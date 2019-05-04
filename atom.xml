@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2019-05-01T03:45:35.450Z</updated>
+  <updated>2019-05-04T11:50:52.614Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[java]说说 JRE , JDK , JVM 三者之间的区别与联系</title>
+    <link href="https://www.dynamic-zheng.com/posts/dfd14d26.html"/>
+    <id>https://www.dynamic-zheng.com/posts/dfd14d26.html</id>
+    <published>2019-05-04T11:48:17.000Z</published>
+    <updated>2019-05-04T11:50:52.614Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在写了很多代码之后,如果问 jre 和 jdk 之间有什么关系, jvm 又是什么,估计有相当一部分人不知道在说什么.所以这篇文章,就尝试解释一下这三者之间的区别和联系.<br><a id="more"></a></font></p><table><tr><td bgcolor="#1E90FF"><font face="楷体" color="white" size="5">基本概念</font></td></tr></table><p><font face="华文中宋" size="3">咱们先来说说, jvm , jre , jdk 都是什么.</font></p><p><font face="华文中宋" size="5">JVM ( Java Virtual Machine ):</font></p><p><font face="华文中宋" size="3">就是常说的 java 虚拟机,顾名思义,它就是一个虚拟出来的计算机,通过在实际的计算机上模拟各种计算机功能来实现.<br>JVM 是 java 实现跨平台最核心的部分,所有的 java 程序,首先会被编译成 .class 的类文件, JVM 的主要工作是解释自己的指令集(即字节码)并映射到本地的 CPU 的指令集或 OS 的系统调用. java 面对不同操作系统使用不同的虚拟机,这样实现了跨平台.<br>因为 JVM 对上层的 java 源文件怎样是不关心的,它关心的是由源文件生成的类文件.</font></p><p><font face="华文中宋" size="5">JRE ( Java Runtime Environment ):</font></p><p><font face="华文中宋" size="3">java 运行时环境.<br>它主要包括两部分: jvm 的标准实现和 java 的一些基本类库还有一些模块等.<br>在 java 平台下,所有的 java 程序都需要在 JRE 下才能运行,这是因为在解释 class 时, JVM 需要调用解释所需要的类库 lib .<br>可以看看自己下载的 jre ,里面有 bin 和 lib , 在这里可以认为 bin 就是 JVM , lib 就是 JVM 所需要的类库. JVM 和 lib 合起来就称为 JRE .</font></p><p><font face="华文中宋" size="5">JDK (Java Development Kit ):</font></p><p><font face="华文中宋" size="3"> java 开发工具包.<br>jdk 是整个 java 开发的核心,包括了 java 的运行环境,一堆 java 工具和 java 基础的类库.你可以将 JDK 看成是 JRE 的一个超集.<br>由上,我们能够看出来,这三者之间的关系是层层嵌套的:<strong> JDK 包含 JRE , 而 JRE 包含 JVM .</strong></font></p><table><tr><td bgcolor="#1E90FF"><font face="楷体" color="white" size="5">QA</font></td></tr></table><p><font face="华文中宋" size="3">在以上基础上,面试的时候,就有的问了.<br>比如:<br>Q : java 为什么能够跨平台,实现” write once , run anywhere “<br>A : java 能够跨平台运行的核心在于 jvm ,所以并不是 java 能够跨平台,而是它的 jvm 可以做到跨平台.<br>java 引入了字节码的概念, jvm 只认识字节码,并将它们解释到系统的 API 调用.不同的系统有不同的 jvm 实现,有 Linux 版本的 jvm 实现,也有 Windows 版本的 jvm 实现,但是同一段代码在编译后的字节码是一样的.<br>也就是说,我想要实现的功能,因为编译生成的字节码是唯一的,所以和系统无关,因为在不同的 jvm 实现上会映射到不同系统的 API 调用,从而实现了代码不做任何修改,就可以跨平台运行.</font></p><p><font face="华文中宋" size="3">Q : jdk 和 jre 有什么区别<br>A : 把&lt;基本概念&gt;里面的内容说说,然后再说一下在实际中:如果只是想跑 java 程序,只安装 jre 就可以了,如果想要写 java 程序并且运行,就需要 jdk .</font></p><p><font face="华文中宋" size="3">如果能够玩转 jre  , jdk , jvm ,你就可以骄傲的说,你有扎实的 java 基础了.<br>在这里推荐两篇博客,好好阅读,会有很多收获.<br><a href="http://www.cnblogs.com/zuoxiaolong/p/life51.html" target="_blank" rel="noopener">回答阿里社招面试如何准备，顺便谈谈对于Java程序猿学习当中各个阶段的建议</a><br><a href="http://www.cnblogs.com/zuoxiaolong/p/life53.html" target="_blank" rel="noopener">万能的林萧说：一篇文章教会你，如何做到招聘要求中的“要有扎实的Java基础”。</a></font></p><p><font face="华文中宋" size="3">感谢您的阅读~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在写了很多代码之后,如果问 jre 和 jdk 之间有什么关系, jvm 又是什么,估计有相当一部分人不知道在说什么.所以这篇文章,就尝试解释一下这三者之间的区别和联系.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="java" scheme="https://www.dynamic-zheng.com/categories/java/"/>
+    
+    
+      <category term="java 基础" scheme="https://www.dynamic-zheng.com/tags/java-%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>[读书]春天该很好,你若尚在场</title>
