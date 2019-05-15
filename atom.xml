@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2019-05-11T00:50:18.396Z</updated>
+  <updated>2019-05-15T07:32:00.090Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[mysql]修改 mysql 数据库端口</title>
+    <link href="https://www.dynamic-zheng.com/posts/ade78a36.html"/>
+    <id>https://www.dynamic-zheng.com/posts/ade78a36.html</id>
+    <published>2019-05-15T07:28:28.000Z</published>
+    <updated>2019-05-15T07:32:00.090Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">背景:在一台 Linux 服务器上,安装了两个 mysql ,那么为了我能够同时连接到 mysql ,就需要对另外一个 mysql 修改连接端口.<br><a id="more"></a><br>修改 mysql 数据库之前,查看一下当前使用端口,命令(需要进入到 mysql 中进行操作),命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global variables like &apos;port&apos;;</span><br></pre></td></tr></table></figure></font></p><p><img src="https://ws1.sinaimg.cn/large/006zqJRgly1g31ztykju2j30be036glo.jpg"></p><p><font face="华文中宋" size="3">可以看到,当前使用端口为 3306<br>接下来进入到 /etc 找到 my.cnf 文件,修改内容如下:<br><img src="https://ws1.sinaimg.cn/large/006zqJRgly1g321b99mm4j30di044q37.jpg"></font></p><p><font face="华文中宋" size="3">修改完成之后,重新启动 mysql 数据库,命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld restart</span><br></pre></td></tr></table></figure></font></p><p><img src="https://ws1.sinaimg.cn/large/006zqJRgly1g321bq4cfej30bl0403ym.jpg"></p><p><font face="华文中宋" size="3">此时,我们看到,已经修改成功.<br><img src="https://ws1.sinaimg.cn/large/006zqJRgly1g321c66oawj30bg035t8t.jpg"></font></p><p><font face="华文中宋" size="3">端口已经修改成功了,如果 Navicat 连接不上 mysql 的话,就需要看看防火墙有没有打开相应的端口.想要打开特定端口,查看这篇文章吧,实在是懒得写了:<a href="https://blog.csdn.net/zll_0405/article/details/81208606" target="_blank" rel="noopener">CentOS7 开启防火墙及特定端口</a></font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;背景:在一台 Linux 服务器上,安装了两个 mysql ,那么为了我能够同时连接到 mysql ,就需要对另外一个 mysql 修改连接端口.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="运维" scheme="https://www.dynamic-zheng.com/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+      <category term="mysql" scheme="https://www.dynamic-zheng.com/tags/mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>[运维] proxmox ve 与 vSphere 对比</title>
