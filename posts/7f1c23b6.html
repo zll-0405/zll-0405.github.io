@@ -107,18 +107,18 @@
 
 
 
-  <meta name="description" content="一直关注我的博友,应该知道我曾经捣鼓过 vSphere 相关的内容,写过一个专栏: VMware vSphere ,起码有些许的成绩了,支撑起了公司大大小小的项目,虽然出过问题,但最后都有惊无险的熬了过来.">
-<meta name="keywords" content="proxmox ve">
+  <meta name="description" content="如果要了解 J2EE 的知识,就不可避免的接触到 13 种规范.作为规范之一的 JDBC 吸引起了我的注意,因为我比较了解 ODBC .所以这篇文章,就先说说 JDBC ,然后咱们再聊聊 ODBC ,最后再对比说一下,这样印象更深刻一些.">
+<meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[运维] proxmox ve 与 vSphere 对比">
-<meta property="og:url" content="https://www.dynamic-zheng.com/posts/f77b1752.html">
+<meta property="og:title" content="[java]说说 JDBC ,再聊聊 ODBC">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/7f1c23b6.html">
 <meta property="og:site_name" content="郑璐璐|个人博客">
-<meta property="og:description" content="一直关注我的博友,应该知道我曾经捣鼓过 vSphere 相关的内容,写过一个专栏: VMware vSphere ,起码有些许的成绩了,支撑起了公司大大小小的项目,虽然出过问题,但最后都有惊无险的熬了过来.">
+<meta property="og:description" content="如果要了解 J2EE 的知识,就不可避免的接触到 13 种规范.作为规范之一的 JDBC 吸引起了我的注意,因为我比较了解 ODBC .所以这篇文章,就先说说 JDBC ,然后咱们再聊聊 ODBC ,最后再对比说一下,这样印象更深刻一些.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-11T00:50:18.396Z">
+<meta property="og:updated_time" content="2019-05-24T12:03:19.030Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[运维] proxmox ve 与 vSphere 对比">
-<meta name="twitter:description" content="一直关注我的博友,应该知道我曾经捣鼓过 vSphere 相关的内容,写过一个专栏: VMware vSphere ,起码有些许的成绩了,支撑起了公司大大小小的项目,虽然出过问题,但最后都有惊无险的熬了过来.">
+<meta name="twitter:title" content="[java]说说 JDBC ,再聊聊 ODBC">
+<meta name="twitter:description" content="如果要了解 J2EE 的知识,就不可避免的接触到 13 种规范.作为规范之一的 JDBC 吸引起了我的注意,因为我比较了解 ODBC .所以这篇文章,就先说说 JDBC ,然后咱们再聊聊 ODBC ,最后再对比说一下,这样印象更深刻一些.">
 
 
 
@@ -128,7 +128,7 @@
 
   
   
-  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/f77b1752">
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/7f1c23b6">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>[运维] proxmox ve 与 vSphere 对比 | 郑璐璐|个人博客</title>
+  <title>[java]说说 JDBC ,再聊聊 ODBC | 郑璐璐|个人博客</title>
   
 
 
@@ -354,7 +354,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/f77b1752.html">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/7f1c23b6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑璐璐">
@@ -371,7 +371,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[运维] proxmox ve 与 vSphere 对比
+          <h1 class="post-title" itemprop="name headline">[java]说说 JDBC ,再聊聊 ODBC
 
               
             
@@ -397,7 +397,7 @@
                 
               
 
-              <time title="创建时间：2019-05-11 08:48:37 / 修改时间：08:50:18" itemprop="dateCreated datePublished" datetime="2019-05-11T08:48:37+08:00">2019-05-11</time>
+              <time title="创建时间：2019-05-24 20:01:11 / 修改时间：20:03:19" itemprop="dateCreated datePublished" datetime="2019-05-24T20:01:11+08:00">2019-05-24</time>
             
 
             
@@ -419,7 +419,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
 
                 
                 
@@ -438,8 +438,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/posts/f77b1752.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/f77b1752.html" itemprop="commentCount"></span>
+                <a href="/posts/7f1c23b6.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/7f1c23b6.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -467,13 +467,27 @@
       
 
       
-        <p><font face="华文中宋" size="3">一直关注我的博友,应该知道我曾经捣鼓过 vSphere 相关的内容,写过一个专栏: <a href="https://blog.csdn.net/zll_0405/column/info/21107" target="_blank" rel="noopener">VMware vSphere</a> ,起码有些许的成绩了,支撑起了公司大大小小的项目,虽然出过问题,但最后都有惊无险的熬了过来.<br><a id="more"></a><br>也算是基于兴趣,对这方面一直都有关注.前几天,贺信找到我,说发现了一个可以尝试的系统软件: proxmox ve (为了方便,下面我就写 proxmox 系统了).<br>在了解它之后,发现这个系统软件还真的不错,后期看看能不能推进一下这个方案,争取把这个方案落地.</font></p>
-<p><font face="华文中宋" size="3">为什么想要推进这个方案,让它落地呢.我主要有以下几点考虑:<br>1 , proxmox ve 是开源的,而 vSphere 是收费的.<br>开源和收费,我觉得都没多大关系,只要符合自己公司当前发展的需求,我觉得付费也是 OK 的.但是开源的在于,它的氛围很不错,而且我看了一下,遇到的问题都有人写出过解决方案,这一点我是很看好的.(不过大部分解决方案都是英文,说明了英语的重要性)<br>vSphere 产品遇到问题的时候,一般查找不到相关解决资料,都是自己各种尝试,不知道哪儿懵对了,机器就好了,排查问题的时候,真的是靠个人经验.这一点,从我博客里面就能看出来,访问量最多的就是写 vSphere 的那几篇文章.说明在这方面沉淀的人少,所以搜索引擎把我的文章推出来.<br>而 proxmox ve 是开源的,这样就比较能够放心让别人大胆尝试,不至于遇到问题的时候,总是那几个人上,每个人都有锻炼的机会.<br>当然了,如果你真的比较土豪,购买 proxmox ve 系统也是 OK 的.</font></p>
-<p><font face="华文中宋" size="3">2 , proxmox 虚拟机使用的是 kvm ,容器则使用的是 LXC( Linux Container ),也就是说,容器这方面相当于原生的,对于各类常见的应用软件容器,就不用再单独创建 Linux 虚拟机,可以直接在虚拟机上安装相关容器即可.<br>但是 proxmox 对物理服务器的限制是设定在 32 台物理主机,所以如果物理主机比较多的话,而且还需要统一集中在一个集群管理,它可能就不是最好的解决方案了.<br>但是就目前公司的需求来说,我觉得使用 proxmox 还是能够满足需求的.</font></p>
-<p><font face="华文中宋" size="3">3 ,proxmox 支持市面上几乎所有的主流存储协议,特别是对 ceph 分布式存储的支持.这意味着,通过 ceph 可以实现虚拟机的 HA 功能,虚拟机动态迁移等高级特性,而且我觉得在以后,大数据是一个趋势,所以能够支持分布式存储的话,这一个优点无疑是比较吸引人的.</font></p>
-<p><font face="华文中宋" size="3">4 , vSphere 出于商业收费和 license 的考虑,将很多功能进行了拆分,安装完 ESXi 之后,只能使用基本功能,如果想要使用高级功能,必须安装 vcenter 来进行相关操作才可以.<br>相比较之下, proxmox 就友好很多,安装完成之后,所有集群的物理节点都是平等的,通过每个物理节点都可以管理整个集群.<br>如果只是从稳定性来看的话, proxmox ve 和 vSphere 可以说是旗鼓相当,但是硬件兼容性则没有 proxmox 好,而且在 proxmox 中没有主次节点之分,所以它能够最大化的提高硬件的使用效率.</font></p>
-<p><font face="华文中宋" size="3">5 ,这是最重要的一个原因: proxmox 相对于 vSphere 来说,它少了一层.<br>vSphere 的架构是:在服务器上安装 ESXi 系统,然后通过 vcenter 去管理,通过 vcenter 来创建虚拟机,管理集群等.<br>而 proxmox 架构是:在服务器上安装 proxmox 系统之后,就可以在上面创建虚拟机,随便访问一台物理节点,都可以来管理整个集群.<br>发现不同了嘛?好吧,我觉得你可能没发现.<br>proxmox 不需要经过 vcenter 这一层的管理,也就是少了一层通信.这一层通信少了之后,就可能将整个集群的读取速度,反应速度提升一个层次.<br>如果非要举个例子来说明的话(这个例子可能不太恰当,但是想不起来合适的了),就相当于你的笔记本从原来用机械硬盘,到后来改用固态,那种速度之间的差别,你可以想想.</font></p>
-<p><font face="华文中宋" size="3">基于以上吧,我个人是觉得这个方案可以尝试去做.<br>后期看时间和精力,看看能不能弄起来.</font></p>
+        <p><font face="华文中宋" size="3">如果要了解 J2EE 的知识,就不可避免的接触到 13 种规范.作为规范之一的 JDBC 吸引起了我的注意,因为我比较了解 ODBC .<br>所以这篇文章,就先说说 JDBC ,然后咱们再聊聊 ODBC ,最后再对比说一下,这样印象更深刻一些.<br><a id="more"></a></font></p>
+<h1 id="JDBC"><a href="#JDBC" class="headerlink" title=" JDBC"></a><font face="华文中宋" size="3"> JDBC</font></h1><p><font face="华文中宋" size="3">JDBC ( Java DataBase Connectivity , Java 数据库连接)是一种用于执行 SQL 语句的 Java API ,可以为多种关系数据库提供统一访问,由一组用 Java 语言编写的类和接口组成.<br>使用 JDBC 的步骤:加载 JDBC 驱动程序 –&gt;建立数据库连接 Connection –&gt;创建执行 SQL 的语句 Statement –&gt;处理执行结果 ResultSet –&gt;释放资源<br>既然是和数据库相关,就不可避免谈谈 JDBC 常用接口:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">1 , Driver 接口<br><font face="华文中宋" size="3">Driver 接口由数据库厂家提供,作为java开发人员,只需要使用 Driver 接口就可以了.在编程中要连接数据库,必须先装载特定厂商的数据库驱动程序,不同的数据库有不同的装载方法.</font></font></li>
+<li><p><font face="华文中宋" size="3">2 , Connection 接口<br><font face="华文中宋" size="3">connection 与特定数据库的连接,在连接上下文中执行 sql 语句并返回结果. DriverManager.getConnection(url, user, password) 方法建立在 JDBC URL 中定义的数据库 Connection 连接上.<br>常用方法:</font></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">createStatement() :创建向数据库发送 sql 的 statement 对象</span><br><span class="line">prepareStatement(sql) :创建向数据库发送预编译 sql 的 PrepareSatement 对象</span><br><span class="line">prepareCall(sql) :创建执行存储过程的 callableStatement 对象</span><br><span class="line">setAutoCommit(boolean autoCommit) :设置事务是否自动提交</span><br><span class="line">commit() :在链接上提交事务</span><br><span class="line">rollback() :在此链接上回滚事务</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><font face="华文中宋" size="3">3 , Statement 接口<br><font face="华文中宋" size="3">用于执行静态 SQL 语句并返回它所生成结果的对象<br>常用的 Statement 方法：</font></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">execute(String sql) :运行语句,返回是否有结果集</span><br><span class="line">executeQuery(String sql) :运行 select 语句,返回 ResultSet 结果集</span><br><span class="line">executeUpdate(String sql) :运行 insert/update/delete 操作,返回更新的行数</span><br><span class="line">addBatch(String sql) :把多条 sql 语句放到一个批处理中</span><br><span class="line">executeBatch() :向数据库发送一批 sql 语句执行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><font face="华文中宋" size="3">4 , ResultSet 接口<br><font face="华文中宋" size="3">ResultSet 提供检索不同类型字段的方法,常用的有:</font></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">getString(int index),getString(String columnName) :获得在数据库里是 varchar,char 等类型的数据对象</span><br><span class="line">getFloat(int index),getFloat(String columnName) :获得在数据库里是 Float 类型的数据对象</span><br><span class="line">getDate(int index),getDate(String columnName) :获得在数据库里是 Date 类型的数据</span><br><span class="line">getBoolean(int index),getBoolean(String columnName) :获得在数据库里是 Boolean 类型的数据</span><br><span class="line">getObject(int index),getObject(String columnName) :获取在数据库里任意类型的数据</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><font face="华文中宋" size="3">使用之后,依次关闭的对象及连接为: ResultSet –&gt; Statement –&gt; Connection</font></p>
+<h1 id="ODBC"><a href="#ODBC" class="headerlink" title=" ODBC"></a><font face="华文中宋" size="3"> ODBC</font></h1><p><font face="华文中宋" size="3">在上面说了 JDBC ,我觉得看到 JDBC ,应该能够想到 ODBC ,所以接下来咱们聊聊 ODBC .<br>ODBC ( Open Database Connectivity )开放数据库连接,是为了解决异构数据库间的数据共享而产生的,用于对数据库的访问.<br>ODBC 实际上是一个数据库访问函数库,这样可以使得程序可以直接操纵数据库中的数据. ODBC 是基于 SQL 语言的,是一种在 SQL 和应用界面之间的标准接口,这样就免除了应用软件随着数据库的改变而进行改变的麻烦.<br>所以 ODBC 的一个显著优点就是:它生成的程序与数据库或数据库引擎是无关的,这样就为数据库用户和开发人员屏蔽了异构环境的复杂性,提供了数据库访问的一个统一接口,也就使得应用程序实现与平台的无关性和可移植性成为了可能.</font></p>
+<li> <font face="华文中宋" size="3">ODBC 主要由四部分构成:应用程序,驱动程序管理器,驱动程序,数据源.<br><br><ul><br>     <li><font face="华文中宋" size="3">应用程序( Application ),主要任务有:连接数据库,提交 SQL 语句给数据库,检索结果并处理错误,提交或者回滚 SQL 语句的事务,与数据库断开连接<br>     <li><font face="华文中宋" size="3">驱动程序管理器 ( Driver Manager ):每种数据库引擎都需要向 ODBC 驱动程序管理器注册自己的 ODBC 驱动程序,这种驱动程序对于不同的数据库引擎是不同的. ODBC 驱动程序管理器能将与 ODBC 兼容的 SQL 请求从应用程序传给驱动程序,随后由驱动程序把对数据库的操作翻译成相应数据库引擎所提供的固有调用,对数据库实现访问操作.</font></li><br>     <li><font face="华文中宋" size="3">驱动程序:驱动程序是一个用于支持 ODBC 函数调用的模块,应用程序调用驱动程序所支持的函数来操纵数据库.若想使应用程序操作不同类型的数据库,就要动态连接到不同的驱动程序上. ODBC 驱动程序处理 ODBC 函数调用,将应用程序的 SQL 请求提交给指定的数据源,接受由数据源返回的结果,传回给应用程序. </font></li><br>     <li><font face="华文中宋" size="3">数据源:是用户,应用程序要访问的数据文件或数据库,以及访问他们需要的有关信息.它定义了数据库服务器的名称,登录名和密码等选项</font></li><br></font></li></ul></font></li> 
+
+<h1 id="JDBC-与-ODBC"><a href="#JDBC-与-ODBC" class="headerlink" title=" JDBC 与 ODBC"></a><font face="华文中宋" size="3"> JDBC 与 ODBC</font></h1><p><font face="华文中宋" size="3">先说说 JDBC 和 ODBC 的联系.<br>JDBC 和 ODBC 都是用来连接数据库的启动程序, JDBC 和 ODBC 由于具有数据库独立性甚至平台无关性,因而对 Internet 上异构数据库的访问提供了很好的支持.</font></p>
+<p><font face="华文中宋" size="3">接下来,说说 JDBC 与 ODBC 的区别(参考自:<a href="https://www.geeksforgeeks.org/difference-odbc-jdbc/" target="_blank" rel="noopener">Difference between ODBC and JDBC</a>):<br>|    ODBC   |    JDBC    |<br>| :——–: | :——–:|<br>|  ODBC Stands for Open Database Connectivity.     |    JDBC Stands for java database connectivity.    |<br>|   Introduced by Microsoft in 1992.    |   Introduced by SUN Micro Systems in 1997.     |<br>|    We can use ODBC for any language like C,C++,Java etc.   |   We can use JDBC only for Java languages.     |<br>|  We can choose ODBC only windows platform. |   We can Use JDBC in any platform.  |<br>|  Mostly ODBC Driver developed in native languages like C,C++. |  JDBC Stands for java database connectivity. |<br>|  For Java applications it is not recommended to use ODBC because performance will be down due to internal conversion and applications will become platform Dependent. |   For Java application it is highly recommended to use JDBC because there we no performance &amp; platform dependent problem.|<br>|  ODBC is procedural.   |   JDBC is object oriented.|</font></p>
+<p><font face="华文中宋" size="3">你如果跟我说,看不明白,那就踏实学英语去吧!<br>以上,感谢您的阅读~</font></p>
 
       
     </div>
@@ -497,7 +511,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/proxmox-ve/" rel="tag"><i class="fa fa-tag"></i> proxmox ve</a>
+            <a href="/tags/java基础/" rel="tag"><i class="fa fa-tag"></i> java基础</a>
           
         </div>
       
@@ -510,8 +524,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/dfd14d26.html" rel="next" title="[java]说说 JRE , JDK , JVM 三者之间的区别与联系">
-                <i class="fa fa-chevron-left"></i> [java]说说 JRE , JDK , JVM 三者之间的区别与联系
+              <a href="/posts/ade78a36.html" rel="next" title="[mysql]修改 mysql 数据库端口">
+                <i class="fa fa-chevron-left"></i> [mysql]修改 mysql 数据库端口
               </a>
             
           </div>
@@ -519,10 +533,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/posts/ade78a36.html" rel="prev" title="[mysql]修改 mysql 数据库端口">
-                [mysql]修改 mysql 数据库端口 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -570,8 +580,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -670,6 +689,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JDBC"><span class="nav-number">1.</span> <span class="nav-text"> JDBC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ODBC"><span class="nav-number">2.</span> <span class="nav-text"> ODBC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDBC-与-ODBC"><span class="nav-number">3.</span> <span class="nav-text"> JDBC 与 ODBC</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
