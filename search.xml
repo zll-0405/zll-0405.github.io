@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[计算机网络] P2P 协议</title>
+      <link href="/posts/1269457e.html"/>
+      <url>/posts/1269457e.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在上篇文章中说过<a href="https://www.dynamic-zheng.com/posts/17a04cff.html#more">[计算机网络] FTP 协议</a>,要写写 P2P 协议的,嗯,来写写,虽然写的不是太好.<br><a id="more"></a></font></p><h1 id="P2P-是什么"><a href="#P2P-是什么" class="headerlink" title=" P2P 是什么?"></a><font face="华文中宋" size="3"> P2P 是什么?</font></h1><p><font face="华文中宋" size="3">还是要回到这个场景:<br>如果想要下载一个电影,一般都是通过什么方式呢?<br>我希望这次你的答案,除了 HTTP 方式,还有 FTP 方式(要不上篇文章岂不是白写了?)<br>但是你发现了嘛,不管是 HTTP 的方式,还是 FTP 的方式,都有一个比较大的缺点,就是难以解决单一服务器的带宽压力,因为它们使用的都是传统的客户端服务器的方式.<br>这个时候,一种创新的, P2P 协议就开始流行起来. P2P 就是 peer-to-peer .<br>传统的方式不是把资源都集中地存储在某些设备上了嘛,那我就创新一下,我不让这些资源都集中在某些设备上了,我让这些资源都分散的存储在多台设备上面去.这些设备,为了理解方便,我们称为 “ peer “</font></p><p><font face="华文中宋" size="3">那么,当我想要下载一个文件的时候,我只要得到那些已经存在了文件的 peer ,和这些 peer 建立点对点的连接,而不需要到中心服务器上面去,我就可以就近下载文件了.<br>一旦下载了文件,你也就成为了 peer 中的一员,你旁边的那些机器,也可能会选择从你这里下载文件.<br>所以当你使用 P2P 软件的时候,往往能够看到,它既有下载的流量,也有上传的流量,也就是说,你自己也加入了这个 P2P 的网络,自己从别人那里下载,同时也提供给其他人下载.<br>你可以想一下,这种方式,是不是参与的人越多,下载速度就越快,一起简直是完美啊~</font></p><h1 id="种子-torrent-文件"><a href="#种子-torrent-文件" class="headerlink" title="种子 (.torrent )文件"></a><font face="华文中宋" size="3">种子 (.torrent )文件</font></h1><p><font face="华文中宋" size="3">这里其实是有一个问题的,当我想要下载一个文件的时候,我怎么知道哪儿些 peer 有这个文件呢?<br>这就是种子文件,也就是「 torrent」文件.它由两部分组成: announce ( tracker URL )和文件信息.</font></p><ul><li><font face="华文中宋" size="3">文件信息里面有这些内容:<ul><li>info 区:这里指定的是该种子有几个文件,文件有多长,目录结构,以及目录和文件的名字;</li><li>Name 字段:指定顶层目录名字;</li><li>每个段的大小: BitTorrent ( 简称 BT )协议把一个文件分成很多个小段,然后分段下载;</li><li>段哈希值:将整个种子中,每个段的 SHA-1 哈希值拼在一起.</li></ul></font></li></ul><p><font face="华文中宋" size="3">下载时, BT 客户端首先解析 .torrent 文件,得到 tracker 地址,然后连接 tracker 服务器. tracker 服务器回应下载者的请求,将其他下载者(包括发布者)的 IP 提供给下载者.下载者再连接其他下载者,根据 .torrent 文件,两者分别告诉对方自己已经有的数据,然后交换对方没有的数据.这个时候,就不需要其他服务器的参与,就分散了单个线路上的数据流量,从而减轻了服务器的负担.</font></p><p><font face="华文中宋" size="3">从上面的过程,我们能够看出, P2P 这种方式特别依赖 tracker . tracker 需要收集下载者信息的服务器,并且将这些信息提供给其他下载者,使得下载者们相互之间能够连接起来,传输数据.虽然说,在整个下载的过程中,是非中心化的,但是加入这个 P2P 网络的时候,都需要借助 tracker 中心服务器,因为 tracker 服务器是用来登记有哪些用户在请求哪些资源.<br>到这里你可能就会比较清楚了,这种方式的限制就是 tracker 服务器.只要它出现故障或者线路遭到屏蔽, BT 工具就没办法再正常工作了.</font></p><h1 id="去中心化网络-DHT"><a href="#去中心化网络-DHT" class="headerlink" title=" 去中心化网络( DHT )"></a><font face="华文中宋" size="3"> 去中心化网络( DHT )</font></h1><p><font face="华文中宋" size="3">在整个下载的过程中,是非中心化的,但是它还是受限制的.那到底能不能做到彻底非中心化呢?<br>所以就有了 DHT ( Distributed Hash Table )的去中心化网络.每一个加入这个 DHT 网络的人,都要负责存储这个网络中的资源信息和其他成员的联系信息,相当于所有人一起构成了一个庞大的分布式存储数据库.<br>在这里有一种著名的 DHT 协议,叫 Kademlia 协议.</font></p><h1 id="Kademlia-协议详解"><a href="#Kademlia-协议详解" class="headerlink" title=" Kademlia 协议详解"></a><font face="华文中宋" size="3"> Kademlia 协议详解</font></h1><p><font face="华文中宋" size="3">在 Kademlia 协议中,任何一个 BitTorrent 启动之后,它都有两个角色.一个是 peer ,监听一个 TCP 端口,用来上传和下载文件,这个角色就是为了说明,我这里有某个文件.另一个角色 DHT node ,监听一个 UDP 的端口,通过这个角色,这个节点加入了一个 DHT 的网络.<br>在 DHT 网络中,每一个 DHT node 都有一个 ID .这个 ID 是一个很长的串.每个 DHT node 都有责任掌握一些知识,也就是<strong>文件索引</strong>,也就是说,它应该知道某些文件是保存在哪些节点上.它只需要知道这些东西就行了,不一定就是保存这个文件的节点.<br>这样我想要实现去中心化就好实现了.</font></p><p><font face="华文中宋" size="3"> 以上就是想要分享的内容了,感谢您的阅读~</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> P2P </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[计算机网络] FTP 协议</title>
       <link href="/posts/17a04cff.html"/>
       <url>/posts/17a04cff.html</url>
