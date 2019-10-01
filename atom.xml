@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2019-09-13T13:39:59.582Z</updated>
+  <updated>2019-10-01T23:55:46.621Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -17,11 +17,55 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[Jenkins]详细说说 Jenkins 配置那些事</title>
+    <link href="https://www.dynamic-zheng.com/posts/525ce227.html"/>
+    <id>https://www.dynamic-zheng.com/posts/525ce227.html</id>
+    <published>2019-10-01T23:54:55.000Z</published>
+    <updated>2019-10-01T23:55:46.621Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">对于 Jenkins 的操作来说,搭建什么的我觉得没啥难度(如果觉得有难度,我觉得应该是没看我这篇文章:<a href="https://blog.csdn.net/zll_0405/article/details/85163461" target="_blank" rel="noopener">[Jenkins]CentOS7下Jenkins搭建</a>),困难在于配置文件怎么写.这篇文章详细来说说.<br><a id="more"></a><br>先说一下,这些配置只是起参考价值,具体还是需要根据自己的情况来.<br>对于后端来说,配置文件主要在构建之后需要执行的操作( # 后面为注释内容)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">tomcat_path=/usr/local/tomcats/tomcat-test       #定义 tomcat 的位置</span><br><span class="line">project_web=$tomcat_path/test.war #定义项目打包位置</span><br><span class="line">if [ -f $project_web ] ;then </span><br><span class="line">echo -- stop tomcat</span><br><span class="line">#kill tomcat pid</span><br><span class="line">pidlist=`ps -ef | grep tomcat-test | grep -v grep | awk &apos;&#123;print $2&#125;&apos;`#查看是否有进程正在运行</span><br><span class="line">if [ &quot;$pidlist&quot; = &quot;&quot; ]#没有进程在运行,则提示</span><br><span class="line">then</span><br><span class="line"> echo &quot;no tomcat pid alive!&quot;</span><br><span class="line">else#有进程在运行,杀掉</span><br><span class="line">   echo &quot;tomcat Id list :$pidlist&quot;</span><br><span class="line">   kill -9 $pidlist</span><br><span class="line">   echo &quot;KILL $pidlist:&quot;</span><br><span class="line">   echo &quot;tomcat stop success&quot;</span><br><span class="line">fi </span><br><span class="line"></span><br><span class="line">    echo -- 正在部署$project_web#将进程杀掉之后,重新进行部署</span><br><span class="line">    if [ -f $tomcat_path/webapps/test.war ] ;then#查看 /webapps 目录下是否有以前的 war 包,如果有,删掉</span><br><span class="line">        rm -f $tomcat_path/webapps/test.war</span><br><span class="line">        rm -rf $tomcat_path/webapps/test</span><br><span class="line">        echo -- 正在删除$project_web</span><br><span class="line">    fi </span><br><span class="line">        cp $project_web $tomcat_path/webapps/test.war#将新生成的 war 包复制到 /webapps 目录下</span><br><span class="line">    # start tomcat</span><br><span class="line">    echo $tomcat_path</span><br><span class="line">    #sleep 5</span><br><span class="line">    export JAVA_HOME=/usr/java/latest</span><br><span class="line">    #$tomcat_path/bin/startup.sh</span><br><span class="line">    $&#123;tomcat_path&#125;/bin/startup.sh </span><br><span class="line">else </span><br><span class="line">echo $BUILD_ID - 未找到$project_web</span><br><span class="line">fi</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">对于前端来说,主要就是需要注意一下前端特有的打包方式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --unsafe-perm</span><br><span class="line">ng build --prod --env=test --output-path=typing-dev --base-href ./</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">对于 k8s 来说,需要在构建时创建事件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh -l </span><br><span class="line"></span><br><span class="line">examimage_path=reg.zll.com/library/test:1.0.0#定义镜像在 harbor 上的位置</span><br><span class="line"></span><br><span class="line">cp test-web/target/test-web.war test-web/src/profiles/k8s_prod/test-web.war#将 war 复制到目标目录下</span><br><span class="line">cd test-web/src/profiles/k8s_prod#进入目标目录</span><br><span class="line">docker build -t $examimage_path .#开始创建新的镜像,注意后面还有一个&quot;.&quot;,要不然命令是不会生效的</span><br><span class="line">docker push $examimage_path#将构建好的镜像推到 harbor 上面去</span><br><span class="line">echo &apos;推送镜像到harbor&apos;</span><br><span class="line"></span><br><span class="line">#删除本地镜像</span><br><span class="line">docker rmi -f $examimage_path#推送成功之后,将本地镜像删除</span><br><span class="line"></span><br><span class="line">#k8s部署</span><br><span class="line">echo &apos;开始部署&apos;</span><br><span class="line">kubectl delete -f $WORKSPACE/test-web/src/profiles/k8s_prod/.#将本地的都删除</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo $WORKSPACE</span><br><span class="line">kubectl create -f $WORKSPACE/test-web/src/profiles/k8s_prod/.#部署最新的</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">以上就是我接触到的配置文件常用方法,希望能够帮助到你~<br>感谢您的阅读</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;对于 Jenkins 的操作来说,搭建什么的我觉得没啥难度(如果觉得有难度,我觉得应该是没看我这篇文章:&lt;a href=&quot;https://blog.csdn.net/zll_0405/article/details/85163461&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;[Jenkins]CentOS7下Jenkins搭建&lt;/a&gt;),困难在于配置文件怎么写.这篇文章详细来说说.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="运维" scheme="https://www.dynamic-zheng.com/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+      <category term="Jenkins配置" scheme="https://www.dynamic-zheng.com/tags/Jenkins%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[计算机网络] IP 地址与 MAC 地址之间的关系</title>
+    <link href="https://www.dynamic-zheng.com/posts/e579f21d.html"/>
+    <id>https://www.dynamic-zheng.com/posts/e579f21d.html</id>
+    <published>2019-10-01T23:52:32.000Z</published>
+    <updated>2019-10-01T23:54:22.738Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">了解计算机网络的话,逃不过 IP 地址和 MAC 地址.<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">MAC ( Media Access Control ,介质访问控制 )地址,也叫硬件地址,长度是 48 比特( 6 字节),由 16 进制数字组成,分为前 24 位和后 24 位.前 24 位叫做组织唯一标志符( Organizationally Unique Identifier , OUI ),这是由 IEEE 的注册管理机构给不同厂家分配的代码,用来区分不同的厂家.后 24 位是厂家自己分配的,称为扩展标识符.对于同一个厂家来说,生产的网卡中 MAC 地址后 24 位是不一样的.<br>这样就保证了 MAC 地址的唯一性.</font></p><p><font face="华文中宋" size="3">MAC 地址应用的场景有很多.<br>1 ,在一个局域网内, IP 地址应该都是动态分配的,假如我在公司局域网内的 IP 地址是: 192.168.1.156 ,现在我不在公司使用了,那么这个 IP 地址就给了别人,让别人使用.<br>也就是说, IP 地址和你正在使用的设备是不对应的,那我发出的请求,就没办法准确无误的到达我这里,在这种情况下,进行通信肯定会出现问题.<br>MAC 地址和设备在全球范围内都是唯一的,所以在局域网内使用 MAC 地址进行通信没什么问题.<br>2 ,在早期的以太网,只有交换机,没有路由器,以太网之间就是通过 MAC 地址来进行通信,后来有了互联网,为了兼容原来还是使用 MAC 地址的模式,采用了 IP+MAC 地址的方式.</font></p><p><font face="华文中宋" size="3">估计看到这里你就有问题了,既然 MAC 地址在全球范围内都是唯一的,那我直接使用 MAC 地址来进行通信不就好了嘛?为什么还要有 IP 地址呢.<br>你想一想,全世界有那么多人,那么多人的 MAC 地址如果想要进行保存的话,是不是需要一张超级超级大 MAC 地址对应表?有了一张这样的对应表,为了寻找一个 MAC 地址,那个效率,想想就会很低.<br>而 IP 地址就可以很好的解决这个问题.<br>因为 IP 地址是网络提供商给你的,所以你在哪里整个网络都是知道的.<br>比如,你现在人在中国北京,那么 IP 地址就标识了你在中国.网络上有个请求需要到达你这里,对于别人来说,只需要将这个请求发送到中国就 OK 了,剩下的就是中国内部再进行处理.但是从全局来看,我只需要维护中国这个地址就够了.</font></p><p><font face="华文中宋" size="3">还有一点,随着设备越来越多,而且还有虚拟化的设备和网卡,有很多工具还可以对 MAC 地址进行修改,就很难保证不冲突了,也就是说, MAC 地址也只是理论上是全球唯一,对于 MAC 地址,最低要求是在一个局域网内, MAC 地址是唯一的.<br>MAC 的设计方式,虽然不能保证绝对唯一(毕竟世界上没有非常绝对的事情),但是能够保证在一个局域网内出现冲突的概率很小.这样的设计,就能够让一台机器启动的时候,在没有 IP 地址的情况下,可以先用 MAC 地址进行通信,获得 IP 地址.<br>如果在局域网内,还能出现 MAC 地址冲突的话,那就让网络工程师采取一定的机制解决冲突就好了,这方面我就不擅长了.</font></p><p><font face="华文中宋" size="3">以上.<br>接下来打算系统总结一下算法方面的知识.<br>最后,感谢您的阅读哇~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;了解计算机网络的话,逃不过 IP 地址和 MAC 地址.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="计算机网络" scheme="https://www.dynamic-zheng.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="计算机网络" scheme="https://www.dynamic-zheng.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[碎碎念]总结一下最近在做的事情</title>
     <link href="https://www.dynamic-zheng.com/posts/a3f84cce.html"/>
     <id>https://www.dynamic-zheng.com/posts/a3f84cce.html</id>
     <published>2019-09-13T13:39:14.000Z</published>
-    <updated>2019-09-13T13:39:59.582Z</updated>
+    <updated>2019-09-13T13:40:09.366Z</updated>
     
     <content type="html"><![CDATA[<p><font face="华文中宋" size="3">最近更新频率特别低,我能感受到.因为技术方面的输入比较少了,所以不知道该输出什么有干货的内容给大家.<br>那我就说一下最近在做的几件事情吧,希望这其中的碎碎念,也能给你一些启发.<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">1 ,转到项目管理.<br>项目管理对于当下的我来说,挑战特别大.<br>刚被提拔上来的时候,我是很懵逼的,我不知道这件事情到底是不是该我负责,这件事情到底需不需要我去做,不像以前只管开发就行了,上面分配什么我就去做什么就 OK 了.很多事情都需要我去思考,需要我不断的去问为什么,不断的去逼近问题的本质.<br>在这个过程中,慢慢对敏捷开发有了一些认识.刚开始提出来的时候,整个人对流程都是很懵的,到现在对整个流程的熟悉让我有了一种上手的感觉.<br>我开始知道从哪儿能够跟踪到整个团队的进度,知道之所以出现这样的问题是哪儿个环节没有做好,下次要怎么改正,开始能够发现到问题.<br>这段经历,对我来说真的是一个转变,让我不再沉迷于技术,而是抬起头来也看了看天空.<br>当然了,技术还是目前我所需要沉淀的,后期技术深度和广度的涉猎内容,会再提上日程.<br>生命不息,学习不止~</font></p><p><font face="华文中宋" size="3">2 ,准备自考毕设.<br>这是我最近比较头疼的一件事.我对 PB 是很不熟的那种,平时因为各种事情一直在拖,直到现在不能再拖延了,才开始动手. 20 号就要开始答辩,而自己还没怎么做,内心慌得一批.<br>可能是因为自己的运气比较好,每次遇到事情的时候,都有人出来帮助我.超级感谢颖娟,自考毕设的事情,她的功劳占据 70% ,很感谢身边的朋友一直都是这样,无私不求回报的帮助我.<br>这段时间,紧赶慢赶总算是在今天把论文初稿定出来了,邮寄给了自考负责的老师,现在就是等老师的批改意见,然后再进行修改什么的,就等着答辩就 OK 了.<br>等自考答辩完毕之后,准备自学考试.用我朋友的话说就是:我不是在考试,就是在考试的路上.</font></p><p><font face="华文中宋" size="3">3 ,尝试的一些其他事情.<br>对于一个技术人来说,最怕的就是沉迷于自己的技术世界,还不自知.我一直都深知这一点,所以也在尝试不同的事情.<br>第一就是读书.<br>在读各种书籍,刚去看了一下,电子书 + 实体书一共看了 30+ 本书了.今年打算看至少 50 本书的,目前来看这个目标今年达成是没什么问题的.<br>读的书籍很杂,有关于个人发展的,有关于管理方面的,有心理学方面的,最喜欢东野圭吾先生的书,每次读都沉进去出不来.<br>第二就是在尝试打破自己的交际圈.<br>因为身边人都是技术型人才,在一个圈里面,眼光视野难免有所局限,我在逐渐打破自己的交际圈.<br>也算是比较幸运,认识了几位比较厉害的大佬.具体多厉害我就不说了,就是由这件事让我知道,很多东西只要我想去尝试,那么我就能够达到自己的期望,而且如果再积极主动一些,一般都能做得更好一些.<br>第三就是开眼.<br>一个人想要尝试副业赚钱的前提是,知道自己的独特优势.<br>我还不知道,所以目前在看各种赚钱案例,在研究各位巨人是怎么一步步定位自己的.<br>开眼这件事,非常重要,接触不同的人之后,你会知道原来还能这样玩,原来还可以这么去做,还能从这个角度去想.<br>不断的去打破自己的思维局限,不断的挑战自己的认知,是一件很有趣的事情.<br>目前还是在开眼阶段,因为对各种赚钱案例看的还不够多,研究的还不是很深入,等我厚积的差不多了,我就要开始薄发了.</font></p><p><font face="华文中宋" size="3">以上就是最近在折腾的一些事情.<br>一句话,和大家共勉:要记住每个对你好的人,因为他们本可以不这么做的.<br>我几乎每天都会这样去提醒自己,所以每天对我来说都很惊喜.<br>最后,祝大家中秋快乐啊~(这篇碎碎念又有点儿长了,感谢你看到这里)</font></p>]]></content>
     
@@ -409,30 +453,6 @@
     
     
       <category term="java 基础" scheme="https://www.dynamic-zheng.com/tags/java-%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[Linux]时间同步设置 + 防火墙设置 + SELinux 设置</title>
-    <link href="https://www.dynamic-zheng.com/posts/d1d9f7bd.html"/>
-    <id>https://www.dynamic-zheng.com/posts/d1d9f7bd.html</id>
-    <published>2019-04-29T13:35:53.000Z</published>
-    <updated>2019-04-30T01:29:07.284Z</updated>
-    
-    <content type="html"><![CDATA[<table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> 时间同步设置</font></td></tr></table><p><font face="华文中宋" size="3">在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：<br><a id="more"></a><br>1，设置ntp客户端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ntp 安装ntp时间同步软件</span><br><span class="line">systemctl enable ntpd 使软件可用</span><br><span class="line">systemctl start ntpd 启动ntp软件</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">2，编辑/etc/ntp.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ntp.conf</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">重点修改以下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Use public servers from the pool.ntp.org project.</span><br><span class="line"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span><br><span class="line">#server 0.centos.pool.ntp.org iburst</span><br><span class="line"> </span><br><span class="line">server 192.168.243.133   -------&gt;（此处需要修改，以哪台为准就写那台的IP）</span><br><span class="line"> </span><br><span class="line">restrict 192.168.243.133 nomodify notrap noquery-------&gt;（此处需要修改，以哪台为准就写那台的IP）</span><br><span class="line"> </span><br><span class="line">server 192.168.243.***     -------&gt;（本机IP是多少就写多少）</span><br><span class="line">fudge 192.168.243.*** -------&gt;（本机IP是多少就写多少） stratum 10</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">3，重启ntpd服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart ntpd</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">4，启动后，查看同步情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ntpq -p</span><br><span class="line">ntpstat</span><br></pre></td></tr></table></figure></font></p><table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> 防火墙设置</font></td></tr></table><p><font face="华文中宋" size="3">关闭firewall：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">临时关闭防火墙: systemctl stop firewalld </span><br><span class="line">永久关闭防火墙： systemctl disable firewalld.service</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">关闭iptables：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">关闭命令： service iptables stop </span><br><span class="line">永久关闭防火墙：chkconfig iptables off </span><br><span class="line">检查防火墙状态：service iptables status</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">查看防火墙状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">检查firewall的状态：systemctl status firewalld.service</span><br><span class="line">检查iptables状态：service iptables status</span><br></pre></td></tr></table></figure></font></p><table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> SELinux设置</font></td></tr></table><p><font face="华文中宋" size="3">1，临时关闭SELinux：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">2，永久关闭SELinux：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/selinux/config</span><br><span class="line">将配置文件中SELINUX=enforcing改为SELINUX=disabled</span><br><span class="line">注：修改配置文件需要重启机器，但我们已临时关闭SELinux，等下次机器重启后，配置文件自动生效</span><br></pre></td></tr></table></figure></font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;table&gt;&lt;tr&gt;&lt;td bgcolor=&quot;navy&quot; blue&gt;&lt;font face=&quot;楷体&quot; color=&quot;white&quot; size=&quot;5&quot;&gt; 时间同步设置&lt;/font&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-
-&lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：&lt;br&gt;
-    
-    </summary>
-    
-      <category term="运维" scheme="https://www.dynamic-zheng.com/categories/%E8%BF%90%E7%BB%B4/"/>
-    
-    
-      <category term="Linux" scheme="https://www.dynamic-zheng.com/tags/Linux/"/>
     
   </entry>
   
