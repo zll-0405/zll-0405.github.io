@@ -107,18 +107,21 @@
 
 
 
-  <meta name="description" content="时间同步设置  在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：">
-<meta name="keywords" content="Linux">
+  <meta name="description" content="在学算法之余,也在学习计算机网络方面的东西,就是极客时间上刘超老师的&amp;lt;趣谈网络协议&amp;gt;那门课程,其中有一篇讲得非常有意思,也有些难以理解,我以我的角度来谈谈.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Linux]时间同步设置 + 防火墙设置 + SELinux 设置">
-<meta property="og:url" content="https://www.dynamic-zheng.com/posts/d1d9f7bd.html">
+<meta property="og:title" content="[计算机网络]想出网关?你需要懂得这些">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/ff423025.html">
 <meta property="og:site_name" content="郑璐璐|个人博客">
-<meta property="og:description" content="时间同步设置  在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：">
+<meta property="og:description" content="在学算法之余,也在学习计算机网络方面的东西,就是极客时间上刘超老师的&amp;lt;趣谈网络协议&amp;gt;那门课程,其中有一篇讲得非常有意思,也有些难以理解,我以我的角度来谈谈.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-30T01:29:07.284Z">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2019/mac-and-ip.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2019/transfor.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2019/NAT.jpg">
+<meta property="og:updated_time" content="2019-12-05T12:46:21.515Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Linux]时间同步设置 + 防火墙设置 + SELinux 设置">
-<meta name="twitter:description" content="时间同步设置  在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：">
+<meta name="twitter:title" content="[计算机网络]想出网关?你需要懂得这些">
+<meta name="twitter:description" content="在学算法之余,也在学习计算机网络方面的东西,就是极客时间上刘超老师的&amp;lt;趣谈网络协议&amp;gt;那门课程,其中有一篇讲得非常有意思,也有些难以理解,我以我的角度来谈谈.">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2019/mac-and-ip.jpg">
 
 
 
@@ -128,7 +131,7 @@
 
   
   
-  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/d1d9f7bd">
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/ff423025">
 
 
 
@@ -138,7 +141,7 @@
   };
 </script>
 
-  <title>[Linux]时间同步设置 + 防火墙设置 + SELinux 设置 | 郑璐璐|个人博客</title>
+  <title>[计算机网络]想出网关?你需要懂得这些 | 郑璐璐|个人博客</title>
   
 
 
@@ -354,7 +357,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/d1d9f7bd.html">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/ff423025.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑璐璐">
@@ -371,7 +374,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[Linux]时间同步设置 + 防火墙设置 + SELinux 设置
+          <h1 class="post-title" itemprop="name headline">[计算机网络]想出网关?你需要懂得这些
 
               
             
@@ -397,46 +400,16 @@
                 
               
 
-              <time title="创建时间：2019-04-29 21:35:53" itemprop="dateCreated datePublished" datetime="2019-04-29T21:35:53+08:00">2019-04-29</time>
+              <time title="创建时间：2019-12-05 20:43:51 / 修改时间：20:46:21" itemprop="dateCreated datePublished" datetime="2019-12-05T20:43:51+08:00">2019-12-05</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-04-30 09:29:07" itemprop="dateModified" datetime="2019-04-30T09:29:07+08:00">2019-04-30</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -450,8 +423,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/posts/d1d9f7bd.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/d1d9f7bd.html" itemprop="commentCount"></span>
+                <a href="/posts/ff423025.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/ff423025.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -479,22 +452,22 @@
       
 
       
-        <table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> 时间同步设置</font></td></tr></table>
-
-<p><font face="华文中宋" size="3">在大数据集群环境中，要求每台集群的时间必须是同步的，这样我们就会要求每台集群的时间必须和一台服务的时间是同步的。接下来介绍一下步骤：<br><a id="more"></a><br>1，设置ntp客户端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ntp 安装ntp时间同步软件</span><br><span class="line">systemctl enable ntpd 使软件可用</span><br><span class="line">systemctl start ntpd 启动ntp软件</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">2，编辑/etc/ntp.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ntp.conf</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">重点修改以下内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Use public servers from the pool.ntp.org project.</span><br><span class="line"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span><br><span class="line">#server 0.centos.pool.ntp.org iburst</span><br><span class="line"> </span><br><span class="line">server 192.168.243.133   -------&gt;（此处需要修改，以哪台为准就写那台的IP）</span><br><span class="line"> </span><br><span class="line">restrict 192.168.243.133 nomodify notrap noquery-------&gt;（此处需要修改，以哪台为准就写那台的IP）</span><br><span class="line"> </span><br><span class="line">server 192.168.243.***     -------&gt;（本机IP是多少就写多少）</span><br><span class="line">fudge 192.168.243.*** -------&gt;（本机IP是多少就写多少） stratum 10</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">3，重启ntpd服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart ntpd</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">4，启动后，查看同步情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ntpq -p</span><br><span class="line">ntpstat</span><br></pre></td></tr></table></figure></font></p>
-<table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> 防火墙设置</font></td></tr></table>
-
-<p><font face="华文中宋" size="3">关闭firewall：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">临时关闭防火墙: systemctl stop firewalld </span><br><span class="line">永久关闭防火墙： systemctl disable firewalld.service</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">关闭iptables：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">关闭命令： service iptables stop </span><br><span class="line">永久关闭防火墙：chkconfig iptables off </span><br><span class="line">检查防火墙状态：service iptables status</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">查看防火墙状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">检查firewall的状态：systemctl status firewalld.service</span><br><span class="line">检查iptables状态：service iptables status</span><br></pre></td></tr></table></figure></font></p>
-<table><tr><td bgcolor="navy" blue><font face="楷体" color="white" size="5"> SELinux设置</font></td></tr></table>
-
-<p><font face="华文中宋" size="3">1，临时关闭SELinux：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">2，永久关闭SELinux：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/selinux/config</span><br><span class="line">将配置文件中SELINUX=enforcing改为SELINUX=disabled</span><br><span class="line">注：修改配置文件需要重启机器，但我们已临时关闭SELinux，等下次机器重启后，配置文件自动生效</span><br></pre></td></tr></table></figure></font></p>
+        <p><font face="华文中宋" size="3">在学算法之余,也在学习计算机网络方面的东西,就是极客时间上刘超老师的&lt;趣谈网络协议&gt;那门课程,其中有一篇讲得非常有意思,也有些难以理解,我以我的角度来谈谈.<br><a id="more"></a></font></p>
+<p><font face="华文中宋" size="3">想要跨网段访问的话,有一关是必须要过的:网关( Gateway )<br>配置好 IP 地址和网关之后,就能够自由访问上网了,想访问哪儿网站就访问哪儿个网站,各种浪.但是在进行跨网访问的时候,会牵扯到 MAC 地址和 IP 地址的变化,所以咱们先来知道一下 MAC 头和 IP 头的细节.</font></p>
+<p><font face="华文中宋" size="3">MAC 头和 IP 头的细节(画的不是太好哈):<br><img src="/images/2019/mac-and-ip.jpg"></font></p>
+<p><font face="华文中宋" size="3">简单来说一下内容:<br>目标 MAC 地址和源 MAC 地址应该不需要说明什么了,协议类型是为了说明里面是 IP 协议<br>版本( Version ):占 4 位,用来表明 IP 协议实现的版本号,目前来说主流还是 IPV4<br>服务类型 TOS ( Type of Service ):占 8 位,其中前 3 位比特为优先权字段,第 8 位保留未用,第 4 至 7 位分别代表延迟,吞吐量,可靠性和花费.<br>总长度:占 16 位,说明整个数据报的长度(以字节为单位),最大长度为 65535 字节<br>标识:占 16 位,用来唯一标识主机发送的每一份数据报,通常每发一份报文,它的值会加 1<br>标志:占 3 位,标志一份数据报是否要求分段<br>片偏移:占 13 位,如果一份数据报要求分段的话,该字段指明该段偏移距原始数据报开始的位置<br>生存期 TTL ( Time to Live ):占 8 位,用来设置数据报最多可以经过的路由器数,由发送数据的源主机设置,通常为 32,64,128 等.没经过一个路由器,它的值减 1,直到 0 时该数据报被丢弃.<br>协议:占 8 位,用来说明 IP 层所封装的上层协议类型,如 ICMP( 1 ), IGMP( 2 ), TCP( 6 ), UDP( 17 )等.<br>首部校验和:占 16 位,根据 IP 头部计算得到的校验和码.<br>源 IP 地址,目标 IP 地址:各占 32 位,用来标明发送 IP 数据报文的源主机地址和接收 IP 报文的目标主机地址.</font></p>
+<p><font face="华文中宋" size="3">在任何一台机器上,如果想要访问另一个 IP 地址时,都会先判断,要访问的目标 IP 地址,与当前机器 IP 地址是否在同一个网段内.<br>如果是同一个网段,这就好说了,直接将源地址和目标地址放入到 IP 头中,然后通过 ARP 得到 MAC 地址,将源 MAC 和目标 MAC 放入 MAC 头中,发出去就 OK 了.<br>但是如果不是同一个网段呢,这就需要发往默认网关 Gateway 了.Gateway 的地址一定是和源 IP 地址是同一个网段的,如果不是第一个,就是第二个.比如, 192.168.1.0/24 这个网段,Gateway 一般就是 192.168.1.1/24 或者 192.168.1.2/24.因为网关和源 IP 地址在同一个网段内,所以发给 Gateway 的过程和上面同一个网段的过程是一样的.网关接收到之后,接下来怎么处理就是它自己的事情了.<br>做了上面那么多的铺垫,终于来到了今天想要说的主要内容:网关是怎么将数据跨网段发送出去的.因为在这里面涉及到了 IP 地址和 MAC 地址的变化.</font></p>
+<p><font face="华文中宋" size="3">MAC 地址是在一个局域网内才有效的地址,所以 MAC 地址只要经过网关,就一定会改变,因为经过网关就意味着换了局域网.主要在于 IP 地址是否改变.如果 IP 地址不改变,那我们就将网关称为转发网关;如果 IP 地址改变,则将网关称为 NAT 网关.<br>先来说一下转发网关:<br><img src="/images/2019/transfor.jpg"></font></p>
+<p><font face="华文中宋" size="3">如图,我们能够看到,服务器 A 的 IP 地址为 192.168.1.101/24 ,服务器 B 的 IP 地址为 192.168.4.101/24 ,现在服务器 A 想要访问服务器 B,不在同一个网段内,怎么办呢?肯定要经过网关的,对吧(因为 IP 头和 MAC 头里面的内容太多了,在这里主要写出 MAC 和 IP 内容)<br>此时,服务器 A 会给路由器 A 发送这样的内容:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :服务器 A 的 MAC</span><br><span class="line">目标 MAC : 路由器 A 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.1.101 (即服务器 A 的 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.4.101 (即服务器 B 的 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">路由器 A 接收到内容之后,发现是想访问 192.168.4.0/24 的,根据配置的路由规则,将要发送的内容通过 192.168.2.1 这个口发送出去,发送给路由器 B 的内容是这样的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :路由器 A 的 MAC</span><br><span class="line">目标 MAC : 路由器 B 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.1.101 (即服务器 A 的 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.4.101 (即服务器 B 的 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">路由器 B 接收到了来自路由器 A 的内容,它发现是想访问 192.168.4.0 这个地址,根据配置的路由规则,需要从 192.168.4.1 这个口出去,这样就能发给服务器 B,此时路由器 B 发送的包是这样的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :路由器 B 的 MAC</span><br><span class="line">目标 MAC : 服务器 B 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.1.101 (即服务器 A 的 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.4.101 (即服务器 B 的 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">至此,服务器 A 发送的内容就到达了服务器 B .<br>咱们来总结一下以上内容:在转发网关下,我不 care 其他的,我只知道我要发给哪儿个 IP ,所以在整个过程中,源 IP 和目标 IP 都没有发生改变.</font></p>
+<p><font face="华文中宋" size="3">接下来咱们来说说 NAT 网关.照例,上个图:<br><img src="/images/2019/NAT.jpg"></font></p>
+<p><font face="华文中宋" size="3">有没有发现一个问题,服务器 A 的 IP 地址是 192.168.1.101 ,要访问的服务器 B 的地址也是 192.168.1.101 ,如果只是看 IP 地址的话,是不是饶了一圈发现,这不就是自己访问自己嘛?惊不惊喜.<br>但是实际上服务器 A 在北京,服务器 B 在上海,两个地方有一个相同的 IP 地址罢了.问题就来了,服务器 A 怎么就可以访问到服务器 B 了呢?<br>就像上海人说上海话,北京人说北京话,一个区域内大家都听得懂,但是如果北京人跑到上海去,想要交流怎么办呢?说普通话呗,对不对.在网络中也可以这样做.既然这两个局域网之间没有商量过,各自使用各自的,内部使用的话这都没事儿,但是如果想要在外面也走的开,就需要制定规则.也就是说,路由器 A 和 B 在外网上需要有一个大家都公认的身份.<br>在图中我们能够看到路由器 A 在公网上的身份是 192.168.2.1/24 ,路由器 B 在公网上的身份是 192.168.2.2/24 .有了公认的身份之后,来看看接下来发送的内容:<br>服务器 A 发送给路由器 A 的内容:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :服务器 A 的 MAC</span><br><span class="line">目标 MAC : 路由器 A 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.1.101 (即服务器 A 的 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.2.2 (即路由器 B 的公网 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">路由器 A 接收到内容之后,根据配置的路由规则,通过 192.168.2.1/24 发送给路由器 B ,此时发送的内容为:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :路由器 A 的 MAC</span><br><span class="line">目标 MAC : 路由器 B 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.2.1 (即路由器 A 的公网 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.2.2 (即路由器 B 的公网 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">内容到达路由器 B 之后,根据它的配置规则,发现是想要发送给服务器 B 的,此时:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">源 MAC :路由器 B 的 MAC</span><br><span class="line">目标 MAC : 服务器 B 的 MAC</span><br><span class="line">源 IP : <span class="number">192.168</span>.2.1 (即路由器 A 的公网 IP )</span><br><span class="line">目标 IP : <span class="number">192.168</span>.1.101 (即服务器 B 的公网 IP )</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">至此,服务器 A 发送的内容就到达了服务器 B .<br>咱们来总结一下以上内容:在 NAT 网关下, MAC 地址和 IP 地址都是会改变的. MAC 地址还好理解一些,要发送给谁,那么目标 MAC 地址就是要发送的机器 MAC 地址即可.但是 IP 地址如果是跨网段访问,则都需要通过公网 IP 来进行才可以.</font></p>
+<p><font face="华文中宋" size="3">以上就是想要分享的内容,如果有错误之处,还希望指出哇~<br>感谢您的阅读~</font></p>
 
       
     </div>
@@ -516,12 +489,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
-          
-        </div>
-      
 
       
       
@@ -531,15 +498,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/posts/3671c55b.html" rel="next" title="[数据结构与算法]05 Stack 经典面试题之判断字符串是否合法( Java 版)">
+                <i class="fa fa-chevron-left"></i> [数据结构与算法]05 Stack 经典面试题之判断字符串是否合法( Java 版)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/posts/dfd14d26.html" rel="prev" title="[java]说说 JRE , JDK , JVM 三者之间的区别与联系">
-                [java]说说 JRE , JDK , JVM 三者之间的区别与联系 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
