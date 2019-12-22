@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[数据结构与算法]06 数组( Array )</title>
+      <link href="/posts/99ead990.html"/>
+      <url>/posts/99ead990.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">什么是数组呢?你的脑海中是不是第一反应是这样的:<br><a id="more"></a></font></p><blockquote><p><font face="华文中宋" size="3"> 数组 ( Array )是一种线性表数据结构,它用一组连续的内存空间,来存储一组具有相同类型的数据.</font></p></blockquote><p><font face="华文中宋" size="3">在定义上,咱们来死扣两个概念.</font></p><ul><li><font face="华文中宋" size="3">线性表.<br><font face="华文中宋" size="3">线性线性,就是数据排成像一条线一样的结构,每个线性表上的数据最多只有前和后两个方向.这样看定义的话,除了数组,链表,队列,栈也是线性表结构.</font></font></li><li><font face="华文中宋" size="3">是一组连续的内存空间,存储一组具有相同类型的数据.<br><font face="华文中宋" size="3">这句话能够看出来,对于数组有两个限制:第一空间必须是连续的,第二,数据需要是相同类型的.<br>也就是说,如果内存空间剩余 1MB 但是不是连续的,此时创建数组就会失败;如果数组内存储的不是相同类型的数据,就会报错</font></font></li></ul><h2 id="数组是如何实现”随机访问”的"><a href="#数组是如何实现”随机访问”的" class="headerlink" title="数组是如何实现”随机访问”的"></a><font face="华文中宋" size="3">数组是如何实现”随机访问”的</font></h2><p><font face="华文中宋" size="3">当我们申请创建一个数组时,比如此时我申请一个数组 <code>int[] a = new int[10]</code> ,计算机会给数组 <code>a[10]</code> 分配一块连续内存空间.<br>计算机会给每个内存单元分配一个地址,通过地址来访问内存中的数据.当计算机需要随机访问数组中的某个元素时,它会首先通过下面的寻址公式,来计算出想要访问元素的存储内存地址:</font></p><blockquote><p>a[i]_address = base_address + i * data_type_size</p></blockquote><p><font face="华文中宋" size="3">根据 CPU 的预读机制,存储的数组就有可能被 CPU 全部读入,在 CPU 中进行访问,那个速度你可以想象~</font></p><h2 id="警惕数组越界问题"><a href="#警惕数组越界问题" class="headerlink" title="警惕数组越界问题"></a><font face="华文中宋" size="3">警惕数组越界问题</font></h2><p><font face="华文中宋" size="3">咱们先来看一段 C 语言代码:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>* argv[])</span> </span>&#123; </span><br><span class="line"><span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">for</span>(;i&lt;=<span class="number">3</span>;i++)&#123;</span><br><span class="line">arr[i]=<span class="number">0</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">仔细看,发现问题了嘛?这段代码不会打印 3 行” hello world “,而是会无限打印” hello world “.<br>因为,数组大小为 3 , a[0] , a[1] , a[2] ,实例代码中因为书写错误,导致 for 循环的结束条件错写成了 <code>i&lt;=3</code> ,而不是 <code>i&lt;3</code> ,所以当 <code>i=3</code> 时,会导致数组 <code>a[3]</code> 访问越界.在 C 语言中,只要不是访问受限的内存,那么所有的内存空间都是可以自由访问的.如果 <code>a[3]=0</code> 恰好是 <code>i=0</code> ,循环就会又开始.<br>所以这段代码就陷入了死循环.</font></p><hr><p><font face="华文中宋" size="3">参考:</font></p><ul><li><font face="华文中宋" size="3"> 极客时间&lt;数据结构与算法之美&gt;</font></li></ul><p><font face="华文中宋" size="3">以上,感谢您的阅读(这篇文章确实写得有些仓促了,逃;<br>最后,祝您冬至快乐~</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据结构与算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据结构与算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[碎碎念]不知道该起什么题目的一篇文章</title>
       <link href="/posts/a353dbe7.html"/>
       <url>/posts/a353dbe7.html</url>
