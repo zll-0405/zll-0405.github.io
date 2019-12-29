@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="单链表经典操作,第一个是单链表反转,在这篇文章中已经写过了:[数据结构与算法]04 Link List (链表)及单链表反转实现,第二个是判断链表中是否有环,也就是今天这篇文章想要说的.">
+<meta name="keywords" content="数据结构与算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[数据结构与算法]07 关于单链表环的操作( Java 版)">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/9b14f6f8.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="单链表经典操作,第一个是单链表反转,在这篇文章中已经写过了:[数据结构与算法]04 Link List (链表)及单链表反转实现,第二个是判断链表中是否有环,也就是今天这篇文章想要说的.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2019/有环链表.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2019/入环点.jpg">
+<meta property="og:updated_time" content="2019-12-29T00:54:24.258Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[数据结构与算法]07 关于单链表环的操作( Java 版)">
+<meta name="twitter:description" content="单链表经典操作,第一个是单链表反转,在这篇文章中已经写过了:[数据结构与算法]04 Link List (链表)及单链表反转实现,第二个是判断链表中是否有环,也就是今天这篇文章想要说的.">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2019/有环链表.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/9b14f6f8">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[数据结构与算法]07 关于单链表环的操作( Java 版) | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/9b14f6f8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[数据结构与算法]07 关于单链表环的操作( Java 版)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-29 08:39:33 / 修改时间：08:54:24" itemprop="dateCreated datePublished" datetime="2019-12-29T08:39:33+08:00">2019-12-29</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/9b14f6f8.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/9b14f6f8.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">单链表经典操作,第一个是单链表反转,在这篇文章中已经写过了:<a href="https://www.dynamic-zheng.com/posts/745fa732.html">[数据结构与算法]04 Link List (链表)及单链表反转实现</a>,第二个是判断链表中是否有环,也就是今天这篇文章想要说的.<br><a id="more"></a></font></p>
+<h1 id="判断链表是否有环"><a href="#判断链表是否有环" class="headerlink" title="判断链表是否有环"></a><font face="华文中宋" size="3">判断链表是否有环</font></h1><p><font face="华文中宋" size="3">如图,我们能够清楚看到,这个链表是有环的.<br><img src="/images/2019/有环链表.jpg"></font></p>
+<p><font face="华文中宋" size="3">咱们一起来分析一下</font></p>
+<blockquote>
+<p><font face="华文中宋" size="3">判断链表中是否有环,可以从头结点开始,依次遍历单链表中的每一个节点.每遍历一个节点,就和前面的所有节点作比较,如果发现新节点和之前的某个节点相同,则说明此节点被遍历过两次,说明链表有环,反之就是没有.</font></p>
+</blockquote>
+<p><font face="华文中宋" size="3">但是仔细看一下这种方法,你会发现这种方法很耗时耗力,因为每遍历一个节点,都要把它和前面所有的节点都比较一遍.<br>还有一个很巧妙的方法,就是使用两个指针.</font></p>
+<blockquote>
+<p><font face="华文中宋" size="3">使用两个指针,一个快指针,一个慢指针.<br>快指针每次走 2 步,慢指针每次走 1 步.<br>如果链表中没有环,则快指针会先指向 null<br>如果链表中有环,则快慢指针一定会相遇</font></p>
+</blockquote>
+<p><font face="华文中宋" size="3">基于这个思路,可以使用代码实现:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断链表是否有环</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 郑璐璐</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@datetime</span> 2019-12-28 09:44:41</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IsHasLoop</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> data;</span><br><span class="line">        <span class="keyword">private</span> Node next;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> data,Node next)</span></span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.data=data;</span><br><span class="line">            <span class="keyword">this</span>.next=next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getData</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> data;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 初始化单链表</span></span><br><span class="line">        Node node5=<span class="keyword">new</span> Node(<span class="number">5</span>,<span class="keyword">null</span>);</span><br><span class="line">        Node node4=<span class="keyword">new</span> Node(<span class="number">4</span>,node5);</span><br><span class="line">        Node node3=<span class="keyword">new</span> Node(<span class="number">3</span>,node4);</span><br><span class="line">        Node node2=<span class="keyword">new</span> Node(<span class="number">2</span>,node3);</span><br><span class="line">        Node node1=<span class="keyword">new</span> Node(<span class="number">1</span>,node2);</span><br><span class="line">        <span class="comment">// 让 node5 的指针指向 node1 形成一个环</span></span><br><span class="line">        node5.next=node1;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> flag=isHasLoop(node1);</span><br><span class="line">        System.out.println(flag);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isHasLoop</span><span class="params">(Node list)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (list == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Node slow=list;</span><br><span class="line">        Node fast=list;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (fast.next != <span class="keyword">null</span> &amp;&amp; fast.next.next != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 慢指针走一步,快指针走两步</span></span><br><span class="line">            slow=slow.next;</span><br><span class="line">            fast=fast.next.next;</span><br><span class="line">            <span class="comment">// 如果快慢指针相遇,则说明链表中有环</span></span><br><span class="line">            <span class="keyword">if</span> (slow==fast)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 反之链表中没有环</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="求环长"><a href="#求环长" class="headerlink" title=" 求环长"></a><font face="华文中宋" size="3"> 求环长</font></h1><p><font face="华文中宋" size="3">现在已经将链表中是否有环判断出来了,接下来扩展一下,求环长.</font></p>
+<p><font face="华文中宋" size="3">先理一下整体思路:<br>当快慢指针第一次相遇时,我们可以记录下此时的位置.<br>接下来让慢指针继续走,每次走 1 步,直到走到第一次相遇的地方,此时慢指针走过的长度即为环长<br>基于这样的思路,就可以将代码实现:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getLength</span><span class="params">(Node list)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 定义环长初始值为 0</span></span><br><span class="line">        <span class="keyword">int</span> loopLength=<span class="number">0</span>;</span><br><span class="line">        Node slow=list;</span><br><span class="line">        Node fast=list;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="keyword">null</span> &amp;&amp; fast.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 慢指针走一步,快指针走两步</span></span><br><span class="line">            slow=slow.next;</span><br><span class="line">            fast=fast.next.next;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 第一次相遇时跳出循环</span></span><br><span class="line">            <span class="keyword">if</span> (slow == fast) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果 fast next 指针首先指向 null 指针,说明该链表没有环,则环长为 0</span></span><br><span class="line">        <span class="keyword">if</span>(fast.next == <span class="keyword">null</span> || fast.next.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果有环,使用临时变量保存当前的链表</span></span><br><span class="line">        Node temp = slow;</span><br><span class="line">        <span class="comment">// 让慢指针一直走,直到走到原来位置</span></span><br><span class="line">        <span class="keyword">do</span>&#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            loopLength++;</span><br><span class="line">        &#125; <span class="keyword">while</span>(slow != temp);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> loopLength;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="求入环点"><a href="#求入环点" class="headerlink" title="求入环点"></a><font face="华文中宋" size="3">求入环点</font></h1><p><font face="华文中宋" size="3">求入环点有点儿绕,咱们先来上一张图:<br><img src="/images/2019/入环点.jpg"><br> <font face="华文中宋" size="3">如上图,假设:<br>入环点距离头结点距离为 D<br> 入环点与首次相遇点较短的距离为 S1<br> 入环点与首次相遇点较长的距离为 S2</font></font></p>
+<blockquote>
+<p><font face="华文中宋" size="3"> 当两个指针首次相遇时,慢指针一次只走 1 步,则它所走的距离为: D+S1<br>快指针每次走 2 步,多走了 n(n&gt;=1) 圈,则它所走的距离为: D+S1+n(S1+S2)<br>快指针速度为慢指针的 2 倍,则: 2(D+S1)=D+S1+n(S1+S2)<br>上面等式,整理可得: D=(n-1)(S1+S2)+S2</font></p>
+</blockquote>
+<p><font face="华文中宋" size="3">如果让 (n-1)(S1+S2) 为 0 ,是不是 D 和 S2 就相等了?也就是说,当两个指针第一次相遇时,只要把其中一个指针放回到头结点位置,另外一个指针保持在首次相遇点,接下来两个指针每次都向前走 1 步,接下来这两个指针相遇说,就是要求的入环点.<br>有点儿像做数学题的感觉~<br>基于这样的思路,可以将代码实现:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Node <span class="title">entryNodeOfLoop</span><span class="params">(Node list)</span></span>&#123;</span><br><span class="line">        Node slow=list;</span><br><span class="line">        Node fast=list;</span><br><span class="line">        <span class="keyword">while</span>(fast.next != <span class="keyword">null</span> &amp;&amp; fast.next.next != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 慢指针走一步,快指针走两步</span></span><br><span class="line">            slow=slow.next;</span><br><span class="line">            fast=fast.next.next;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 第一次相遇时跳出循环</span></span><br><span class="line">            <span class="keyword">if</span> (slow == fast) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果 fast next 指针首先指向 null 指针,说明该链表没有环,则入环点为 null</span></span><br><span class="line">        <span class="keyword">if</span> (fast.next == <span class="keyword">null</span> || fast.next.next == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>  <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 第一次相遇之后,让一个指针指向头结点,另外一个指针在相遇位置</span></span><br><span class="line">        <span class="comment">// 两个指针每次走 1 步,相遇为止,此时相遇节点即为入环点</span></span><br><span class="line">        Node head=list; <span class="comment">// 头结点</span></span><br><span class="line">        Node entryNode=slow;    <span class="comment">// 相遇节点</span></span><br><span class="line">        <span class="keyword">while</span> (entryNode != head)&#123;</span><br><span class="line">            entryNode=entryNode.next;</span><br><span class="line">            head=head.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> entryNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <font face="华文中宋" size="3">关于链表的一些操作差不多就是这些了.<br> 其实仔细观察能够看到,不管是求环长,还是找到入环点,最关键的是找到第一次相遇时所在的位置,基于这一点,接下来的问题就比较容易解决.</font></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考:"></a><font face="华文中宋" size="3">参考:</font></h1><p><font face="华文中宋" size="3"> &lt;漫画算法&gt;-程序员小灰<br> 以上,感谢您的阅读~</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"><i class="fa fa-tag"></i> 数据结构与算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/99ead990.html" rel="next" title="[数据结构与算法]06 数组( Array )">
+                <i class="fa fa-chevron-left"></i> [数据结构与算法]06 数组( Array )
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#判断链表是否有环"><span class="nav-number">1.</span> <span class="nav-text">判断链表是否有环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#求环长"><span class="nav-number">2.</span> <span class="nav-text"> 求环长</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#求入环点"><span class="nav-number">3.</span> <span class="nav-text">求入环点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考:</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
