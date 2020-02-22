@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[操作系统]关于 Windows 文件访问方式,你可能真的不是很了解</title>
+      <link href="/posts/34678e11.html"/>
+      <url>/posts/34678e11.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在 Windows 操作系统下,想要访问文件时,一般有以下三种方式:</font></p><ul><li><font face="华文中宋" size="3">不使用文件缓存</font></li><li><font face="华文中宋" size="3">使用文件缓存</font></li><li><font face="华文中宋" size="3">异步模式<a id="more"></a><font face="华文中宋" size="3">动动小脑就应该知道,最常用的是「使用文件缓存」这种方式(好吧,小脑是为了保证身体平衡,不是为了思考;<br>接下来就说说,在 Windows 操作系统下,当我们以「使用文件缓存」这种方式来访问文件时,操作系统所做的事情.</font></font></li></ul><p><font face="华文中宋" size="3">使用文件缓存访问:</font></p><ul><li><font face="华文中宋" size="3">由 Windows 的 Cache Manager 实现对缓存的控制,读取数据时,进行预取<ul><li><font face="华文中宋" size="3">如果 Cache 满了怎么办?<br><font face="华文中宋" size="3">Cache Manager 会根据 LRU ( Least Recently Used ,最近最少使用)原则,来清除一些缓存内容<br>同时还需要定期更新磁盘内容,让磁盘内容和 Cache 中保持一致(通常是 1 秒更新一次)</font></font></li></ul></font></li><li><font face="华文中宋" size="3">Write-back 机制:<ul><li><font face="华文中宋" size="3">在对文件进行访问时,会涉及到对文件的一些修改,这就涉及到了对磁盘写数据<br>此时,我们不直接对磁盘进行更改,而是只更改 Cache 中的内容,然后由 Cache Manager 决定什么时候将用户所做的更新反映到磁盘上<ul><li><font face="华文中宋" size="3">为什么不直接对磁盘进行更改?<br>对任何操作系统来说, I/O 的读写速度永远都是硬伤,如果频繁对磁盘进行 I/O 操作,会使得系统性能降低</font></li></ul></font></li></ul></font></li></ul><p><font face="华文中宋" size="3">画一个图,能够更直观的看到(请忽略我的画图水平):<br><img src="/images/2020/file.jpg"></font></p><p><font face="华文中宋" size="3">如上图,阴影部分表示需要访问的数据.<br>数据在磁盘,系统缓存和进程地址空间有 3 份拷贝,通常情况下用户对数据的修改并不直接反映到磁盘上,而是通过 write-back 机制定期更新到磁盘上.</font></p><p><font face="华文中宋" size="3">为了尽可能提高读取速度,我们应该将要存储的数据,尽量放在同一个柱面上.</font></p><p><font face="华文中宋" size="3">以上,就是想要分享的内容<br>感谢您的阅读~</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 操作系统 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 操作系统 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[操作系统]当双击某程序到它显示运行界面时,操作系统做了什么</title>
       <link href="/posts/e6161cda.html"/>
       <url>/posts/e6161cda.html</url>

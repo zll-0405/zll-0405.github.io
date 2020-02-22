@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-02-15T10:43:31.524Z</updated>
+  <updated>2020-02-22T10:51:40.748Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[操作系统]关于 Windows 文件访问方式,你可能真的不是很了解</title>
+    <link href="https://www.dynamic-zheng.com/posts/34678e11.html"/>
+    <id>https://www.dynamic-zheng.com/posts/34678e11.html</id>
+    <published>2020-02-22T10:49:12.000Z</published>
+    <updated>2020-02-22T10:51:40.748Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在 Windows 操作系统下,想要访问文件时,一般有以下三种方式:</font></p><ul><li><font face="华文中宋" size="3">不使用文件缓存</font></li><li><font face="华文中宋" size="3">使用文件缓存</font></li><li><font face="华文中宋" size="3">异步模式<a id="more"></a><font face="华文中宋" size="3">动动小脑就应该知道,最常用的是「使用文件缓存」这种方式(好吧,小脑是为了保证身体平衡,不是为了思考;<br>接下来就说说,在 Windows 操作系统下,当我们以「使用文件缓存」这种方式来访问文件时,操作系统所做的事情.</font></font></li></ul><p><font face="华文中宋" size="3">使用文件缓存访问:</font></p><ul><li><font face="华文中宋" size="3">由 Windows 的 Cache Manager 实现对缓存的控制,读取数据时,进行预取<ul><li><font face="华文中宋" size="3">如果 Cache 满了怎么办?<br><font face="华文中宋" size="3">Cache Manager 会根据 LRU ( Least Recently Used ,最近最少使用)原则,来清除一些缓存内容<br>同时还需要定期更新磁盘内容,让磁盘内容和 Cache 中保持一致(通常是 1 秒更新一次)</font></font></li></ul></font></li><li><font face="华文中宋" size="3">Write-back 机制:<ul><li><font face="华文中宋" size="3">在对文件进行访问时,会涉及到对文件的一些修改,这就涉及到了对磁盘写数据<br>此时,我们不直接对磁盘进行更改,而是只更改 Cache 中的内容,然后由 Cache Manager 决定什么时候将用户所做的更新反映到磁盘上<ul><li><font face="华文中宋" size="3">为什么不直接对磁盘进行更改?<br>对任何操作系统来说, I/O 的读写速度永远都是硬伤,如果频繁对磁盘进行 I/O 操作,会使得系统性能降低</font></li></ul></font></li></ul></font></li></ul><p><font face="华文中宋" size="3">画一个图,能够更直观的看到(请忽略我的画图水平):<br><img src="/images/2020/file.jpg"></font></p><p><font face="华文中宋" size="3">如上图,阴影部分表示需要访问的数据.<br>数据在磁盘,系统缓存和进程地址空间有 3 份拷贝,通常情况下用户对数据的修改并不直接反映到磁盘上,而是通过 write-back 机制定期更新到磁盘上.</font></p><p><font face="华文中宋" size="3">为了尽可能提高读取速度,我们应该将要存储的数据,尽量放在同一个柱面上.</font></p><p><font face="华文中宋" size="3">以上,就是想要分享的内容<br>感谢您的阅读~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在 Windows 操作系统下,想要访问文件时,一般有以下三种方式:&lt;/font&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;不使用文件缓存&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;使用文件缓存&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;异步模式
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://www.dynamic-zheng.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="https://www.dynamic-zheng.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[操作系统]当双击某程序到它显示运行界面时,操作系统做了什么</title>
     <link href="https://www.dynamic-zheng.com/posts/e6161cda.html"/>
     <id>https://www.dynamic-zheng.com/posts/e6161cda.html</id>
     <published>2020-02-15T10:41:53.000Z</published>
-    <updated>2020-02-15T10:43:31.524Z</updated>
+    <updated>2020-02-15T10:43:44.245Z</updated>
     
     <content type="html"><![CDATA[<p><font face="华文中宋" size="3">继<a href="https://www.dynamic-zheng.com/posts/ebb383b9.html#more">[计算机网络]从页面输入网址,回车到显示内容,这中间到底经历了什么</a>这篇文章之后,我突然发现我对计算机网络的一些知识串了起来,它们对我来说不再是一个个的单独个体.<br>基于这个经验,我再来梳理一下当双击某程序到它显示运行界面时,操作系统做了什么,尝试将操作系统的一些东西,也串起来.<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">假设:我们现在想要让操作系统运行「微信」,那么首先我们会怎么做?</font></p><ul><li><p><font face="华文中宋" size="3"> 1 ,双击微信图标.<br>但是打开一个程序的方式不止一种,不要限制了自己,比如也可以通过命令行键入命令的方式将它打开(不过一般不会这么做吧;<br>当我们双击了微信图标时,就告诉了操作系统,我希望你能帮我运行「微信」</font></p></li><li><p><font face="华文中宋" size="3"> 2 ,此时操作系统接收到请求之后,就去磁盘上找到「微信」程序的相关信息,检测它的类型是不是可执行文件,同时通过程序首部信息确定代码和数据在可执行文件中的位置并且计算出对应的磁盘块地址.</font></p><ul><li><font face="华文中宋" size="3">看完上面的解释,你有疑问嘛?操作系统怎么检测它是不是可执行文件呢?对于 Windows 系统来说,可执行文件是 <a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%A7%BB%E6%A4%8D%E5%8F%AF%E6%89%A7%E8%A1%8C" target="_blank" rel="noopener">PE(Portable Executable)</a>,对于 Linux 系统来说,可执行文件是 <a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E5%9F%B7%E8%A1%8C%E8%88%87%E5%8F%AF%E9%8F%88%E6%8E%A5%E6%A0%BC%E5%BC%8F" target="_blank" rel="noopener">ELF(Executable and Linkable Format)</a>,对于 Mac 系统来说,可执行文件是<a href="https://zh.wikipedia.org/wiki/Mach-O" target="_blank" rel="noopener">Mach-O(Mach Object)</a></font></li></ul></li><li><p><font face="华文中宋" size="3"> 3 ,操作系统做完第 2 步之后,就会创建一个进程,并且将「微信」的可执行文件映射到该进程结构,意思就是,这个进程负责执行「微信」程序.</font></p></li><li><font face="华文中宋" size="3"> 4 ,接下来操作系统会为「微信」程序设置 CPU 上下文环境,此时我们假设这个调度程序选中了「微信」程序,那么操作系统就会跳到程序开始处</font></li><li><font face="华文中宋" size="3"> 5 ,接下来执行「微信」程序的第一条指令.<br>但是它会发生缺页异常.<ul><li><font face="华文中宋" size="3">为什么会发生缺页异常?<br>因为程序在执行时,要将代码和数据读入内存, CPU 才能执行,但此时因为内存中还没有相关数据,进而触发了硬件机制,捕获到缺页异常,将控制权交给操作系统</font></li></ul></font></li><li><font face="华文中宋" size="3"> 6 ,操作系统此时会分配一页物理内存,同时将代码从磁盘读入内存,然后继续执行「微信」程序.<br>如果程序很大,一页内存不够的话,会在执行过程中重复 5,6 步骤,直至将程序全部读入内存为止</font></li><li><font face="华文中宋" size="3"> 7 ,之后,「微信」程序执行相关函数(系统调用),在显示器上显示「微信」图标</font></li><li><font face="华文中宋" size="3"> 8 ,操作系统接收到这个请求,然后找到显示设备,通常显示设备是由一个进程控制的,所以操作系统将要显示的「微信」图标给该进程</font></li><li><font face="华文中宋" size="3"> 9 ,控制设备的进程告诉设备的窗口系统它要显示「微信」图标,窗口系统在确定这是一个合法的操作之后,会将「微信」图标转换成像素,将像素写入设备的存储映像区</font></li><li><font face="华文中宋" size="3"> 10 ,视频硬件将像素转换成显示器可以接收的一组控制数据信号</font></li><li><font face="华文中宋" size="3"> 11 ,显示器解释数据信号,激发液晶屏<br>此时,我们就能够在屏幕上看到「微信」的登录界面.</font></li></ul><p><font face="华文中宋" size="3">至此,当我们双击某个程序,到显示运行界面时,操作系统做的工作我们就比较清楚了.</font></p><p><font face="华文中宋" size="3">这篇文章的灵感来源于:</font></p><p><font face="华文中宋" size="3"><a href="https://www.bilibili.com/video/av9555596?t=4" target="_blank" rel="noopener">操作系统做了什么?</a></font></p><p><font face="华文中宋" size="3">以上,非常感谢您的阅读~</font></p>]]></content>
     
@@ -431,28 +457,6 @@
     
     
       <category term="虚拟机" scheme="https://www.dynamic-zheng.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[计算机网络] HTTPDNS 协议</title>
-    <link href="https://www.dynamic-zheng.com/posts/4e5d330.html"/>
-    <id>https://www.dynamic-zheng.com/posts/4e5d330.html</id>
-    <published>2019-08-25T07:47:07.000Z</published>
-    <updated>2019-08-25T07:50:29.152Z</updated>
-    
-    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在上篇文章中<a href="https://www.dynamic-zheng.com/posts/a43453ce.html">[计算机网络] DNS 协议</a>,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.<br>看起来这种方式无懈可击,但其实也有些问题.<br><a id="more"></a></font></p><h1 id="传统-DNS-存在的问题"><a href="#传统-DNS-存在的问题" class="headerlink" title="传统 DNS 存在的问题"></a><font face="华文中宋" size="3">传统 DNS 存在的问题</font></h1><p><font face="华文中宋" size="3">1 ,域名缓存问题:<br>客户端想要访问一个网址的时候,其实它首先是去看本地的缓存里面有没有这个地址,如果有就直接访问,如果没有才会去询问上级领导.<br>但是这个时候就会有个问题:比如在你上高中的时候,你知道学校旁边有个超好吃的店,后来你再想吃的时候,想都没想,直接去了那家店,结果发现人家关门了,你会不会非常失望?本地缓存也会出现这个问题,有的时候那个地址已经换掉了,但是因为本地缓存中有原来的地址,所以不会向上一级询问,将你导向原来的地址,结果就是访问不到界面,由此带来的用户体验不是很好.<br>还有个问题:假设我在北京海淀区,淘宝的应用因为某种原因没有在海淀区设置数据中心,然后我访问的时候,一直都是将我的访问请求发送到朝阳区.后来呢,淘宝在海淀区增加了数据中心,但是当我访问的时候,本地缓存依旧会将我的请求,导向到朝阳区那边,这样造成的结果就是: 1 ,对于客户来说,让他绕远路了.明明一个区域就可以解决的事情,偏偏要跨区域.就像明明在这里可以买到东西,偏偏让你跑到另外的地方去买,你开心嘛? 2 ,对于商家来说,也就是淘宝,我设置了新的数据中心,结果呢,客户的请求没能到这里,那我还费钱费力的去做这件事干嘛?又没有提高用户的体验,对不对.</font></p><p><font face="华文中宋" size="3">2 ,出口 NAT 问题:<br>在网关那里,很多机房都会在出口配置 NAT ( Network Address Translation ),即:网络地址转换.<br>也就是说,从这个网关出去的包,都会换成新的 IP 地址,当请求返回的时候,在网关这里,再将 IP 地址转换回去,这样造成的结果就是,权威的 DNS 服务器,没办法通过这个地址,来判断用户到底是来自哪个运营商,而且极有可能因为误判运营商,导致跨运营商访问,从而导致网速极慢.</font></p><p><font face="华文中宋" size="3">3 ,解析延迟问题:<br>DNS 的查询过程,需要递归遍历多个 DNS 服务器,才能得到最终的解析结果,这会带来一定的时延,甚至是解析超时.</font></p><h1 id="HTTPDNS-的工作模式"><a href="#HTTPDNS-的工作模式" class="headerlink" title="HTTPDNS 的工作模式"></a><font face="华文中宋" size="3">HTTPDNS 的工作模式</font></h1><p><font face="华文中宋" size="3">DNS 解析有很多问题,那怎么办呢?再回到最初的起点:直接 IP 地址?显然不合适啊.<br>这就引出了 HTTPDNS .说白了就是,它不走传统的 DNS 解析,而是走自己搭建基于 HTTP 协议的 DNS 服务器集群.这些集群分布在多个地点,当客户端需要 DNS 解析的时候,直接通过 HTTP 协议进行请求这个服务器集群,就可以得到最近的地址.<br>这样做就相当于每个客户端都是基于 HTTP 协议的,自己实现自己的域名解析,自己做一个自己专属的地址簿,而不是使用统一的地址簿.但是默认的域名解析都是走 DNS ,所以如果想要使用 HTTPDNS 的话,就需要绕过默认的 DNS 路径,这样就不能使用默认的客户端.<br>使用 HTTPDNS 的,一般都是手机应用,所以只需要在手机端嵌入支持 HTTPDNS 的客户端 SDK 就 OK 了.这样就可以通过自己的 HTTPDNS 服务器和相关的 SDK ,实现了从依赖别人,到自己上网查询,自己想去哪儿去哪儿,想干什么干什么,岂不是快哉~<br>HTTPDNS 工作模式具体可以描述如下:当手机要访问一个地址的时候,我会先看本地缓存里面有没有,如果有就直接访问,这个缓存是手机应用自己做的,至于如何更新,何时更新,那是手机应用的客户端的事情;如果没有的话呢,就需要请求 HTTPDNS 服务器,在本地 HTTPDNS 服务器的 IP 列表中,选择一个发出 HTTP 的请求,会返回一个要访问的网站的 IP 列表.因为是直接的 HTTP 通信,所以 HTTPDNS 服务器能够准确知道这些信息,所以可以做到精准的全局负载均衡.</font></p><p><font face="华文中宋" size="3">写到这里,这篇文章想要表达的是两点:<br>1 ,传统的 DNS 有很多问题:比如域名缓存问题,出口 NAT 问题,解析延迟问题<br>2 ,为了解决上述问题, HTTPDNS 通过客户端 SDK 和服务端,通过 HTTP 的形式,直接调用解析 DNS 的方式,绕过了传统的 DNS 的这些缺点,从而实现了智能的调度.</font></p><p><font face="华文中宋" size="3">以上是学的极客时间上&lt;趣谈网络协议&gt;这门课程,我已经感觉自己的脑袋有些大了…还有一些内容,我先自己慢慢消化一下…<br>感谢您的阅读~</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在上篇文章中&lt;a href=&quot;https://www.dynamic-zheng.com/posts/a43453ce.html&quot;&gt;[计算机网络] DNS 协议&lt;/a&gt;,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.&lt;br&gt;看起来这种方式无懈可击,但其实也有些问题.&lt;br&gt;
-    
-    </summary>
-    
-      <category term="计算机网络" scheme="https://www.dynamic-zheng.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="HTTPDNS" scheme="https://www.dynamic-zheng.com/tags/HTTPDNS/"/>
     
   </entry>
   
