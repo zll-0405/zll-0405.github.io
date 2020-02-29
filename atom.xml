@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-02-29T02:42:25.948Z</updated>
+  <updated>2020-02-29T08:12:56.790Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[数据结构与算法]10 直接插入排序( Java 版)</title>
+    <link href="https://www.dynamic-zheng.com/posts/df2b73be.html"/>
+    <id>https://www.dynamic-zheng.com/posts/df2b73be.html</id>
+    <published>2020-02-29T08:12:08.000Z</published>
+    <updated>2020-02-29T08:12:56.790Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">直接插入排序,当你看到这几个字的时候,首先第一想法是什么?<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">我第一想法是在我斗地主的时候,比如我的牌是 5,J,K 下一张牌是 8 ,那我就直接把它放在 5 和 J 之间,此时手里面的牌就是 5,8,J,K 再来一张牌是 4 ,那就放在最前面,此时是 4,5,8,J,K 又来一张牌是 10 ,那就直接把它放在 8 和 J 之间,就是 5,8,10,J,K .(原谅我有点儿强迫症,一定要把牌从大到小码好才觉得顺眼)<br>发现规律了嘛?在我手里面的牌是有序的,没有在我手里面的牌则是无序的,然后我一张一张的从无序的牌里面抽出来,然后和我手里面的牌进行比较,看看抽到的这张牌将它放在哪个位置比较好.<br>如果找到了合适的位置,就直接插入进去就可以了.<br>上面的这个过程,就是直接插入排序的体现.</font></p><p><font face="华文中宋" size="3">上面的描述比较口语化,咱们用术语来说一下原理(显得我比较有文化,哈哈哈):</font></p><ul><li><font face="华文中宋" size="3">将 n 个待排序的元素看成是一个有序表和无序表</font></li><li><font face="华文中宋" size="3">每次从无序表中取出第一个元素,把它插入到有序表的合适位置,使得有序表从整体来看依然有序.</font></li><li><font face="华文中宋" size="3">第一趟比较前两个数,然后把第二个数按照大小插入到有序表中;第二趟将第三个数据与前面两个数据进行比较,将第三个数据插入到有序表合适的位置中</font></li><li><font face="华文中宋" size="3">按照这样的步骤依次进行下去,进行了 n-1 趟扫描以后,就整个待排序列排好了.</font></li></ul><p><font face="华文中宋" size="3">从上面的步骤中,应该能够体会到,直接插入排序有两层嵌套循环.<br>第一层是外循环,标识待比较的数值,也就是从无序表中取出来的那个值.<br>第二层是内循环,是为了确定从无序表中取出的值的最终位置.<br>但是外循环是从第二个数开始比较的,因为直接插入排序是将待比较的数值与它的前一个数值进行比较,如果没有前一个数值,也就没有直接插入排序这一说.</font></p><p><font face="华文中宋" size="3">OK ,理论知识补充完毕了,咱们来看看代码上是如何实现的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 直接插入排序代码实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 郑璐璐</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020-1-25 11:39:13</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StraightInsert</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">StraightInsert</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 定义变量</span></span><br><span class="line">        <span class="keyword">int</span> i , j , insertNote;</span><br><span class="line">        <span class="comment">// 从数组的第二个元素开始循环,将数组中的元素插入</span></span><br><span class="line">        <span class="keyword">for</span> (i=<span class="number">1</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">            <span class="comment">// 第一次循环,假设第 2 个元素为要插入的元素</span></span><br><span class="line">            insertNote = arr[i];</span><br><span class="line">            j = i - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (j&gt;=<span class="number">0</span> &amp;&amp; insertNote &lt; arr[j])&#123;</span><br><span class="line">                <span class="comment">// 如果要插入的元素小于第 j 个元素,就将第 j 个元素向后移动</span></span><br><span class="line">                arr[j+<span class="number">1</span>] = arr[j];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 要插入的元素大于第 j 个元素时,将要插入的数据插入到数组中</span></span><br><span class="line">            arr[j+<span class="number">1</span>] = insertNote;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr =&#123;<span class="number">1</span>,<span class="number">8</span>,<span class="number">95</span>,<span class="number">45</span>,<span class="number">78</span>,<span class="number">56</span>,<span class="number">23</span>,<span class="number">456</span>,<span class="number">741</span>,<span class="number">16</span>&#125;;</span><br><span class="line"></span><br><span class="line">        StraightInsert(arr);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : arr) &#123;</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">以上,就是想要分享的内容啦~<br>感谢您的阅读哇<br>有什么更好的实现方法更欢迎评论区交流~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;直接插入排序,当你看到这几个字的时候,首先第一想法是什么?&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>[数据结构与算法]09 冒泡排序( Java 版)</title>
@@ -435,28 +457,6 @@
     
     
       <category term="计算机网络" scheme="https://www.dynamic-zheng.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[碎碎念]总结一下最近在做的事情</title>
-    <link href="https://www.dynamic-zheng.com/posts/a3f84cce.html"/>
-    <id>https://www.dynamic-zheng.com/posts/a3f84cce.html</id>
-    <published>2019-09-13T13:39:14.000Z</published>
-    <updated>2019-09-13T13:40:09.366Z</updated>
-    
-    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">最近更新频率特别低,我能感受到.因为技术方面的输入比较少了,所以不知道该输出什么有干货的内容给大家.<br>那我就说一下最近在做的几件事情吧,希望这其中的碎碎念,也能给你一些启发.<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">1 ,转到项目管理.<br>项目管理对于当下的我来说,挑战特别大.<br>刚被提拔上来的时候,我是很懵逼的,我不知道这件事情到底是不是该我负责,这件事情到底需不需要我去做,不像以前只管开发就行了,上面分配什么我就去做什么就 OK 了.很多事情都需要我去思考,需要我不断的去问为什么,不断的去逼近问题的本质.<br>在这个过程中,慢慢对敏捷开发有了一些认识.刚开始提出来的时候,整个人对流程都是很懵的,到现在对整个流程的熟悉让我有了一种上手的感觉.<br>我开始知道从哪儿能够跟踪到整个团队的进度,知道之所以出现这样的问题是哪儿个环节没有做好,下次要怎么改正,开始能够发现到问题.<br>这段经历,对我来说真的是一个转变,让我不再沉迷于技术,而是抬起头来也看了看天空.<br>当然了,技术还是目前我所需要沉淀的,后期技术深度和广度的涉猎内容,会再提上日程.<br>生命不息,学习不止~</font></p><p><font face="华文中宋" size="3">2 ,准备自考毕设.<br>这是我最近比较头疼的一件事.我对 PB 是很不熟的那种,平时因为各种事情一直在拖,直到现在不能再拖延了,才开始动手. 20 号就要开始答辩,而自己还没怎么做,内心慌得一批.<br>可能是因为自己的运气比较好,每次遇到事情的时候,都有人出来帮助我.超级感谢颖娟,自考毕设的事情,她的功劳占据 70% ,很感谢身边的朋友一直都是这样,无私不求回报的帮助我.<br>这段时间,紧赶慢赶总算是在今天把论文初稿定出来了,邮寄给了自考负责的老师,现在就是等老师的批改意见,然后再进行修改什么的,就等着答辩就 OK 了.<br>等自考答辩完毕之后,准备自学考试.用我朋友的话说就是:我不是在考试,就是在考试的路上.</font></p><p><font face="华文中宋" size="3">3 ,尝试的一些其他事情.<br>对于一个技术人来说,最怕的就是沉迷于自己的技术世界,还不自知.我一直都深知这一点,所以也在尝试不同的事情.<br>第一就是读书.<br>在读各种书籍,刚去看了一下,电子书 + 实体书一共看了 30+ 本书了.今年打算看至少 50 本书的,目前来看这个目标今年达成是没什么问题的.<br>读的书籍很杂,有关于个人发展的,有关于管理方面的,有心理学方面的,最喜欢东野圭吾先生的书,每次读都沉进去出不来.<br>第二就是在尝试打破自己的交际圈.<br>因为身边人都是技术型人才,在一个圈里面,眼光视野难免有所局限,我在逐渐打破自己的交际圈.<br>也算是比较幸运,认识了几位比较厉害的大佬.具体多厉害我就不说了,就是由这件事让我知道,很多东西只要我想去尝试,那么我就能够达到自己的期望,而且如果再积极主动一些,一般都能做得更好一些.<br>第三就是开眼.<br>一个人想要尝试副业赚钱的前提是,知道自己的独特优势.<br>我还不知道,所以目前在看各种赚钱案例,在研究各位巨人是怎么一步步定位自己的.<br>开眼这件事,非常重要,接触不同的人之后,你会知道原来还能这样玩,原来还可以这么去做,还能从这个角度去想.<br>不断的去打破自己的思维局限,不断的挑战自己的认知,是一件很有趣的事情.<br>目前还是在开眼阶段,因为对各种赚钱案例看的还不够多,研究的还不是很深入,等我厚积的差不多了,我就要开始薄发了.</font></p><p><font face="华文中宋" size="3">以上就是最近在折腾的一些事情.<br>一句话,和大家共勉:要记住每个对你好的人,因为他们本可以不这么做的.<br>我几乎每天都会这样去提醒自己,所以每天对我来说都很惊喜.<br>最后,祝大家中秋快乐啊~(这篇碎碎念又有点儿长了,感谢你看到这里)</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;最近更新频率特别低,我能感受到.因为技术方面的输入比较少了,所以不知道该输出什么有干货的内容给大家.&lt;br&gt;那我就说一下最近在做的几件事情吧,希望这其中的碎碎念,也能给你一些启发.&lt;br&gt;
-    
-    </summary>
-    
-      <category term="碎碎念" scheme="https://www.dynamic-zheng.com/categories/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
-    
-    
-      <category term="碎碎念" scheme="https://www.dynamic-zheng.com/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
     
   </entry>
   

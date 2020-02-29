@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[数据结构与算法]10 直接插入排序( Java 版)</title>
+      <link href="/posts/df2b73be.html"/>
+      <url>/posts/df2b73be.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">直接插入排序,当你看到这几个字的时候,首先第一想法是什么?<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">我第一想法是在我斗地主的时候,比如我的牌是 5,J,K 下一张牌是 8 ,那我就直接把它放在 5 和 J 之间,此时手里面的牌就是 5,8,J,K 再来一张牌是 4 ,那就放在最前面,此时是 4,5,8,J,K 又来一张牌是 10 ,那就直接把它放在 8 和 J 之间,就是 5,8,10,J,K .(原谅我有点儿强迫症,一定要把牌从大到小码好才觉得顺眼)<br>发现规律了嘛?在我手里面的牌是有序的,没有在我手里面的牌则是无序的,然后我一张一张的从无序的牌里面抽出来,然后和我手里面的牌进行比较,看看抽到的这张牌将它放在哪个位置比较好.<br>如果找到了合适的位置,就直接插入进去就可以了.<br>上面的这个过程,就是直接插入排序的体现.</font></p><p><font face="华文中宋" size="3">上面的描述比较口语化,咱们用术语来说一下原理(显得我比较有文化,哈哈哈):</font></p><ul><li><font face="华文中宋" size="3">将 n 个待排序的元素看成是一个有序表和无序表</font></li><li><font face="华文中宋" size="3">每次从无序表中取出第一个元素,把它插入到有序表的合适位置,使得有序表从整体来看依然有序.</font></li><li><font face="华文中宋" size="3">第一趟比较前两个数,然后把第二个数按照大小插入到有序表中;第二趟将第三个数据与前面两个数据进行比较,将第三个数据插入到有序表合适的位置中</font></li><li><font face="华文中宋" size="3">按照这样的步骤依次进行下去,进行了 n-1 趟扫描以后,就整个待排序列排好了.</font></li></ul><p><font face="华文中宋" size="3">从上面的步骤中,应该能够体会到,直接插入排序有两层嵌套循环.<br>第一层是外循环,标识待比较的数值,也就是从无序表中取出来的那个值.<br>第二层是内循环,是为了确定从无序表中取出的值的最终位置.<br>但是外循环是从第二个数开始比较的,因为直接插入排序是将待比较的数值与它的前一个数值进行比较,如果没有前一个数值,也就没有直接插入排序这一说.</font></p><p><font face="华文中宋" size="3">OK ,理论知识补充完毕了,咱们来看看代码上是如何实现的:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 直接插入排序代码实现</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 郑璐璐</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020-1-25 11:39:13</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StraightInsert</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">StraightInsert</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 定义变量</span></span><br><span class="line">        <span class="keyword">int</span> i , j , insertNote;</span><br><span class="line">        <span class="comment">// 从数组的第二个元素开始循环,将数组中的元素插入</span></span><br><span class="line">        <span class="keyword">for</span> (i=<span class="number">1</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">            <span class="comment">// 第一次循环,假设第 2 个元素为要插入的元素</span></span><br><span class="line">            insertNote = arr[i];</span><br><span class="line">            j = i - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span> (j&gt;=<span class="number">0</span> &amp;&amp; insertNote &lt; arr[j])&#123;</span><br><span class="line">                <span class="comment">// 如果要插入的元素小于第 j 个元素,就将第 j 个元素向后移动</span></span><br><span class="line">                arr[j+<span class="number">1</span>] = arr[j];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 要插入的元素大于第 j 个元素时,将要插入的数据插入到数组中</span></span><br><span class="line">            arr[j+<span class="number">1</span>] = insertNote;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr =&#123;<span class="number">1</span>,<span class="number">8</span>,<span class="number">95</span>,<span class="number">45</span>,<span class="number">78</span>,<span class="number">56</span>,<span class="number">23</span>,<span class="number">456</span>,<span class="number">741</span>,<span class="number">16</span>&#125;;</span><br><span class="line"></span><br><span class="line">        StraightInsert(arr);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : arr) &#123;</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">以上,就是想要分享的内容啦~<br>感谢您的阅读哇<br>有什么更好的实现方法更欢迎评论区交流~</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据结构与算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据结构与算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[数据结构与算法]09 冒泡排序( Java 版)</title>
       <link href="/posts/9e1c66c3.html"/>
       <url>/posts/9e1c66c3.html</url>
