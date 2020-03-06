@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[工具集]介绍一波我常用的小工具</title>
+      <link href="/posts/22ced40a.html"/>
+      <url>/posts/22ced40a.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">和很多人交流之后,我发现很多我以为大家都知道的小工具,到最后只是我以为.<br>既然这样,这篇文章就分享一波~<br><a id="more"></a><br>如果你那里也有好的小工具,欢迎评论区交流<br>毕竟,你有一个苹果,我有一个梨,咱俩一交流,就有了两种水果可以吃,哈哈哈</font></p><h1 id="技术"><a href="#技术" class="headerlink" title="技术."></a><font face="华文中宋" size="3">技术.</font></h1><p><font face="华文中宋" size="3">技术上,我喜欢有事没事逛逛 github ,这应该是程序员/程序媛们的标配吧?<br>上面开源的项目,很多质量都非常高,能够从里面学习到很多东西.给个传送门:  <a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a><br>还有个网站: <a href="https://stackoverflow.com" target="_blank" rel="noopener">stackoverflow</a></font></p><p><font face="华文中宋" size="3">站在巨人的肩膀上,能够走得更快.<br>在编程这个道路上,我特别佩服耗子叔,所以常常有事没事就刷他的网站.<br>每次觉得迷茫了,不知道要做什么了,就去刷一刷大佬的网站,然后收获就很多: <a href="https://coolshell.cn/" target="_blank" rel="noopener">酷 壳 – CoolShell</a></font></p><p><font face="华文中宋" size="3">在学习上,肯定也少不了理论的补充,我喜欢去极客时间: <a href="https://time.geekbang.org/" target="_blank" rel="noopener">极客时间</a></font></p><p><font face="华文中宋" size="3">在写博客的时候,很多情况下都需要画图,而且是很好看的那种,这个时候推荐 ProcessOn : <a href="https://www.processon.com/;jsessionid=198BBBBCD99C1191E9265342EA9F1D95.jvm1" target="_blank" rel="noopener">ProcessOn</a> ,支持将文件导出,也是很方便</font></p><h1 id="提升认知"><a href="#提升认知" class="headerlink" title="提升认知"></a><font face="华文中宋" size="3">提升认知</font></h1><p><font face="华文中宋" size="3">想要提升认知,读书是必不可少的,给一份书单: <a href="https://www.douban.com/note/686630327/" target="_blank" rel="noopener">北京地铁书单：理想的地铁是图书馆的模样（396种+持续更新）</a><br>现在微信读书上面的书籍是挺多的了,特别是出了网页版,很方便,抱个电脑,一天的阅读就都有了: <a href="https://weread.qq.com/" target="_blank" rel="noopener">微信读书</a><br>如果微信读书上没有,也可以来这里搜书看看有没有: <a href="https://obook.cc/" target="_blank" rel="noopener">偶书</a><br>可以这么说,微信读书 + NeatReader 覆盖了我 90% 的阅读需求. NeatReader 是一个 epub 阅读器,花钱买个终身会员,在任何平台都可以看自己存储的书籍,爽的一批,你可以尝试一下</font></p><p><font face="华文中宋" size="3">读完书之后,不能只是读完书对吧?最好还能写写读后感,我比较喜欢用 Notion 来做记录,但是 Notion 对新手很不友好,很多功能都需要你自己去尝试,而且吧,还需要 google 账号,如果你没有 google 账号的话,也不知道怎么注册,那我还是建议你忽略这个推荐好了,因为没有 google 账号也不知道怎么注册,我觉得大概率都是懒得摸索,那这个网站大概率你也不会怎么探索.<br>既然推荐了,还是给个传送门: <a href="https://www.notion.so/?r=a4ce1b04924f4686824c5492db62a3b2" target="_blank" rel="noopener">Notion</a><br>给大家看一下 Notion 界面,我喜欢黑色,酷酷的~<br><img src="/images/2020/notion.jpg"></font></p><p><font face="华文中宋" size="3">最后推荐一位跨境电商的大佬博客: <a href="http://www.guxiaobei.com/history-articles.html" target="_blank" rel="noopener">顾小北的 B2C 博客</a><br>看这个博客,能让你增长很多见识.真的,程序员/程序媛别限制自己.<br>至于这位大佬多厉害呢:大学毕业就已经挣够了百万,现在已经挣够 1 个亿了,重点是,他还年轻啊!!!羡慕的一批<br>所以没事多看看大佬的文章,多瞅瞅人家的思维模式,收获颇丰.</font></p><h1 id="chrome-常用插件"><a href="#chrome-常用插件" class="headerlink" title=" chrome 常用插件"></a><font face="华文中宋" size="3"> chrome 常用插件</font></h1><p><font face="华文中宋" size="3">chrome 插件有很多,但是我这里只推荐 6 个.<br><img src="/images/2020/chrome插件.jpg"></font></p><p><font face="华文中宋" size="3">第一个插件就不用多说了,安装上之后,界面清爽了很多.<br>第二个插件是清空访问网站记录的,我这个人有强迫症,每次浏览器关闭之前,都会将访问的历史记录清空一下,有了这个插件,一键搞定.<br>第三个插件是一个非常漂亮的标签页<br>第四个 + 第六个插件,是在 github 上用的.<br>第五个插件是为了保存网页,不知道你有没有这样一个痛点:我在手机上发现了一个好网站,也想在电脑上访问;同样我在电脑上发现了一个好的网站,也想在手机上访问,这个插件就可以完美解决以上困境.发现一个好的网站,直接鼠标右键将网站保存到这里,然后手机上也装上这个软件就可以在手机上也访问了.</font></p><h1 id="windows-系统下常用插件"><a href="#windows-系统下常用插件" class="headerlink" title="windows 系统下常用插件"></a><font face="华文中宋" size="3">windows 系统下常用插件</font></h1><p><font face="华文中宋" size="3">每次我的电脑重装系统之后,第一件事情就是把下面这 4 个软件装上,要不然会觉得不舒服.<br><img src="/images/2020/windows小工具.jpg"></font></p><p><font face="华文中宋" size="3">第一个软件是 WGestures ,这个软件是鼠标手势.复制粘贴你还在用 Ctrl + c/v 嘛? out 啦~用这个插件,只需要鼠标右键操作即可.<br>还有一点是我常用的:比如和别人聊天,突然发过来一个名字我不知道,想搜索怎么办?你是不是需要打开浏览器,然后输入关键字回车?使用这个软件的话,直接鼠标右键就可以搞定!<br>还有很多很强大的功能,在这里就不多做介绍了,读者可以自行尝试~<br>来个传送门: <a href="http://www.yingdev.com/projects/wgestures" target="_blank" rel="noopener">WGestures 全局鼠标手势</a></font></p><p><font face="华文中宋" size="3">第二个软件是 Listary .<br>这个软件以前写过一篇文章,我就不详细介绍了: <a href="https://blog.csdn.net/zll_0405/article/details/77815032" target="_blank" rel="noopener">Listary 的使用</a></font></p><p><font face="华文中宋" size="3">第三个软件是 Snipaste .这个是一个截图软件.<br>看到这里你可能会说,截图我用微信或者 QQ 截图就可以呀.但是这个截图软件有一个很特殊的功能: 贴图.<br>在码代码的时候,你有没有一种冲动,想把这几行代码固定在屏幕上不动,和正常的代码对比着看,瞅瞅到底哪里有错误.那么,这个软件可能是你需要的.<br>最重要的是,很方便,直接 F1 就将程序调用出来.<br>同样,来个传送门: <a href="https://zh.snipaste.com/" target="_blank" rel="noopener">Snipaste</a></font></p><p><font face="华文中宋" size="3">第四个软件,你熟悉的话就知道怎么用,不熟悉的话,我也就不介绍了.</font></p><p><font face="华文中宋" size="3">以上,就是我比较常用的各种网站 + 软件 + 小工具,是我压箱底的分享了.<br>不知道你有没有想和我分享的?<br>感谢您的阅读哇~</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具集 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工具集 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[数据结构与算法]10 直接插入排序( Java 版)</title>
       <link href="/posts/df2b73be.html"/>
       <url>/posts/df2b73be.html</url>
