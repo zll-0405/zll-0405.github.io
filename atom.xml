@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-03-28T10:55:00.692Z</updated>
+  <updated>2020-04-05T02:47:26.137Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[数据结构与算法]14 搞不懂线性结构,非线性结构?</title>
+    <link href="https://www.dynamic-zheng.com/posts/d42777bf.html"/>
+    <id>https://www.dynamic-zheng.com/posts/d42777bf.html</id>
+    <published>2020-04-05T02:46:43.000Z</published>
+    <updated>2020-04-05T02:47:26.137Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在前面文章中介绍的数组,栈,队列这种都是线性结构,在接下来的文章中,会介绍图,这是一种非线性结构.<br>朋友,你是不是一脸问号?啥是线性结构,什么又是非线性结构呢?我怎么区别这两者呢.<br>别慌,一点点来看.<br><a id="more"></a></font></p><h1 id="线性结构"><a href="#线性结构" class="headerlink" title="线性结构"></a><font face="华文中宋" size="3">线性结构</font></h1><p><font face="华文中宋" size="3">我在学习知识的时候,喜欢和以前的知识联系起来.<br>线性结构,我就想到了在学数学的时候,常说的线性相关,或者说这两个变量之间呈线性关系.<br>那么,在数学的定义上,什么是线性关系呢?<br>我就直接把维基百科的定义搬过来了,链接在这儿: <a href="https://zh.wikipedia.org/wiki/%E7%B7%9A%E6%80%A7%E9%97%9C%E4%BF%82" target="_blank" rel="noopener">线性关系</a></font></p><blockquote><p><font face="华文中宋" size="3"> 在现代学术界中，线性关系一词存在 2 种不同的含义。其一，若某数学函数或数量关系的函数图形呈现为一条直线或线段，那么这种关系就是一种线性的关系。其二，在代数学和数学分析学中，如果一种运算同时满足特定的“加性”和“齐性”，则称这种运算是线性的。</font></p></blockquote><p><font face="华文中宋" size="3">咱们着重看第一个含义,和数学上面的定义差不多,大概意思就是 y 和 x 的关系在图中表示为一条直线或线段,比如 y=x ,那么这种关系我们就可以称之为是线性关系.<br>OK ,那 y=x 有什么特殊之处呢?是不是每一个 x 的取值,都唯一对应一个 y 值?<br>Nice !能够想到这一点,就触及到了线性结构的本质,即:数据元素之间存在着”一对一”的线性关系的数据结构就称为 线性结构.</font></p><p><font face="华文中宋" size="3">了解本质之后,咱们应该就很好理解了,像: 线性表,栈,队列,双队列 这种都是线性结构.</font></p><h1 id="非线性结构"><a href="#非线性结构" class="headerlink" title="非线性结构"></a><font face="华文中宋" size="3">非线性结构</font></h1><p><font face="华文中宋" size="3">在了解线性结构之后,再来理解非线性结构就好说了.<br>既然线性结构是一对一的关系,那么非线性结构就存在不是一对一的关系了呗,比如一对多?<br>恭喜你,答对了!<br>那么我们常见的: 二维数组,多维数组,树,图 就都是非线性结构了.</font></p><p><font face="华文中宋" size="3">以上就是想要分享的内容了<br>最近感觉自己写文章遇到了瓶颈一般,总是觉得没有写出自己想要的效果<br>关于我的文章,欢迎各位留言和我交流哇</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在前面文章中介绍的数组,栈,队列这种都是线性结构,在接下来的文章中,会介绍图,这是一种非线性结构.&lt;br&gt;朋友,你是不是一脸问号?啥是线性结构,什么又是非线性结构呢?我怎么区别这两者呢.&lt;br&gt;别慌,一点点来看.&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>[数据结构与算法]13 再来谈散列表</title>
@@ -428,28 +450,6 @@
     <summary type="html">
     
       &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;学习数据结构与算法的时候,避不开的一个知识点就是:时间复杂度和空间复杂度分析.&lt;br&gt;
-    
-    </summary>
-    
-      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[数据结构与算法]02 什么是数据结构与算法以及我该怎么学</title>
-    <link href="https://www.dynamic-zheng.com/posts/c30d995b.html"/>
-    <id>https://www.dynamic-zheng.com/posts/c30d995b.html</id>
-    <published>2019-10-27T12:35:14.000Z</published>
-    <updated>2019-10-27T12:36:43.559Z</updated>
-    
-    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">什么是数据结构与算法呢?<br>当你看到这个问题的时候,你脑海中的第一反应是什么?<br><a id="more"></a></font></p><blockquote><p>数据结构就是指一组数据的存储结构,算法是操作数据的一组方法.</p></blockquote><p><font face="华文中宋" size="3">这样的答案是不是让你觉得,我去,这么抽象,所以算法是什么,数据结构是什么?还是一脸懵逼.<br>小时候我的问题可多了,总是问我母上大人,妈妈这个字念什么,那个字念什么.母上大人后来被我烦的不行,索性给了我一本&lt;新华字典&gt;,教我怎么查,从那儿以后再也没烦过她了.</font></p><p><font face="华文中宋" size="3">为什么要说这个事情,因为我觉得这就是一个解释什么是数据结构,什么是算法的例子.新华字典是按照字母的顺序来给汉字进行编号,那么厚的一本字典就是「汉字」的存储结构.接下来我有个字知道它的拼音,但是我不知道它念几声哇,怎么办呢?一种方法是:根据字母顺序定位,然后开始找;另外一种方法是:根据偏旁部首来找到这个字,然后再看看它在几页,定位过去.为了查找这个汉字,所采用的方法,就是常说的算法.</font></p><p><font face="华文中宋" size="3">你有没有发现,只要说数据结构,就一定提到算法,或者提到算法的时候,就会说到数据结构.为什么呢?<br>因为数据结构和算法是相辅相成的,数据结构是为算法服务的,算法主要作用在特定的数据结构之上,如果单独讲,没有什么意义,或者说意义不大.</font></p><p><font face="华文中宋" size="3">现在,我知道了学好数据结构和算法很重要了,但是我该怎么学呢?<br>我现在也是在摸索阶段,根据自己的经验来说说.</font></p><p><font face="华文中宋" size="3">第一,要学会站在巨人的肩膀上.<br>当你打开图灵图书的时候,你会发现这么一句话「站在巨人的肩膀上」,那么好的位置,如果用来放广告,会给它带来多少的效益啊,但是编辑没有这么做,反而是放了这样一句话,说明什么?说明这句话,特别值钱.<br>所以能从这句话里面学到什么?<br>站在巨人的肩膀上,能够少走很多弯路.现在互联网这么发达,只要你想学,课程一大堆,找一个好的课程踏踏实实的从头到尾学一遍,如果你对「知识付费」不排斥的话,我推荐极客时间上的「数据结构与算法之美」这个课程,我也在学习这门课程,给我的帮助很大.如果对付费比较排斥的话,我觉得大学计算机课程上的「数据结构导论」这本书吃透也差不多,不过我看的那个版本的是 C 语言的,对新手可能不太友好.</font></p><p><font face="华文中宋" size="3">第二,就是要多写,多练.<br>展示你实力的从来都是 no BB , show code .<br>想要学好算法也是这样,别说太多,干就完了.<br>一定要多写.前一段时间为了准备考试,把课本上的例子,用各种算法都手写了一遍,冒泡的话,这些顺序是怎么动的,快速排序的话又是如何变化的.<br>我觉得一定要用手写写画画,现在我对于算法思想有了一点儿感受.如果没有这个量,我觉得知道快速排序为什么快这一点是不会有很深刻的体会的.<br>多写,多练,没啥捷径.</font></p><p><font face="华文中宋" size="3">最后一点就是心态的问题了.<br>很多人,也包括我自己,常常是想着今天付出了,明天就要看到回报.<br>明明知道一口吃不成胖子,可是真的在生活中,却总是想着这样的事情.<br>心静,心静,让心沉淀下来.</font></p><p><font face="华文中宋" size="3">感谢您的阅读~</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;什么是数据结构与算法呢?&lt;br&gt;当你看到这个问题的时候,你脑海中的第一反应是什么?&lt;br&gt;
     
     </summary>
     
