@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-04-05T02:47:26.137Z</updated>
+  <updated>2020-04-11T23:40:40.369Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[数据结构与算法]15 两行代码就可以搞定求众数,但还有更巧的</title>
+    <link href="https://www.dynamic-zheng.com/posts/de95c539.html"/>
+    <id>https://www.dynamic-zheng.com/posts/de95c539.html</id>
+    <published>2020-04-11T23:38:17.000Z</published>
+    <updated>2020-04-11T23:40:40.369Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">这个周末刷了几道算法题,把其中一个比较不错的分享给你~<br><a id="more"></a></font></p><blockquote><p> 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。<br> 你可以假设数组是非空的，并且给定的数组总是存在多数元素。<br> 示例 1:<br> 输入: [3,2,3]<br> 输出: 3<br> 示例 2:<br> 输入: [2,2,1,1,1,2,2]<br> 输出: 2</p></blockquote><p><font face="华文中宋" size="3">哦,原来是求众数,注意一下哈,这里的众数是指”在数组中出现次数大于 ⌊ n/2 ⌋ 的元素”,不要问我为什么要你们注意一下这个条件,因为我钻牛角尖了!</font></p><p><font face="华文中宋" size="3">拿到这个题目,我的第一反应就是,那我给这个数组排个序然后取中间的值不就得了?<br>所以代码就只有两行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.sort(nums);</span><br><span class="line">return nums[nums.length &gt;&gt; 1];</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">写完程序运行,一点儿毛病都没有,简简单单两行代码就搞定,那一刻我觉得我就是个天才!<br>后来梦醒了,冷静分析了一下,我去这样的代码简单是简单,但是时间复杂度是 O(nlogn) ,空间复杂度是 O(logn)<br>所以有没有更好的解决方案呢?能让它的时间复杂度和空间复杂度都降下来<br>必须得有哇!要不然我写这篇文章是为了啥<br>这种比较好的解决方案就是摩尔投票法</font></p><p><font face="华文中宋" size="3">这个方法理解起来有点儿绕,我先来讲讲,这一块儿看懂了,咱们再往下走<br>先回到现实生活中,投票的时候咱们是怎么投的呢?大家每个人都选一个人,然后开始拆开纸团瞅瞅选的是谁,刚开始默认大家都是 0 票,然后纸条上投的是谁,这个人就多一票,最后看谁的票数比较多.<br>回到咱们这个题目,既然是众数,而且出现的次数大于 ⌊ n/2 ⌋ ,那我们可以假设一个数就是要求的众数,同时设置这个数字出现的次数为 0 ,然后和接下来的数字进行比较,如果一样呢,咱们把这个数字出现的次数加上 1 ,如果不一样,就让次数减 1 ,当这个值减到 0 时,说明刚开始假设的数字不是众数,那就换当前的这个数字,继续循环<br>这样最后这个数字出现的次数一定是大于等于 0 的,要不然就不符合 <code>出现的次数大于 ⌊ n/2 ⌋</code> 这个题意了<br>最后,将真正的众数返回即可<br>具体代码可见下面:</font></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int count = 0 ;</span><br><span class="line">Integer candidate = null;</span><br><span class="line"></span><br><span class="line">    for(int num : nums)&#123;</span><br><span class="line">        if (count == 0)&#123;</span><br><span class="line">            candidate = num;</span><br><span class="line">        &#125;</span><br><span class="line">        count += ( num == candidate ) ? 1 : -1 ;</span><br><span class="line">    &#125;</span><br><span class="line">return candidate;</span><br></pre></td></tr></table></figure><p><font face="华文中宋" size="3">分析一下,这样实现的时间复杂度是 O(n) ,空间复杂度是 O(1)<br>和刚开始使用的方法相比,好了许多</font></p><p><font face="华文中宋" size="3">你有没有更巧妙的方法实现,欢迎评论区和我交流哇<br>最后,感谢您的阅读~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;这个周末刷了几道算法题,把其中一个比较不错的分享给你~&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[数据结构与算法]14 搞不懂线性结构,非线性结构?</title>
     <link href="https://www.dynamic-zheng.com/posts/d42777bf.html"/>
     <id>https://www.dynamic-zheng.com/posts/d42777bf.html</id>
     <published>2020-04-05T02:46:43.000Z</published>
-    <updated>2020-04-05T02:47:26.137Z</updated>
+    <updated>2020-04-05T02:47:47.371Z</updated>
     
     <content type="html"><![CDATA[<p><font face="华文中宋" size="3">在前面文章中介绍的数组,栈,队列这种都是线性结构,在接下来的文章中,会介绍图,这是一种非线性结构.<br>朋友,你是不是一脸问号?啥是线性结构,什么又是非线性结构呢?我怎么区别这两者呢.<br>别慌,一点点来看.<br><a id="more"></a></font></p><h1 id="线性结构"><a href="#线性结构" class="headerlink" title="线性结构"></a><font face="华文中宋" size="3">线性结构</font></h1><p><font face="华文中宋" size="3">我在学习知识的时候,喜欢和以前的知识联系起来.<br>线性结构,我就想到了在学数学的时候,常说的线性相关,或者说这两个变量之间呈线性关系.<br>那么,在数学的定义上,什么是线性关系呢?<br>我就直接把维基百科的定义搬过来了,链接在这儿: <a href="https://zh.wikipedia.org/wiki/%E7%B7%9A%E6%80%A7%E9%97%9C%E4%BF%82" target="_blank" rel="noopener">线性关系</a></font></p><blockquote><p><font face="华文中宋" size="3"> 在现代学术界中，线性关系一词存在 2 种不同的含义。其一，若某数学函数或数量关系的函数图形呈现为一条直线或线段，那么这种关系就是一种线性的关系。其二，在代数学和数学分析学中，如果一种运算同时满足特定的“加性”和“齐性”，则称这种运算是线性的。</font></p></blockquote><p><font face="华文中宋" size="3">咱们着重看第一个含义,和数学上面的定义差不多,大概意思就是 y 和 x 的关系在图中表示为一条直线或线段,比如 y=x ,那么这种关系我们就可以称之为是线性关系.<br>OK ,那 y=x 有什么特殊之处呢?是不是每一个 x 的取值,都唯一对应一个 y 值?<br>Nice !能够想到这一点,就触及到了线性结构的本质,即:数据元素之间存在着”一对一”的线性关系的数据结构就称为 线性结构.</font></p><p><font face="华文中宋" size="3">了解本质之后,咱们应该就很好理解了,像: 线性表,栈,队列,双队列 这种都是线性结构.</font></p><h1 id="非线性结构"><a href="#非线性结构" class="headerlink" title="非线性结构"></a><font face="华文中宋" size="3">非线性结构</font></h1><p><font face="华文中宋" size="3">在了解线性结构之后,再来理解非线性结构就好说了.<br>既然线性结构是一对一的关系,那么非线性结构就存在不是一对一的关系了呗,比如一对多?<br>恭喜你,答对了!<br>那么我们常见的: 二维数组,多维数组,树,图 就都是非线性结构了.</font></p><p><font face="华文中宋" size="3">以上就是想要分享的内容了<br>最近感觉自己写文章遇到了瓶颈一般,总是觉得没有写出自己想要的效果<br>关于我的文章,欢迎各位留言和我交流哇</font></p>]]></content>
     
@@ -428,28 +450,6 @@
     <summary type="html">
     
       &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在说链表的时候,就会常说另外一个概念:数组.&lt;br&gt;数组和链表,常常会拿到一起做比较.这篇文章也是,咱们来说说数组和链表.&lt;br&gt;
-    
-    </summary>
-    
-      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="数据结构与算法" scheme="https://www.dynamic-zheng.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[数据结构与算法]03 计算时间和空间复杂度</title>
-    <link href="https://www.dynamic-zheng.com/posts/e9497446.html"/>
-    <id>https://www.dynamic-zheng.com/posts/e9497446.html</id>
-    <published>2019-11-03T11:33:02.000Z</published>
-    <updated>2019-11-03T11:36:32.621Z</updated>
-    
-    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">学习数据结构与算法的时候,避不开的一个知识点就是:时间复杂度和空间复杂度分析.<br><a id="more"></a></font></p><p><font face="华文中宋" size="5">为什么需要复杂度分析?</font></p><p><font face="华文中宋" size="3">一段代码我写好了,直接上手跑一遍,不就知道算法执行的时间和占用的内存大小了,为什么还要做分析呢?而且直接跑一遍得到的数据,准确的不能再准确了.<br>因为直接跑一遍得到算法执行的时间和占用的内存大小,有一定的局限性.<br>第一,同样一段代码,把它拿到 90 年代的笔记本上面执行,和拿到现在的笔记本上面执行,得到的时间是不一样的,所以直接拿来运行的代码,它的准确度真的够准确嘛?<br>第二,如果数据量不够多,直接运行程序得到的结果可能有失其准确性.比如,对于小规模的数据排序,插入排序可能会比快速排序更快.<br>对于计算时间和空间复杂度,一般是采用大 O 表示法来表示.</font></p><p><font face="华文中宋" size="5">时间复杂度计算:</font></p><p><font face="华文中宋" size="3">什么是时间复杂度呢?是指执行当前算法所消耗的时间.<br>常见的几种时间复杂度:O(1),O($log_2 n$),O(n),O($n^2$),O($2^n$),O(n!)<br>先来看一段简单的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> n=<span class="number">1000</span>;</span><br><span class="line">System.out.println(<span class="string">"Hi, your input is:"</span>+n);</span><br><span class="line">System.out.println(<span class="string">"Hey, your code is:"</span>+n);</span><br><span class="line">System.out.println(<span class="string">"Hello, your verification code is:"</span>+n);</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">先别往下看,你觉得这段代码的时间复杂度是多少?<br>是 O(1) 对吧?因为这段代码都是常量级的执行时间,所以对于时间复杂度来说,它的复杂度为 O(1).<br>请注意: O(1) 并不是指执行了一行代码,上面的程序执行了 3 行代码,它的时间复杂度也是 O(1).只要代码的执行时间不随 n 的增大而增长,那时间复杂度就都记为 O(1).一般情况下,只要程序中不存在循环语句,递归语句,就算是有上万行的代码,时间复杂度也是 O(1).<br>来看另外一段代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">  System.out.println(<span class="string">"Hello, your verification code is:"</span>+i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">你觉得这段代码的时间复杂度是多少?<br>先来分析一下,这段代码执行了 n 次, 所以它的时间复杂度为 O(n).<br>如果是这样呢:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=i;j++)&#123;</span><br><span class="line">    System.out.println(<span class="string">"Hello, your verification code is:"</span>+i+<span class="string">"and"</span>+j);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">这段代码的时间复杂度是多少呢?<br>首先它有两个 for 循环,每个循环都会走 n 遍,所以这段代码的时间复杂度为  O($n^2$) .</font></p><p><font face="华文中宋" size="3">如果将以上代码合并在一起,它们的复杂度是多少?是  O(1) + O(n) + O($n^2$) 嘛?<br>不,只是 O($n^2$) .因为当 n 足够大时, O(1) 和 O(n) 对于程序的影响几乎都可以忽略不计,此时我们只需要关注最大量级即可.</font></p><p><font face="华文中宋" size="5">接下来说说,空间复杂度计算:</font></p><p><font face="华文中宋" size="3">什么是空间复杂度呢?是指执行当前算法需要占用的内存空间大小.也就是看使用了几个辅助变量.<br>照样上几段代码来看看.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> <span class="keyword">var</span> = <span class="number">3</span>;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">对于这段代码来说,它的空间复杂度是多少?<br>应该比较容易看出来,只使用了一个辅助变量,所以它的空间复杂度为 O(1).<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">这段代码,申请了一个大小为 n 的数组,所以它是申请了 n 个辅助变量,所以它的空间复杂度为 O(n).这段代码是申请了一维的,如果是这样呢:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[][] matrix = <span class="keyword">new</span> <span class="keyword">int</span>[n][n];</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p><p><font face="华文中宋" size="3">你一定猜到了,它的空间复杂度是 O($n^2$)</font></p><p><font face="华文中宋" size="3">关于时间和空间复杂度的计算,大概就是这样了,感谢您的阅读哇~<br>我也不知道为什么, O($n^2$) 它不识别为 n 方,(逃;</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;学习数据结构与算法的时候,避不开的一个知识点就是:时间复杂度和空间复杂度分析.&lt;br&gt;
     
     </summary>
     
