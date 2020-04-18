@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="你是不是和我一样,在学习数据结构与算法时,了解了一下图这种数据结构之后,根本不知道它的用武之地在哪里?在我查了资料之后,现在我可以跟你讲讲,图可以这么用!">
+<meta name="keywords" content="数据结构与算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用?">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/1eb1a8ac.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="你是不是和我一样,在学习数据结构与算法时,了解了一下图这种数据结构之后,根本不知道它的用武之地在哪里?在我查了资料之后,现在我可以跟你讲讲,图可以这么用!">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/undirected-graph.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/真香警告.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/directed-graph.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/weighted-graph.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/QQ.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/adjacency-matrix.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/adjacency-list.jpg">
+<meta property="og:updated_time" content="2020-04-18T01:32:25.910Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用?">
+<meta name="twitter:description" content="你是不是和我一样,在学习数据结构与算法时,了解了一下图这种数据结构之后,根本不知道它的用武之地在哪里?在我查了资料之后,现在我可以跟你讲讲,图可以这么用!">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/undirected-graph.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/1eb1a8ac">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用? | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/1eb1a8ac.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用?
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-18 09:05:35 / 修改时间：09:32:25" itemprop="dateCreated datePublished" datetime="2020-04-18T09:05:35+08:00">2020-04-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/1eb1a8ac.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/1eb1a8ac.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">你是不是和我一样,在学习数据结构与算法时,了解了一下图这种数据结构之后,根本不知道它的用武之地在哪里?<br>在我查了资料之后,现在我可以跟你讲讲,图可以这么用!<br><a id="more"></a></font></p>
+<h1 id="概念介绍"><a href="#概念介绍" class="headerlink" title="概念介绍"></a><font face="华文中宋" size="3">概念介绍</font></h1><p><font face="华文中宋" size="3">先来了解一下什么是图.<br>图,是一种非线性表数据结构.<br>那么你可能会问了,什么是线性表结构哇,我怎么区别一种数据结构是线性的,还是非线性的呢.<br>哈哈,还好我机智,在这篇文章之前就写了一篇文章来介绍,如果还有疑问,楼上雅座请: <a href="https://www.dynamic-zheng.com/posts/d42777bf.html">[数据结构与算法]14 搞不懂线性结构,非线性结构?</a></font></p>
+<p><font face="华文中宋" size="3">在图中元素叫做顶点( vertex ),图中的一个顶点可以和其他任意顶点建立连接关系,这种建立的关系叫做边( edge )</font></p>
+<h1 id="无向图"><a href="#无向图" class="headerlink" title="无向图"></a><font face="华文中宋" size="3">无向图</font></h1><p><img src="/images/2020/undirected-graph.jpg"></p>
+<p><font face="华文中宋" size="3">上面给出的是无向图.看到这里你可能就觉得比较疑惑,这个无向图看起来没啥呀,怎么会有这种数据结构呢?<br>不知道你是怎么想的,我刚开始学的时候就有这种疑问,这是什么神仙数据结构哇,还会有应用场景?<br><img src="/images/2020/真香警告.jpg"></font></p>
+<p><font face="华文中宋" size="3">既然有疑惑,那就给个应用场景:<br>假设,现在你和我是微信好友,那是不是应该你的好友列表里面有我,我的好友里面有你,这样咱们才是好友对不对~<br>那在数据库中如何表示呢?吼~这个时候无向图就登场了<br>你和我是微信好友,那就在咱俩之间来条线,表示咱俩之间有关系,一条线就解决了问题,真是完美至极啊<br>假设,(怎么又是假设,哈哈哈)上图中表示的就是 A,B,C,D,E,F 之间的关系,那你可能就发现问题了,有的顶点线比较多,比如 D 有四条线,有的就相对少一些,比如 B 有两条线.这些线就表示顶点的度( degree ).这个概念有啥用?<br>能一眼看出来谁的好友多!那这个功能有啥用?(好吧,这个功能好像是有点儿鸡肋,不过也算是一个应用场景</font></p>
+<h1 id="有向图"><a href="#有向图" class="headerlink" title="有向图"></a><font face="华文中宋" size="3">有向图</font></h1><p><font face="华文中宋" size="3">看到上面的无向图,基础不错的小伙伴肯定会说了,我还知道有向图呢!<br>呦呵,不错,有向图就是下面这个样子:<br><img src="/images/2020/directed-graph.jpg"></font></p>
+<p><font face="华文中宋" size="3">在无向图中,咱们知道一个顶点有多少条边,就说它的度为多少.<br>在有向图中呢,有指向顶点的,也有从顶点指出去的,基于无向图的概念,咱们把从这个顶点指出去的边称为出度,指向该顶点的边称为入度.<br>那么有向图会应用在哪些场景呢?微信好友这个场景是不太可以了<br>那么微博呢?<br>微博和微信有什么不一样呢?微信是你和我是好友,那么咱们的好友列表里一定是要有彼此的,拉黑或者删除彼此了,那就不能互相发送消息了.<br>但是微博呢?你关注了我,并不代表我就要关注你对吧?看到这里有没有一种豁然开朗的感觉~<br>那么我关注了多少人就是出度,多少人关注了我就是入度.<br>这样带入理解是不是会比较好一点儿?(我可真是个天才,哈哈哈</font></p>
+<h1 id="带权图"><a href="#带权图" class="headerlink" title="带权图"></a><font face="华文中宋" size="3">带权图</font></h1><p><font face="华文中宋" size="3">看完了无向图,有向图,相信就有人说,我还见过带权图!(陈独秀给我坐下!<br>带权图长啥样呢?就下面这个样子:<br><img src="/images/2020/weighted-graph.jpg"></font></p>
+<p><font face="华文中宋" size="3">懵逼了,这每条边上的数字是个什么鬼呦<br>别急,咱们来个场景:大家都玩 QQ 嘛?(别跟我说不玩,配合一下嘛…<br>玩 QQ 的话,一定知道有 QQ 空间,然后空间里面有个「谁在意我」「我在意谁」的功能,就是下图:<br><img src="/images/2020/QQ.jpg"></font></p>
+<p><font face="华文中宋" size="3">那么有没有好奇过呢? QQ 怎么知道我在意谁,谁在意我呢?<br>就是通过带权图哇<br>你访问了一个人的空间,这条边的权重就增加一点儿;别人访问了你的空间,那这条边的权重就增加一点儿;这段时间你们两个人聊天聊得比较频繁,来个小火花,顺便在你们两者之间的边权重增加一点儿.然后根据这些边的权重从大到小排序就得出了「谁在意我」「我在意谁」</font></p>
+<p><font face="华文中宋" size="3">到这里,上面的一切理解都还 OK ?<br>那咱们继续.图是怎么表示的呢?<br>图这种数据结构,再怎么画顶点,画边,到最后在物理结构上是怎么存储的呢?<br>别急,你所疑惑的,我都帮你想到了</font></p>
+<h1 id="图的存储方法"><a href="#图的存储方法" class="headerlink" title="图的存储方法"></a><font face="华文中宋" size="3">图的存储方法</font></h1><p><font face="华文中宋" size="3">图的存储方法主要有以下两种:</font></p>
+<ul>
+<li><h2 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a><font face="华文中宋" size="3">邻接矩阵</font></h2><font face="华文中宋" size="3">邻接矩阵的底层依赖一个二维数组.对于无向图来说,如果 i 与 j 之间有边,那就将 A[i][j] 和 A[j][i] 标记为 1 ;对于无向图来说,如果 i 指向 j ,那么 A[i][j] 值为 1 ,如果 j 指向 i ,那么 A[j][i] 值为 1 ;对于带权图来说, A[i][j] 存储的值就不是 1 了,而是对应的权重值.所以这是图最直观的一种存储方法.<br>啥,你跟我说这还不直观?该不会是没有看下图吧:<br><img src="/images/2020/adjacency-matrix.jpg"><br><font face="华文中宋" size="3">但是你发现问题了嘛,这样看起来确实是直观了很多,但是很浪费空间有没有!比如无向图,如果 A[i][j] 为 1 ,那么 A[j][i] 肯定也是 1 ,多存储 A[j][i] 根本没啥必要.就像买东西,明明一块钱能买到的东西,为啥非要花两块钱?<br>所以如果使用邻接矩阵来表示的话,一定要清楚它的缺点.</font></font></li>
+</ul>
+<p><font face="华文中宋" size="3">但这并不是说,使用邻接矩阵来存储就没啥优点.这天底下哪儿有那么绝对的事情呢.<br>首先,邻接矩阵的存储方式简单,直接,所以当我们需要获取两个顶点之间的关系时,相信我没有比这种存储结构更高效的了.<br>还有就是使用邻接矩阵存储图的另外一个优点就是方便计算,因为可以将很多图的运算转换成矩阵之间的运算.</font></p>
+<ul>
+<li><h2 id="邻接表"><a href="#邻接表" class="headerlink" title="邻接表"></a><font face="华文中宋" size="3">邻接表</font></h2><font face="华文中宋" size="3">先来看图:<br><img src="/images/2020/adjacency-list.jpg"><br><font face="华文中宋" size="3">乍一看,这不是散列表嘛!每个顶点对应一条链表,链表中存储的是与这个顶点相连接的其他顶点.<br>嘿嘿,直觉超棒!</font></font></li>
+</ul>
+<p><font face="华文中宋" size="3">如果你对散列表熟悉的话,应该知道,在散列表中,如果链太长了,会导致冲突概率增大,复杂度也蹭的一下升高.而且吧,链表的存储方式你也知道,不是连续的,所以相对于数组来说, CPU 读取就会慢一些,相对于邻接矩阵的存储方式,在邻接表中查询两个顶点之间的关系就没那么高效了.<br>所以在实际开发中要注意遇到这种情况该如何处理,或者在刚开始的时候就直接设计好实现方式.比如可以将邻接表中的链表改为平衡二叉树,或者红黑树.</font></p>
+<p><font face="华文中宋" size="3">我觉得对于数据结构来说,没有最好的,只有最合适的~</font></p>
+<p><font face="华文中宋" size="3">参考</font></p>
+<ul>
+<li><font face="华文中宋" size="3">极客时间—&lt;数据结构与算法之美&gt;</font></li>
+</ul>
+<p><font face="华文中宋" size="3">以上,就是想要分享的内容了<br>感谢您的阅读哇</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"><i class="fa fa-tag"></i> 数据结构与算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/de95c539.html" rel="next" title="[数据结构与算法]15 两行代码就可以搞定求众数,但还有更巧的">
+                <i class="fa fa-chevron-left"></i> [数据结构与算法]15 两行代码就可以搞定求众数,但还有更巧的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念介绍"><span class="nav-number">1.</span> <span class="nav-text">概念介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无向图"><span class="nav-number">2.</span> <span class="nav-text">无向图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#有向图"><span class="nav-number">3.</span> <span class="nav-text">有向图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#带权图"><span class="nav-number">4.</span> <span class="nav-text">带权图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图的存储方法"><span class="nav-number">5.</span> <span class="nav-text">图的存储方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">5.1.</span> <span class="nav-text">邻接矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#邻接表"><span class="nav-number">5.2.</span> <span class="nav-text">邻接表</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
