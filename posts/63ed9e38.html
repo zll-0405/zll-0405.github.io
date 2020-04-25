@@ -107,18 +107,18 @@
 
 
 
-  <meta name="description" content="在上篇文章中[计算机网络] DNS 协议,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.看起来这种方式无懈可击,但其实也有些问题.">
-<meta name="keywords" content="HTTPDNS">
+  <meta name="description" content="ThreadGroup 概念">
+<meta name="keywords" content="Java 并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[计算机网络] HTTPDNS 协议">
-<meta property="og:url" content="https://www.dynamic-zheng.com/posts/4e5d330.html">
+<meta property="og:title" content="[Java 并发]01 线程组 (ThreadGroup)">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/63ed9e38.html">
 <meta property="og:site_name" content="郑璐璐|个人博客">
-<meta property="og:description" content="在上篇文章中[计算机网络] DNS 协议,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.看起来这种方式无懈可击,但其实也有些问题.">
+<meta property="og:description" content="ThreadGroup 概念">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-25T07:50:29.152Z">
+<meta property="og:updated_time" content="2020-04-25T05:48:53.450Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[计算机网络] HTTPDNS 协议">
-<meta name="twitter:description" content="在上篇文章中[计算机网络] DNS 协议,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.看起来这种方式无懈可击,但其实也有些问题.">
+<meta name="twitter:title" content="[Java 并发]01 线程组 (ThreadGroup)">
+<meta name="twitter:description" content="ThreadGroup 概念">
 
 
 
@@ -128,7 +128,7 @@
 
   
   
-  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/4e5d330">
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/63ed9e38">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>[计算机网络] HTTPDNS 协议 | 郑璐璐|个人博客</title>
+  <title>[Java 并发]01 线程组 (ThreadGroup) | 郑璐璐|个人博客</title>
   
 
 
@@ -354,7 +354,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/4e5d330.html">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/63ed9e38.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑璐璐">
@@ -371,7 +371,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[计算机网络] HTTPDNS 协议
+          <h1 class="post-title" itemprop="name headline">[Java 并发]01 线程组 (ThreadGroup)
 
               
             
@@ -397,7 +397,7 @@
                 
               
 
-              <time title="创建时间：2019-08-25 15:47:07 / 修改时间：15:50:29" itemprop="dateCreated datePublished" datetime="2019-08-25T15:47:07+08:00">2019-08-25</time>
+              <time title="创建时间：2020-04-25 13:45:04 / 修改时间：13:48:53" itemprop="dateCreated datePublished" datetime="2020-04-25T13:45:04+08:00">2020-04-25</time>
             
 
             
@@ -419,7 +419,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
 
                 
                 
@@ -438,8 +438,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/posts/4e5d330.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/4e5d330.html" itemprop="commentCount"></span>
+                <a href="/posts/63ed9e38.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/63ed9e38.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -467,13 +467,23 @@
       
 
       
-        <p><font face="华文中宋" size="3">在上篇文章中<a href="https://www.dynamic-zheng.com/posts/a43453ce.html">[计算机网络] DNS 协议</a>,介绍了 DNS 协议,它主要做两个功能:根据名称查到具体的地址;针对多个地址做负载均衡,而且可以在多个地址中选择一个距离我最近的地方,让我访问.<br>看起来这种方式无懈可击,但其实也有些问题.<br><a id="more"></a></font></p>
-<h1 id="传统-DNS-存在的问题"><a href="#传统-DNS-存在的问题" class="headerlink" title="传统 DNS 存在的问题"></a><font face="华文中宋" size="3">传统 DNS 存在的问题</font></h1><p><font face="华文中宋" size="3">1 ,域名缓存问题:<br>客户端想要访问一个网址的时候,其实它首先是去看本地的缓存里面有没有这个地址,如果有就直接访问,如果没有才会去询问上级领导.<br>但是这个时候就会有个问题:比如在你上高中的时候,你知道学校旁边有个超好吃的店,后来你再想吃的时候,想都没想,直接去了那家店,结果发现人家关门了,你会不会非常失望?本地缓存也会出现这个问题,有的时候那个地址已经换掉了,但是因为本地缓存中有原来的地址,所以不会向上一级询问,将你导向原来的地址,结果就是访问不到界面,由此带来的用户体验不是很好.<br>还有个问题:假设我在北京海淀区,淘宝的应用因为某种原因没有在海淀区设置数据中心,然后我访问的时候,一直都是将我的访问请求发送到朝阳区.后来呢,淘宝在海淀区增加了数据中心,但是当我访问的时候,本地缓存依旧会将我的请求,导向到朝阳区那边,这样造成的结果就是: 1 ,对于客户来说,让他绕远路了.明明一个区域就可以解决的事情,偏偏要跨区域.就像明明在这里可以买到东西,偏偏让你跑到另外的地方去买,你开心嘛? 2 ,对于商家来说,也就是淘宝,我设置了新的数据中心,结果呢,客户的请求没能到这里,那我还费钱费力的去做这件事干嘛?又没有提高用户的体验,对不对.</font></p>
-<p><font face="华文中宋" size="3">2 ,出口 NAT 问题:<br>在网关那里,很多机房都会在出口配置 NAT ( Network Address Translation ),即:网络地址转换.<br>也就是说,从这个网关出去的包,都会换成新的 IP 地址,当请求返回的时候,在网关这里,再将 IP 地址转换回去,这样造成的结果就是,权威的 DNS 服务器,没办法通过这个地址,来判断用户到底是来自哪个运营商,而且极有可能因为误判运营商,导致跨运营商访问,从而导致网速极慢.</font></p>
-<p><font face="华文中宋" size="3">3 ,解析延迟问题:<br>DNS 的查询过程,需要递归遍历多个 DNS 服务器,才能得到最终的解析结果,这会带来一定的时延,甚至是解析超时.</font></p>
-<h1 id="HTTPDNS-的工作模式"><a href="#HTTPDNS-的工作模式" class="headerlink" title="HTTPDNS 的工作模式"></a><font face="华文中宋" size="3">HTTPDNS 的工作模式</font></h1><p><font face="华文中宋" size="3">DNS 解析有很多问题,那怎么办呢?再回到最初的起点:直接 IP 地址?显然不合适啊.<br>这就引出了 HTTPDNS .说白了就是,它不走传统的 DNS 解析,而是走自己搭建基于 HTTP 协议的 DNS 服务器集群.这些集群分布在多个地点,当客户端需要 DNS 解析的时候,直接通过 HTTP 协议进行请求这个服务器集群,就可以得到最近的地址.<br>这样做就相当于每个客户端都是基于 HTTP 协议的,自己实现自己的域名解析,自己做一个自己专属的地址簿,而不是使用统一的地址簿.但是默认的域名解析都是走 DNS ,所以如果想要使用 HTTPDNS 的话,就需要绕过默认的 DNS 路径,这样就不能使用默认的客户端.<br>使用 HTTPDNS 的,一般都是手机应用,所以只需要在手机端嵌入支持 HTTPDNS 的客户端 SDK 就 OK 了.这样就可以通过自己的 HTTPDNS 服务器和相关的 SDK ,实现了从依赖别人,到自己上网查询,自己想去哪儿去哪儿,想干什么干什么,岂不是快哉~<br>HTTPDNS 工作模式具体可以描述如下:当手机要访问一个地址的时候,我会先看本地缓存里面有没有,如果有就直接访问,这个缓存是手机应用自己做的,至于如何更新,何时更新,那是手机应用的客户端的事情;如果没有的话呢,就需要请求 HTTPDNS 服务器,在本地 HTTPDNS 服务器的 IP 列表中,选择一个发出 HTTP 的请求,会返回一个要访问的网站的 IP 列表.因为是直接的 HTTP 通信,所以 HTTPDNS 服务器能够准确知道这些信息,所以可以做到精准的全局负载均衡.</font></p>
-<p><font face="华文中宋" size="3">写到这里,这篇文章想要表达的是两点:<br>1 ,传统的 DNS 有很多问题:比如域名缓存问题,出口 NAT 问题,解析延迟问题<br>2 ,为了解决上述问题, HTTPDNS 通过客户端 SDK 和服务端,通过 HTTP 的形式,直接调用解析 DNS 的方式,绕过了传统的 DNS 的这些缺点,从而实现了智能的调度.</font></p>
-<p><font face="华文中宋" size="3">以上是学的极客时间上&lt;趣谈网络协议&gt;这门课程,我已经感觉自己的脑袋有些大了…还有一些内容,我先自己慢慢消化一下…<br>感谢您的阅读~</font></p>
+        <h1 id="ThreadGroup-概念"><a href="#ThreadGroup-概念" class="headerlink" title="ThreadGroup 概念"></a><font face="华文中宋" size="3">ThreadGroup 概念</font></h1><a id="more"></a>
+<p><font face="华文中宋" size="3">只是从英文名字上,也能看到这个概念的简单粗暴, ThreadGroup 就是线程组.<br>也就是说,每个 Thread 都能在一个 ThreadGroup 中找到.那么你可能会问了,我不存在于一个 ThreadGroup 不行?自己在程序里面一个人潇洒走天下,岂不是超级爽?<br>抱歉,此路不通.为啥呢?咱们来看源码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ThreadGroup g, Runnable target, String name,</span></span></span><br><span class="line"><span class="function"><span class="params">                      <span class="keyword">long</span> stackSize, AccessControlContext acc,</span></span></span><br><span class="line"><span class="function"><span class="params">                      <span class="keyword">boolean</span> inheritThreadLocals)</span> </span>&#123;</span><br><span class="line">        Thread parent = currentThread();</span><br><span class="line">        SecurityManager security = System.getSecurityManager();</span><br><span class="line">        <span class="keyword">if</span> (g == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">/* Determine if it's an applet or not */</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">/* If there is a security manager, ask the security manager</span></span><br><span class="line"><span class="comment">               what to do. */</span></span><br><span class="line">            <span class="keyword">if</span> (security != <span class="keyword">null</span>) &#123;</span><br><span class="line">                g = security.getThreadGroup();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* If the security doesn't have a strong opinion of the matter</span></span><br><span class="line"><span class="comment">               use the parent thread group. */</span></span><br><span class="line">            <span class="keyword">if</span> (g == <span class="keyword">null</span>) &#123;</span><br><span class="line">                g = parent.getThreadGroup();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">我们能够看到,如果 g 为空,会做这样的处理</font></p>
+<ul>
+<li><font face="华文中宋" size="3">首先看 security 是否为空,如果不为空,直接使用 security 的线程组</font></li>
+<li><font face="华文中宋" size="3">如果 security 是空的话,那么这个线程就获取当前线程所属的线程组<br>所以你想脱离组织自己玩?这种事情想都不要想.<br>操作系统怎么可能允许有逃离自己掌控之外的存在呢!</font></li>
+</ul>
+<h1 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a><font face="华文中宋" size="3">优先级</font></h1><p><font face="华文中宋" size="3">OK ,咱们接下来谈另外一个问题.<br>一个 Thread 必然存在于一个 ThreadGroup , Thread 有自己的优先级, ThreadGroup 也有优先级,如果 Thread 的优先级大于 ThreadGroup 的优先级了,这个时候咋整呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setPriority</span><span class="params">(<span class="keyword">int</span> newPriority)</span> </span>&#123;</span><br><span class="line">        ThreadGroup g;</span><br><span class="line">        checkAccess();</span><br><span class="line">        <span class="comment">// 如果设置的 priority 大于系统设置的最大值,或者小于系统设置的最小值</span></span><br><span class="line">        <span class="comment">// 抛出异常</span></span><br><span class="line">        <span class="keyword">if</span> (newPriority &gt; MAX_PRIORITY || newPriority &lt; MIN_PRIORITY) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>((g = getThreadGroup()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果设置线程的优先级大于线程组的优先级,则重置线程的优先级为线程组的优先级</span></span><br><span class="line">            <span class="keyword">if</span> (newPriority &gt; g.getMaxPriority()) &#123;</span><br><span class="line">                newPriority = g.getMaxPriority();</span><br><span class="line">            &#125;</span><br><span class="line">            setPriority0(priority = newPriority);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">所以啊,优先级冲突了,两位也别吵吵, Thread 踏踏实实跟着 ThreadGroup 走才有肉吃不是~</font></p>
+<h1 id="ThreadGroup-还可以做"><a href="#ThreadGroup-还可以做" class="headerlink" title="ThreadGroup 还可以做"></a><font face="华文中宋" size="3">ThreadGroup 还可以做</font></h1><p><font face="华文中宋" size="3">看完上面,你可能觉得,哦,原来线程组就是管线程的啊<br>你如果真的这么认为的话,我赶紧写写接下来的内容,把你的思绪拉一拉<br>线程组管理的可不单单是线程.<br>咱们看看源码里面,线程组的成员变量都有啥:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadGroup</span> <span class="keyword">implements</span> <span class="title">Thread</span>.<span class="title">UncaughtExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ThreadGroup parent;  <span class="comment">// 父 ThreadGroup</span></span><br><span class="line">    String name;  <span class="comment">// ThreadGroup 名称</span></span><br><span class="line">    <span class="keyword">int</span> maxPriority;  <span class="comment">// 线程最大优先级</span></span><br><span class="line">    <span class="keyword">boolean</span> destroyed;  <span class="comment">// 是否被销毁</span></span><br><span class="line">    <span class="keyword">boolean</span> daemon;  <span class="comment">// 是否守护线程</span></span><br><span class="line">    <span class="keyword">boolean</span> vmAllowSuspension;  <span class="comment">// 是否可以中断</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> nUnstartedThreads = <span class="number">0</span>;  <span class="comment">// 还未启动的线程</span></span><br><span class="line">    <span class="keyword">int</span> nthreads;  <span class="comment">// ThreadGroup 中线程数目</span></span><br><span class="line">    Thread threads[];  <span class="comment">// ThreadGroup 中的线程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> ngroups;  <span class="comment">// 线程组数目</span></span><br><span class="line">    ThreadGroup groups[];  <span class="comment">// 线程组数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">吼,原来线程组里面还可以有线程组,不单单是有线程,原来还可以控制线程优先级,还可以决定是否销毁线程或者守护线程,或者中断线程.</font></p>
+<p><font face="华文中宋" size="3">到这里,咱们来总结一下:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">线程组是一个父子结构,一个线程组可以属于其他线程组,也可以拥有自己的子线程组,如果你一直向上追溯的话,会发现所有的线程组都在一个根线程组里面— System 线程组</font></li>
+<li><font face="华文中宋" size="3">线程组的出现可不是为耍酷用的,它是为了更方便的管理线程而存在的.比如设置线程最大优先级,销毁线程等等</font></li>
+</ul>
+<p><font face="华文中宋" size="3">以上,就是想要分享的内容了<br>感谢您的阅读哇~</font></p>
 
       
     </div>
@@ -497,7 +507,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/HTTPDNS/" rel="tag"><i class="fa fa-tag"></i> HTTPDNS</a>
+            <a href="/tags/Java-并发/" rel="tag"><i class="fa fa-tag"></i> Java 并发</a>
           
         </div>
       
@@ -510,8 +520,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/a43453ce.html" rel="next" title="[计算机网络] DNS 协议">
-                <i class="fa fa-chevron-left"></i> [计算机网络] DNS 协议
+              <a href="/posts/1eb1a8ac.html" rel="next" title="[数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用?">
+                <i class="fa fa-chevron-left"></i> [数据结构与算法]16 你是不是和我一样,不知道图这种数据结构怎么用?
               </a>
             
           </div>
@@ -519,10 +529,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/posts/5c46b427.html" rel="prev" title="[计算机网络]虚拟机中的网卡">
-                [计算机网络]虚拟机中的网卡 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -740,7 +746,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#传统-DNS-存在的问题"><span class="nav-number">1.</span> <span class="nav-text">传统 DNS 存在的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPDNS-的工作模式"><span class="nav-number">2.</span> <span class="nav-text">HTTPDNS 的工作模式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadGroup-概念"><span class="nav-number">1.</span> <span class="nav-text">ThreadGroup 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优先级"><span class="nav-number">2.</span> <span class="nav-text">优先级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadGroup-还可以做"><span class="nav-number">3.</span> <span class="nav-text">ThreadGroup 还可以做</span></a></li></ol></div>
             
 
           </div>
