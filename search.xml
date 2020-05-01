@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[Java 并发]你确定你了解 volatile ?</title>
+      <link href="/posts/6bdf9b1b.html"/>
+      <url>/posts/6bdf9b1b.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">学 Java 并发,过不去 volatile 和 synchronized ,既然过不去,那就不过了,踏踏实实把它搞懂,踩在脚下.<br><a id="more"></a><br>这篇文章先搞定 volatile ,后面我再写另外一篇文章关于 synchronized 和锁的.<br>以下,正文开始:</font></p><p><font face="华文中宋" size="3">在 Java 中, volatile 主要有两个功能:</font></p><ul><li><font face="华文中宋" size="3">保证变量的内存可见性</font></li><li><font face="华文中宋" size="3">禁止 volatile 变量与普通变量重排序</font></li></ul><p><font face="华文中宋" size="3">接下来一一来看这两个功能,以及是怎么实现的</font></p><h1 id="什么是内存可见性"><a href="#什么是内存可见性" class="headerlink" title="什么是内存可见性"></a><font face="华文中宋" size="3">什么是内存可见性</font></h1><p><font face="华文中宋" size="3">如果要谈 volatile 保证了变量的内存可见性,那就需要了解什么是内存可见性</font></p><blockquote><p><font face="华文中宋" size="3">所谓内存可见性是说,当一个线程对 <code>volatile</code> 修饰的变量进行<strong>写操作</strong>时, JMM 会立即将该线程对应的本地内存中的共享变量的值刷新到主内存中;当一个线程对 <code>volatile</code> 修饰的变量进行<strong>读操作</strong>时, JMM 会立即将该线程对应的本地内存设置为无效,然后从主内存中读取共享变量的值</font></p></blockquote><p><font face="华文中宋" size="3">在 JSR-133 之前的旧的 Java 内存模型中,是允许 volatile 变量与普通变量重排序的.<br>也就是说,虽然 volatile 变量能够保证内存可见性,但是可能程序执行的结果依旧不是你想要的.<br>如果直接使用锁的话,又会让整个程序变得比较重量级,基于以上考虑, JSR-133 专家组决定增强 volatile 的内存语义:<strong>严格限制编译器和处理器对 volatile 变量与普通变量的排序</strong></font></p><h1 id="如何禁止-volatile-变量与普通变量重排序"><a href="#如何禁止-volatile-变量与普通变量重排序" class="headerlink" title="如何禁止 volatile 变量与普通变量重排序"></a><font face="华文中宋" size="3">如何禁止 volatile 变量与普通变量重排序</font></h1><p><font face="华文中宋" size="3">俗话说,说得容易,做起来就比较难.定义了严格限制 volatile 变量与普通变量的排序,那是拿什么来做保证的呢? JVM 在处理器层面是通过<strong>内存屏障</strong>来实现的.</font></p><ul><li><font face="华文中宋" size="3">什么是内存屏障呢?从硬件层面来说,内存屏障分为两种:读屏障( Load Barrier )和写屏障( Store Barrier ).内存屏障有两个作用:<ul><li><font face="华文中宋" size="3">阻止屏障两侧的指令重排序</font></li><li><font face="华文中宋" size="3">强制把写缓冲区/高速缓存中的脏数据等写回主内存,或者让缓存中相应的数据失效.<br>这里的缓存主要是指: CPU 缓存,如 L1 , L2 等</font></li></ul></font></li></ul><p><font face="华文中宋" size="3">编译器在生成字节码时,会在指令序列中插入内存屏障来禁止特定类型的处理器重排序.<br>在这里编译器选择了一个比较保守的 JMM 内存屏障插入策略,保守的好处就是,可以保证在任何处理器平台,任何程序中都能得到正确的 volatile 内存语义.这个保守策略就是( Load 代表读操作, Store 代表写操作):</font></p><ul><li><font face="华文中宋" size="3">在每个 volatile 写操作前,插入一个 StoreStore 屏障;<ul><li><font face="华文中宋" size="3">比如: <code>Store1 ; StoreStore ; Store2</code> 语句,在 Store2 及后续写入操作执行前,要保证 Store1 的写入操作对其他处理器可见</font></li></ul></font></li><li><font face="华文中宋" size="3">在每个 volatile 写操作后,插入一个 StoreLoad 屏障;<ul><li><font face="华文中宋" size="3">比如: <code>Store1 ; StoreLoad ; Load2</code> 语句,在 Load2 及后续所有读取操作之前,要保证 Store1 的写入对所有处理器可见</font></li></ul></font></li><li><font face="华文中宋" size="3">在每个 volatile 读操作后,插入一个 LoadLoad 屏障;<ul><li><font face="华文中宋" size="3">比如: <code>Load1 ; LoadLoad ; Load2</code> ,在 Load2 及后续读取操作要读取的数据被访问前,要保证 Load1 要读取的数据读取完毕</font></li></ul></font></li><li><font face="华文中宋" size="3">在每个 volatile 读操作后,再插入一个 LoadStore 屏障<ul><li><font face="华文中宋" size="3">比如: <code>Load1 ; LoadStore ; Store2</code> 在 Store2 及后续写入操作被刷出前,要保证 Load1 读取的数据读取完毕</font></li></ul></font></li></ul><p><font face="华文中宋" size="3">是不是有点儿懵?别急,我这里画了两张图,可以看着理解一下</font></p><p><img src="/images/2020/volatile写.jpg"><br><img src="/images/2020/volatile读.jpg"></p><p><font face="华文中宋" size="3">写到这里了,就顺便介绍一下 volatile 和普通变量的重排序规则:</font></p><ul><li><font face="华文中宋" size="3">如果第一个操作是 volatile 读,那么不管第二个操作是什么,都不能重排序;</font></li><li><font face="华文中宋" size="3">如果第二个操作是 volatile 写,那么不管第一个操作是什么,都不能重排序;</font></li><li><font face="华文中宋" size="3">如果第一个操作是 volatile 写,第二个操作是 volatile 读,也不能重排序;</font></li></ul><p><font face="华文中宋" size="3">可以发现,针对 volatile 写操作来说,是比较严格的,但是如果第一个是普通变量的读,第二个是 volatile 的读,我可不可以重排序呢?可以</font></p><h1 id="volatile-怎么用"><a href="#volatile-怎么用" class="headerlink" title="volatile 怎么用"></a><font face="华文中宋" size="3">volatile 怎么用</font></h1><p><font face="华文中宋" size="3">看到这里,应该就能知道, volatile 保证了内存可见性以及禁止重排序.<br>在保证内存可见性这一点上,可以说 volatile 和锁有着相同的意义,所以 volatile 可以作为一个”轻量级”锁来使用.<br>volatile 的本质其实就是告诉 JVM ,我修饰的这个变量在寄存器中的值是不确定的,如果需要的话,不能直接从本地内存中读取,需要从主存中去拿,所以 volatile 它改变的只是变量的可见性,但是不保证原子性.<br>基于此,就需要搞清楚,在什么情况下使用 volatile 比较好.</font></p><p><font face="华文中宋" size="3">对于 volatile 关键字来说,当且仅当满足以下所有条件时,才可以使用:</font></p><ul><li><font face="华文中宋" size="3">对变量的写操作不依赖变量的当前值,或者确保只有单个线程更新变量的值</font></li><li><font face="华文中宋" size="3">变量没有包含在具有其他变量的不变式中</font></li></ul><p><font face="华文中宋" size="3">我觉得上面的条件,就是为了保证操作是原子性操作,因为 volatile 不保证原子性,那为了安全,就要保证你本身的操作就是原子性操作,相当于直接从源头上就把不是原子性操作给排除掉.<br>这样的话,就比较容易搞清楚 volatile 这个变量使用在什么场景下了:</font></p><ul><li><font face="华文中宋" size="3">用来标识状态,比如 <code>boolean flag</code> 这种</font></li><li><font face="华文中宋" size="3">一次性安全发布( one-time safe publication ):实现安全发布对象的一种技术就是将对象引用定义为 volatile 类型</font></li><li><font face="华文中宋" size="3">独立观察( independent observation):安全使用 volatile 的另一种简单模式是:定期”发布” 观察结果供程序内部使用.例如,假设有一种环境传感器能够感觉环境温度,一个后台线程可能会每隔几秒读取一次该传感器,并更新包含当前文档的 volatile 变量.然后,其他线程可以读取这个变量,从而随时能够看到最新的温度值</font></li></ul><p><font face="华文中宋" size="3">参考:<br>深入理解 JVM<br><a href="https://www.ibm.com/developerworks/cn/java/j-jtp06197.html" target="_blank" rel="noopener">Java 理论与实践:正确使用 Volatile 变量</a><br><a href="https://www.jianshu.com/p/ef8de88b1343" target="_blank" rel="noopener">并发关键字 volatile（重排序和内存屏障）</a><br><a href="https://blog.csdn.net/hqq2023623/article/details/51013468" target="_blank" rel="noopener">JMM——volatile与内存屏障</a></font></p><p><font face="华文中宋" size="3">以上,感谢您的阅读哇</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java 并发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java 并发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[Java 并发]为什么会有重排序?和 happens-before 有啥关系</title>
       <link href="/posts/e3a1cde0.html"/>
       <url>/posts/e3a1cde0.html</url>
