@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前几篇文章是关于 Java 并发,说实话比较费力气,因为一个知识点讲清楚,常常会牵扯出另外一个知识点,然后为了保证写的尽量是对的,还要去翻源码求证,所以你看到的一篇文章,我可能是一周的时间就出去了这周的文章咱们来看个相对来说轻松的点儿的:一条查询语句在 MySQL 中是如何查询的(并发那块,等我回来有时间和精力了,我再慢慢补回来,肯定不会就到此为止的,啊,对了还有算法,有种欠了好多债的赶脚">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[MySQL]来讲讲一条查询语句的具体过程">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/4e657641.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="前几篇文章是关于 Java 并发,说实话比较费力气,因为一个知识点讲清楚,常常会牵扯出另外一个知识点,然后为了保证写的尽量是对的,还要去翻源码求证,所以你看到的一篇文章,我可能是一周的时间就出去了这周的文章咱们来看个相对来说轻松的点儿的:一条查询语句在 MySQL 中是如何查询的(并发那块,等我回来有时间和精力了,我再慢慢补回来,肯定不会就到此为止的,啊,对了还有算法,有种欠了好多债的赶脚">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/search.jpg">
+<meta property="og:updated_time" content="2020-05-17T13:05:15.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[MySQL]来讲讲一条查询语句的具体过程">
+<meta name="twitter:description" content="前几篇文章是关于 Java 并发,说实话比较费力气,因为一个知识点讲清楚,常常会牵扯出另外一个知识点,然后为了保证写的尽量是对的,还要去翻源码求证,所以你看到的一篇文章,我可能是一周的时间就出去了这周的文章咱们来看个相对来说轻松的点儿的:一条查询语句在 MySQL 中是如何查询的(并发那块,等我回来有时间和精力了,我再慢慢补回来,肯定不会就到此为止的,啊,对了还有算法,有种欠了好多债的赶脚">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/search.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/4e657641">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[MySQL]来讲讲一条查询语句的具体过程 | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/4e657641.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[MySQL]来讲讲一条查询语句的具体过程
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-17 21:01:34 / 修改时间：21:05:15" itemprop="dateCreated datePublished" datetime="2020-05-17T21:01:34+08:00">2020-05-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/4e657641.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/4e657641.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">前几篇文章是关于 Java 并发,说实话比较费力气,因为一个知识点讲清楚,常常会牵扯出另外一个知识点,然后为了保证写的尽量是对的,还要去翻源码求证,所以你看到的一篇文章,我可能是一周的时间就出去了<br>这周的文章咱们来看个相对来说轻松的点儿的:一条查询语句在 MySQL 中是如何查询的(并发那块,等我回来有时间和精力了,我再慢慢补回来,肯定不会就到此为止的,啊,对了还有算法,有种欠了好多债的赶脚<br><a id="more"></a></font></p>
+<p><font face="华文中宋" size="3">一条看似非常简单的查询语句:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from T where id=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">然后 MySQL 就返回给了你结果,但是里面具体是如何执行的呢?<br>先上一张图:<br><img src="/images/2020/search.jpg"></font></p>
+<h1 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a><font face="华文中宋" size="3">连接器</font></h1><p><font face="华文中宋" size="3">当客户端连接 MySQL 时,会发出连接请求到连接器,连接器此时就会去验证这个连接的账号密码</font></p>
+<ul>
+<li><font face="华文中宋" size="3">如果账号或者密码不正确,客户端就会收到一个” Access denied for user”的错误,之后此次连接结束</font></li>
+<li><font face="华文中宋" size="3">账号密码正确,连接器会到权限表里面查询出该账号所拥有的权限,之后这个连接里面的权限判断,都是以此时读到的权限为根据</font></li>
+</ul>
+<p><font face="华文中宋" size="3">所以你知道为什么更改了一个账号的权限之后,一定要断开再重连才有效吧~</font></p>
+<p><font face="华文中宋" size="3">在实际中肯定有这样的情况,就是一个连接建立之后,但是我没有执行什么操作,那么就可以说这个连接处于空闲状态( sleep )<br>如果长时间都没有什么操作的话,连接器就会选择把它断开,这个时间是由 wait_timeout 来控制的,默认值是 8 小时<br>连接都被断开了,如果此时客户端再次发送请求想要进行一些操作的话,那就需要重新建立连接才能往下走</font></p>
+<p><font face="华文中宋" size="3">在数据库中有两种连接:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">短连接:每次执行完很少的几次查询就断开连接,下次想查询时,就要重新建立一个</font></li>
+<li><font face="华文中宋" size="3">长连接:如果客户端持续有请求,那就一直使用同一个连接</font></li>
+</ul>
+<p><font face="华文中宋" size="3">建立连接是比较麻烦的,首先要发送请求吧,发送了请求要去验证账号密码吧,验证完了要去看你所拥有的权限吧,所以在使用过程中,尽量使用长连接<br>但是使用长连接又有新的问题:有时候,你会发现 MySQL 占用内存,因为是长连接嘛,所以它会在断开的时候才将资源释放掉.<br>可以考虑下面两种方案:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">定期断开长连接</font></li>
+<li><font face="华文中宋" size="3">如果使用的是 MySQL 5.7 或者更高版本,可以在每次执行一个比较大的操作之后,通过执行 mysql_reset_connection 来重新初始化连接资源,这个过程不需要重新连接和权限验证</font></li>
+</ul>
+<h1 id="分析器"><a href="#分析器" class="headerlink" title="分析器"></a><font face="华文中宋" size="3">分析器</font></h1><p><font face="华文中宋" size="3">连接器这一关是过来了,接下来就是去查询缓存.<br>首先看缓存里面有没有,如果有呢,那就没有必要向下走,直接返回给客户端结果就可以了.<br>如果缓存中没有的话,那就去分析器.</font></p>
+<p><font face="华文中宋" size="3">但是聪明的你肯定发现了,我的小标题并不是缓存,而是分析器,为啥呢?<br>因为查询缓存的失效非常频繁,只要有对一个表的更新,那在这个表上的所有查询缓存都会被清空.所以就会出现, MySQL 费劲吧啦的把缓存给建立起来了,结果呢还没怎么用,一个更新操作,给弄没了<br>所以 MySQL 8.0 版本直接将查询缓存的整块功能都给删掉了,那么在这里也不细说,免得奇怪的知识增加</font></p>
+<p><font face="华文中宋" size="3">分析器首先会进行”词法分析”,词法分析就是 <code>select * from T where id=1;</code> ,它会将 <code>select</code> 识别出来,哦,这是一个查询语句,接下来会将 <code>T</code> 也识别出来,哦,你是想要在这个表中做查询,然后将 <code>where</code> 后面的条件也识别出来,原来我需要去查找这些内容<br>OK ,”词法分析”之后,接下来是”语法分析”,语法分析主要就是分析输入的 SQL 语句合不合法.<br>就比如英语里面的语法” 我用 is , 你用 are “这种,如果不对肯定是不可以的,语法分析之后发现你的 SQL 语句不符合规则,就会收到 <code>You hava an error in your SQL syntax</code> 的错误提示</font></p>
+<h1 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a><font face="华文中宋" size="3">优化器</font></h1><p><font face="华文中宋" size="3">经过分析器分析之后, MySQL就知道你要的是什么了.<br>但是就像条条大路通罗马一样,看似是一条简单的 SQL 查询语句,有可能有好多条执行路径可以走,比如说要查询的表里面有多个索引,我使用哪儿个索引效率会比较高呀;多表联查的时候,我先关联哪儿个表效率会比较高呀<br>像这种就是优化器需要做的事情</font></p>
+<h1 id="执行器"><a href="#执行器" class="headerlink" title="执行器"></a><font face="华文中宋" size="3">执行器</font></h1><p><font face="华文中宋" size="3">优化器做完优化之后,就到了执行器<br>执行器就是要去执行语句了嘛,那我肯定要看看对于要查询的表 <code>T</code> 有没有查询权限,如果没有直接就拒绝,这没啥说的<br>如果有的话,那就会这样(在这里以 InnoDB 为例):</font></p>
+<ul>
+<li><font face="华文中宋" size="3">调用 InnoDB 引擎接口取这个表的第一行,判断 <code>ID</code> 的值是不是 10 ,如果不是就跳过,如果是那就放在结果集中;</font></li>
+<li><font face="华文中宋" size="3">调用引擎接口取”下一行”,重复相同的判断逻辑,直到这个表的最后一行</font></li>
+<li><font face="华文中宋" size="3">执行器将上述遍历过程中所有满足条件的行,组成记录集返回给客户端</font></li>
+</ul>
+<p><font face="华文中宋" size="3">至此,语句执行结束.</font></p>
+<h1 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a><font face="华文中宋" size="3">存储引擎</font></h1><p><font face="华文中宋" size="3">存储引擎,一听名字大概就能知道,它负责的是对数据的存储和提取.<br>关于存储引擎这块,最熟悉的应该就是 InnoDB 了,毕竟从 MySQL 5.5.5 版本开始它就成为了默认得存储引擎</font></p>
+<p><font face="华文中宋" size="3">参考:<br>极客时间- MySQL 实战 45 讲</font></p>
+<p><font face="华文中宋" size="3">以上,就是想要分享的内容了,是不是还好理解那么一点儿?<br>感谢您的阅读哇~</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/23fd3456.html" rel="next" title="[Java 并发]带你从源码解读 ReentrantLock 就不信还搞不定它!">
+                <i class="fa fa-chevron-left"></i> [Java 并发]带你从源码解读 ReentrantLock 就不信还搞不定它!
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#连接器"><span class="nav-number">1.</span> <span class="nav-text">连接器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析器"><span class="nav-number">2.</span> <span class="nav-text">分析器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化器"><span class="nav-number">3.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行器"><span class="nav-number">4.</span> <span class="nav-text">执行器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储引擎"><span class="nav-number">5.</span> <span class="nav-text">存储引擎</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
