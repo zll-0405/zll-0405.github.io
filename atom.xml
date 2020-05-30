@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-05-24T09:48:03.850Z</updated>
+  <updated>2020-05-30T11:00:23.110Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Java 并发]听说,你对 Java 线程的生命周期了如指掌</title>
+    <link href="https://www.dynamic-zheng.com/posts/90b87b3d.html"/>
+    <id>https://www.dynamic-zheng.com/posts/90b87b3d.html</id>
+    <published>2020-05-30T10:56:39.000Z</published>
+    <updated>2020-05-30T11:00:23.110Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">有点儿尴尬,前几篇文章吭哧吭哧写完发现,把最基础的给忘了,这篇文章来补一补,关于 Java 线程的生命周期,可以说是基础而又必须掌握的内容了<br>话不多说,咱们直接开聊<br><a id="more"></a></font></p><h1 id="通用的线程生命周期"><a href="#通用的线程生命周期" class="headerlink" title="通用的线程生命周期"></a><font face="华文中宋" size="3">通用的线程生命周期</font></h1><p><font face="华文中宋" size="3">如果要说 Java 线程的生命周期的话,就绕不过去操作系统的线程生命周期<br>毕竟 JVM 是跑在操作系统上面的嘛,绕不过去的,而且可以说, Java 语言中的线程本质上就是操作系统的线程<br>聪明的你肯定也发现了,不管是操作系统,还是 Java 或者 C# 都有线程的概念.在它们之间,关于线程的生命周期这一部分,肯定是有相同之处的,否则的话,操作系统自己一套生命周期流程, Java 又有自己的一套, C# 又有自己的一套,而且相互之间还要能够互相配合,这种成本想想就大的不行对吧</font></p><p><font face="华文中宋" size="3">所以咱们就来看看,通用的线程生命周期都有啥<br>先直接上张图(这次的图,我画的还可以吧):</font></p><p><img src="/images/2020/system-thread-state.jpg"></p><p><font face="华文中宋" size="3">可以看到,主要有 new , ready , running , waiting , terminated 5 种状态<br>其中:</font></p><ul><li><font face="华文中宋" size="3">new 只是说,这个线程被创建了,但是还不允许分配 CPU 执行.因为这个状态只是说明你在编程语言层面被创建了,操作系统层面还没有被创建,肯定就谈不上分配 CPU 执行了</font></li><li><font face="华文中宋" size="3">ready 这个状态是说,在操作系统层面已经成功创建了,所以接下来就是等待分配 CPU 执行了.还记得那句经典的嘛? ready ? go !</font></li><li><font face="华文中宋" size="3">running 的状态,相信你就知道了,我都已经 ready 了,此时如果再给我分配一下 CPU 我是不是就可以 go 了?那不就是 running 状态了嘛</font></li><li><font face="华文中宋" size="3">waiting 状态,就是线程在 running 状态的时候,突然发现,哎,我需要进行一下 I/O 操作,或者需要等待某个事件发生(比如说需要某个条件变量),这个时候是不是就不能再继续 happy 的 running 了.那咋办, waiting 一下呗<ul><li><font face="华文中宋" size="3">那你都 waiting 了,占用的 CPU 资源是不是应该释放掉?所以说, waiting 状态的线程是永远没有机会获得 CPU 使用权的.</font></li><li><font face="华文中宋" size="3">你是不是一听「永远没有机会」这几个字就给吓坏了,我该不会永远没有机会执行了吧.放心吧,你不是在 waiting 嘛,等你 wait 的事件发生了,就可以继续到 running 状态</font></li></ul></font></li><li><font face="华文中宋" size="3">当整个线程执行完毕,或者出现异常的时候,就进入了 terminated 状态,也就是线程的使命就完成啦,处于 terminated 状态的线程不会再切换到其他状态了</font></li></ul><p><font face="华文中宋" size="3">通用的线程生命周期以及它们之间是如何切换的,到这里,应该就比较清楚了<br>接下来咱们看看 Java 线程的生命周期,在这个基础上是怎么做的优化,有什么区别</font></p><h1 id="Java-线程的生命周期"><a href="#Java-线程的生命周期" class="headerlink" title="Java 线程的生命周期"></a><font face="华文中宋" size="3">Java 线程的生命周期</font></h1><p><font face="华文中宋" size="3">咱们先来瞅瞅源码定义的状态(为了突出重点,我把注释都去掉了):</font></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> State &#123;</span><br><span class="line">NEW,</span><br><span class="line">RUNNABLE,</span><br><span class="line">BLOCKED,</span><br><span class="line">WAITING,</span><br><span class="line">TIMED_WAITING,</span><br><span class="line">TERMINATED;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><font face="华文中宋" size="3">能够清楚的看到,在源码中定义了 6 种线程状态<br>刚才的通用状态有几种来着? 5 种对吧,现在是 6 种.<br>哪 6 种呢?刚才的 5 种状态以及它们之间的切换我搞清楚了,这 6 种状态它们之间又是怎么切换的呢?<br>别急,这么贴心的我,肯定也是画好了一张图的:</font></p><p><img src="/images/2020/Thread-state.png"></p><p><font face="华文中宋" size="3">这 6 个状态咱们也是分别来看:</font></p><ul><li><font face="华文中宋" size="3">NEW 到 RUNNABLE ,应该是挺容易理解的,就是 thread 调用了 start 方法<ul><li><font face="华文中宋" size="3">Java 刚创建出来的 Thread 对象就是 NEW 状态,创建 Thread 对象主要有两种方法,一种是继承 Thread 对象,重写 run() 方法,一种是实现 Runnable 接口,重写 run() 方法,并将该实现类作为创建 Thread 对象的参数,相信各位比我还要懂哈~</font></li><li><font face="华文中宋" size="3">但是还记得嘛, NEW 只是说,这个线程在编程语言层面创建了,在操作系统层面还没有创建,那当然就不会被操作系统调度了对不对,就更谈不上执行了</font></li><li><font face="华文中宋" size="3">所以 Java 线程如果想要执行的话,就必须转换到 RUNNABLE 状态,也就是 thread 调用 start 方法</font></li></ul></font></li><li><font face="华文中宋" size="3"> RUNNABLE 与 BLOCKED ,如果线程等待 synchronized 的隐式锁时,就会从 RUNNABLE 状态转到 BLOCKED 状态.因为 synchronized 修饰的方法/代码块同一时刻只允许一个线程执行,所以其他线程就只能等待了呗,当等待的线程获得 synchronized 隐式锁时,就会从 BLOCKED 状态转到 RUNNABLE 状态<ul><li><font face="华文中宋" size="3">在这里有没有个疑问?就是线程在 wait 一个条件发生时,在操作系统层面线程会转到 waiting 状态,那么在 JVM 层面呢?在 JVM 层面, Java 线程状态是不会发生变化的.也就是此时 Java 线程的状态依然是 RUNNABLE 状态</font></li></ul></font></li><li><font face="华文中宋" size="3"> RUNNABLE 与 WAITING 状态转换,我感觉图已经说得很好了,在这里不再赘述</font></li><li><font face="华文中宋" size="3"> RUNNABLE 与 TIMED_WAITING 状态转换,我感觉图已经说得很好了,在这里也不再赘述,仔细观察下会发现, TIMED_WAITING 与 WAITING 相比,就是多了超时参数,毕竟 TIMED_WAITING 是有时限等待嘛</font></li><li><font face="华文中宋" size="3"> RUNNABLE 到 TERMINATED ,这个过程比较好理解,线程执行完 run() 方法之后,就自动到 TERMINATED 状态了,当然了如果在执行 run() 方法过程中有异常抛出,也会导致线程终止<ul><li><font face="华文中宋" size="3">有时候我们可能需要强制中断 run() 方法的执行,怎么办呢?是使用 stop() 方法还是 interrupt() 方法呢?正确的姿势是调用 interrupt() 方法</font></li><li><font face="华文中宋" size="3">stop() 方法会真的杀死线程,不给线程一点儿喘息的机会,如果被杀死的线程持有 synchronized 隐式锁,那就再也不会释放掉这个锁了,接下来的线程也就没办法获得 synchronized 隐式锁,是不是特别危险?同样 suspend() 和 resume() 这两个方法也是不建议使用</font></li><li><font face="华文中宋" size="3">interrupt() 方法相比于 stop() 方法就温柔很多,它只是通知线程后续的操作可以不用去执行了,线程可以选择执行现在就不执行,当然也可以选择再执行一段时间后再停止,或者我就不听你的,非要执行完,都没关系, interrupt() 只是通知一下你而已.就比如你要做火车去一个地方,突然通知你这个火车晚点了,你可以选择无视这个通知继续等待,或者选择另外一趟高铁,但是不管你做什么,和火车站都没啥关系,它通知的责任尽到了</font></li></ul></font></li></ul><p><font face="华文中宋" size="3">看到这里应该就比较清楚了吧<br>在 Java 线程生命周期中, RUNNABLE 状态是将 ready 和 running 两种状态合并在了一起,而 BLOCKED , WAITING , TIMED_WAITING 这三种状态其实就是 waiting 状态,也就是线程要等待某些事件发生,才能继续向下执行下去<br>关于 Java 线程的生命周期,到这里就说完啦</font></p><p><font face="华文中宋" size="3">在文章刚开始就说了, Java 线程的生命周期,可以说是基础而又必须掌握的内容,因为只有理解了 Java 线程的生命周期以及各种状态之间的转换,在诊断多线程 Bug 的时候,才能够在最短的时间内定位到问题<br>看到这里的你,如果有所收获,我会非常开心的</font></p><p><font face="华文中宋" size="3">参考:<br>极客时间—&lt; Java 并发编程实战&gt;</font></p><p><font face="华文中宋" size="3">以上<br>感谢您的阅读哇~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;有点儿尴尬,前几篇文章吭哧吭哧写完发现,把最基础的给忘了,这篇文章来补一补,关于 Java 线程的生命周期,可以说是基础而又必须掌握的内容了&lt;br&gt;话不多说,咱们直接开聊&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Java 并发" scheme="https://www.dynamic-zheng.com/categories/Java-%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="Java 并发" scheme="https://www.dynamic-zheng.com/tags/Java-%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>[碎碎念]进来唠唠嗑</title>
@@ -435,28 +457,6 @@
     
     
       <category term="操作系统" scheme="https://www.dynamic-zheng.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[计算机网络]从页面输入网址,回车到显示内容,这中间到底经历了什么</title>
-    <link href="https://www.dynamic-zheng.com/posts/ebb383b9.html"/>
-    <id>https://www.dynamic-zheng.com/posts/ebb383b9.html</id>
-    <published>2020-02-14T13:03:45.000Z</published>
-    <updated>2020-02-14T13:10:52.101Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a><font face="华文中宋" size="3">写在前面</font></h1><p><font face="华文中宋" size="3">在学习计算机网络的内容时,脑子里面突然冒出来一个问题:当我们在一个浏览器界面输入网址,回车到界面显示内容,这中间经历了什么?<br>先不要往下看,你能想到什么?<br>下面是我能想到的过程,有可能不是很准确,如有错误之处,还望指出.<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">计算机网络大体上可以分为应用层,传输层,网络层,链路层和物理层.<br>当我们在页面输入网址,然后回车到显示内容时,我通过上面的层次依次来说.</font></p><h1 id="详细过程"><a href="#详细过程" class="headerlink" title="详细过程"></a><font face="华文中宋" size="3">详细过程</font></h1><h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a><font face="华文中宋" size="3">应用层</font></h2><p><font face="华文中宋" size="3">假设我们现在要访问 google 网站,那么第一步要做的就是打开浏览器,在地址栏中输入 google 的地址,当你点击回车时,浏览器知道你要访问 google 了,但是对于浏览器来说,这只是一个名字,但是具体在哪儿它是不知道的.比如,你知道某位明星的名字,但是他/她具体的地址在哪儿你不清楚,对吧?对于浏览器来说也是这样.<br>比较好的一点是,想要访问网站,不像你想见明星那么难.此时浏览器通过 DNS 找到你要访问的具体网站地址.<br>当然了,如果你想要更准确的找到地址,也可以通过 HTTPDNS 去查找.<br>通过 DNS 或者 HTTPDNS 现在浏览器拿到了具体的 IP 地址,随后它就开始打包你的请求.对于举的例子来说,你只是想要访问一下,一般使用 HTTP 协议就可以了;如果有些请求会涉及到你的账号密码,就会使用 HTTPS 协议来保证你的数据安全.</font></p><h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a><font face="华文中宋" size="3">传输层</font></h2><p><font face="华文中宋" size="3">到这里, DNS , HTTP , HTTPS 所在的层称之为应用层.<br>现在应用层的事情做完了,接下来应用层会将以上相关数据进行封装,经过 Socket 编程,将应用层的包发送给传输层.<br>如果这个包是使用 HTTP 或者 HTTPS 协议发送过来的,那传输层就会使用 TCP 协议来将数据进行封装;如果是使用 DNS 协议发送过来的,则会使用 UDP 协议来进行封装.<br>封装完毕之后,浏览器就会将包交给操作系统的网络层.</font></p><h2 id="网络层-链路层-物理层"><a href="#网络层-链路层-物理层" class="headerlink" title="网络层 + 链路层 + 物理层"></a><font face="华文中宋" size="3">网络层 + 链路层 + 物理层</font></h2><p><font face="华文中宋" size="3">这一部分会涉及到网络层 + 链路层 + 物理层,我就不分那么详细了~<br>网络层的协议是 IP 协议,在 IP 协议中会有源 IP 地址和目标 IP 地址.<br>源 IP 地址也就是浏览器所在机器的 IP 地址,说的再白点儿就是,假设你是使用电脑浏览器发出的访问请求,这个源 IP 地址就是你的电脑 IP 地址<br>目标 IP 地址就是你想要访问的网站地址.还记得嘛,在应用层,我们根据 DNS 或 HTTPDNS 已经获取到了想要访问网站的具体 IP 地址.<br>OK ,既然此时操作系统已经知道了目标 IP 地址,接下来它就会想我怎么根据这个目标 IP 地址找到这台机器呢.首先操作系统会看这个 IP 地址是不是在局域网内,如果是的话,从目标 IP 地址就能看出来.但是很明显,想要访问的 google 地址不在本地,在那触不到的远方.</font></p><p><font face="华文中宋" size="3">操作系统知道要访问的地址在远方,但是远方在哪儿它也不知道.所以它就将这个数据包发给网关( gateway ),但是它不知道网关是哪儿台机器,这可咋整.<br>没事儿,反正大家都在一个地方,吼一嗓子不就得了~所以操作系统就大吼了一声:咱们的网关是谁来着.网关就会回答它,我就是,我在这儿呢.<br>上面的那一声吼,就是 ARP 协议,通过 ARP 协议,就知道了网关的具体地址,也就是 MAC 地址.<br>接下来这个数据包就到了网关那里.网关一般就是路由器,到某个 IP 地址怎么走,在一个叫做「路由表」中维护着.<br>出网关就比较复杂了,这里就不详细说了,具体可以看这篇文章: <a href="https://www.dynamic-zheng.com/posts/ff423025.html">[计算机网络]想出网关?你需要懂得这些</a></font></p><p><font face="华文中宋" size="3">出了网关之后,就需要拿出源 IP 地址和目标 IP 地址.因为只要出了网关,那就是在外面肉搏,如果没有源 IP 地址和目标 IP 地址,就不知道这个请求是从哪儿发出的,要往哪儿去.<br>现在这个数据包经过了重重关卡,终于找到了目标 IP 地址所在的服务器.此时服务器会首先发送一个接收请求,然后再将数据包一层层解析,在 TCP 头中含有目标端口号,通过这个端口号,就能够找到哪儿个程序的进程正在监听这个端口号,进而我们就找到了我们想要访问的网页.</font></p><p><font face="华文中宋" size="3">但是我怎么知道从我这里发出的数据包有没有丢失呢?所以此时 TCP 层会隔一段时间发送一次,这并不是说,页面又发送了一次请求,只是 TCP 自己在闷头重试,直到收到了接收请求.</font></p><p><font face="华文中宋" size="3">在我们找到了想要访问的网页之后,接下来就会像来的时候,再原路返回去.</font></p><h1 id="最后"><a href="#最后" class="headerlink" title="最后:"></a><font face="华文中宋" size="3">最后:</font></h1><p><font face="华文中宋" size="3">没想到吧~一个简单的打开界面,竟然涉及到了这么多的知识~<br>当然你会发现在你输入网址之后敲回车,页面几乎是立刻出来了,这就涉及到了缓存,再深入讲的话,这篇文章就很长了.</font></p><p><font face="华文中宋" size="3">这里推荐几篇文章,想深入理解的建议读一下:</font></p><p><font face="华文中宋" size="3"><a href="https://www.dynamic-zheng.com/posts/a43453ce.html">[计算机网络] DNS 协议</a></font></p><p><font face="华文中宋" size="3"><a href="https://www.dynamic-zheng.com/posts/4e5d330.html">[计算机网络] HTTPDNS 协议</a></font></p><p><font face="华文中宋" size="3"><a href="https://www.dynamic-zheng.com/posts/d26db2c7.html">[计算机网络]简单聊聊套接字 Socket</a></font></p><p><font face="华文中宋" size="3"><a href="https://www.dynamic-zheng.com/posts/e579f21d.html">[计算机网络] IP 地址与 MAC 地址之间的关系</a></font></p><p><font face="华文中宋" size="3"><a href="https://www.dynamic-zheng.com/posts/ff423025.html">[计算机网络]想出网关?你需要懂得这些</a></font></p><ul><li><font face="华文中宋" size="3">参考:<br>极客时间-趣谈网络协议</font></li></ul><p><font face="华文中宋" size="3">以上,非常感谢您的阅读~</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;写在前面&quot;&gt;&lt;a href=&quot;#写在前面&quot; class=&quot;headerlink&quot; title=&quot;写在前面&quot;&gt;&lt;/a&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;写在前面&lt;/font&gt;&lt;/h1&gt;&lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;在学习计算机网络的内容时,脑子里面突然冒出来一个问题:当我们在一个浏览器界面输入网址,回车到界面显示内容,这中间经历了什么?&lt;br&gt;先不要往下看,你能想到什么?&lt;br&gt;下面是我能想到的过程,有可能不是很准确,如有错误之处,还望指出.&lt;br&gt;
-    
-    </summary>
-    
-      <category term="计算机网络" scheme="https://www.dynamic-zheng.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="计算机网络" scheme="https://www.dynamic-zheng.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   
