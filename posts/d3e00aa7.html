@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="ThreadPoolExecutor 可能在别的地方已经看过好多了,那我就尽量讲点儿不一样的知识出来">
+<meta name="keywords" content="Java 并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Java 并发]详解 ThreadPoolExecutor">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/d3e00aa7.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="ThreadPoolExecutor 可能在别的地方已经看过好多了,那我就尽量讲点儿不一样的知识出来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/线程池状态转换.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/线程执行任务过程.jpg">
+<meta property="og:updated_time" content="2020-06-14T02:32:19.216Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Java 并发]详解 ThreadPoolExecutor">
+<meta name="twitter:description" content="ThreadPoolExecutor 可能在别的地方已经看过好多了,那我就尽量讲点儿不一样的知识出来">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/线程池状态转换.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/d3e00aa7">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[Java 并发]详解 ThreadPoolExecutor | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/d3e00aa7.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[Java 并发]详解 ThreadPoolExecutor
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-14 10:29:12 / 修改时间：10:32:19" itemprop="dateCreated datePublished" datetime="2020-06-14T10:29:12+08:00">2020-06-14</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/d3e00aa7.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/d3e00aa7.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">ThreadPoolExecutor 可能在别的地方已经看过好多了,那我就尽量讲点儿不一样的知识出来<br><a id="more"></a></font></p>
+<h1 id="为什么要用线程池"><a href="#为什么要用线程池" class="headerlink" title="为什么要用线程池"></a><font face="华文中宋" size="3">为什么要用线程池</font></h1><p><font face="华文中宋" size="3">你有没有这样的疑惑,为什么要用线程池呢?可能你会说,我可以复用已经创建的线程呀;线程是个重量级对象,为了避免频繁创建和销毁,使用线程池来管理最好了<br>没毛病,各位都很懂哈~<br>不过使用线程池还有一个重要的点:可以控制并发的数量.如果并发数量太多了,导致消耗的资源增多,直接把服务器给搞趴下了,肯定也是不行的</font></p>
+<p><font face="华文中宋" size="3">咱们再看看 ThreadPoolExecutor ,把这三个单词分开看, <code>Thread 线程</code>, <code>Pool 池</code>, <code>Executor</code> 执行者.如果连起来的话,是线程池执行者<br>所以呢, ThreadPoolExecutor 它强调的是 <code>Executor</code> ,而不是一般意义上的池化资源</font></p>
+<h1 id="绕不过去的几个参数"><a href="#绕不过去的几个参数" class="headerlink" title="绕不过去的几个参数"></a><font face="华文中宋" size="3">绕不过去的几个参数</font></h1><p><font face="华文中宋" size="3">提到 ThreadPoolExecutor 那么你的小脑袋肯定会想到那么几个参数,咱们来瞅瞅源码(我就直接放有 7 个参数的那个方法了):</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                            <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                            <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="function"><span class="params">                            TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                            BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">                            ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                            RejectedExecutionHandler handler)</span></span></span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">咱们分别来看:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">corePoolSize :<br><font face="华文中宋" size="3">核心线程数,在线程池中有两种线程,核心线程和非核心线程.在线程池中的核心线程,就算是它什么都不做,也会一直在线程池中,除非设置了  <code>allowCoreThreadTimeOut</code> 参数</font></font></li>
+<li><font face="华文中宋" size="3">maximumPoolSize:<br><font face="华文中宋" size="3">线程池能够创建的最大线程数.这个值 = 核心线程数 + 非核心线程数</font></font></li>
+<li><font face="华文中宋" size="3">keepAliveTime &amp; unit :<br><font face="华文中宋" size="3">线程池是可以撤销线程的,那么什么时候撤销呢?一个线程如果在一段时间内,都没有执行任务,那说明这个线程很闲啊,那是不是就可以把它撤销掉了?<br>所以呢,如果一个线程不是核心线程,而且在 keepAliveTime &amp; unit 这段时间内,还没有干活,那么很抱歉,只能请你走人了<br>核心线程就算是很闲,也不会将它从线程池中清除,没办法谁让它是 <code>core</code> 线程呢~</font></font></li>
+<li><font face="华文中宋" size="3">workQueue :<br><font face="华文中宋" size="3">工作队列,这个队列维护的是等待执行的 Runnable 任务对象<br>常用的几个队列: LinkedBlockingQueue , ArrayBlockingQueue , SynchronousQueue , DelayQueue<br>大厂的编码规范,相信各位都知道,并不建议使用 Executors ,最重要的一个原因就是: Executors 提供的很多方法默认使用的都是无界的 LinkedBlockingQueue ,在高负载情况下,无界队列很容易就导致 OOM ,而 OOM 会让所有请求都无法处理,所以在使用时,<strong>强烈建议使用有界队列</strong>,因为如果你使用的是有界队列的话,当线程数量太多时,它会走拒绝策略</font></font></li>
+<li><font face="华文中宋" size="3">threadFactory :<br><font face="华文中宋" size="3">创建线程的工厂,用来批量创建线程的.如果不指定的话,就会创建一个默认的线程工厂</font></font></li>
+<li><font face="华文中宋" size="3">handler :<br><font face="华文中宋" size="3">拒绝处理策略.在 workQueue 那里说了,如果使用的是有界队列,那么当线程数量大于最大线程数的时候,拒绝处理策略就起到作用了<br>常用的有四种处理策略:<ul>
+<li><font face="华文中宋" size="3">AbortPolicy :默认的拒绝策略,会丢弃任务并抛出 RejectedExecutionException 异常</font></li>
+<li><font face="华文中宋" size="3">CallerRunsPolicy :提交任务的线程,自己去执行这个任务</font></li>
+<li><font face="华文中宋" size="3">DiscardOldestPolicy :直接丢弃新来的任务,也没有任何异常抛出</font></li>
+<li><font face="华文中宋" size="3">DiscardOldestPolicy :丢弃最老的任务,然后将新任务加入到工作队列中</font></li>
+</ul>
+</font></font></li>
+</ul>
+<p><font face="华文中宋" size="3">默认拒绝策略是 AbortPolicy ,会  throw RejectedExecutionException 异常,但是这是一个运行时异常,对于运行时异常编译器不会强制 catch 它,所以就会比较容易忽略掉错误.<br>所以,如果线程池处理的任务非常重要,<strong>尽量自定义自己的拒绝策略</strong></font></p>
+<h1 id="线程池的几个状态"><a href="#线程池的几个状态" class="headerlink" title="线程池的几个状态"></a><font face="华文中宋" size="3">线程池的几个状态</font></h1><p><font face="华文中宋" size="3">这篇文章开始我就说了,希望能写出一点儿不一样的东西,那咱们就从源码撸一撸<br>撸啥呢,源码那么多,总不能毫无目的的撸吧?<br>咱们来吧线程池的 5 种状态来撸一撸<br>在源码中,我们能够很明显看到定义的 5 种状态:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RUNNING    = -<span class="number">1</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHUTDOWN   =  <span class="number">0</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP       =  <span class="number">1</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TIDYING    =  <span class="number">2</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TERMINATED =  <span class="number">3</span> &lt;&lt; COUNT_BITS;</span><br></pre></td></tr></table></figure>
+<p>同时,使用 AtomicInteger 类型的变量 ctl 来控制线程池的状态</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger ctl = <span class="keyword">new</span> AtomicInteger(ctlOf(RUNNING, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<ul>
+<li><font face="华文中宋" size="3">线程池创建之后就处于 RUNNING 状态</font></li>
+<li><font face="华文中宋" size="3">调用 shutdown() 方法之后处于 SHUTDOWN 状态,此时线程池不再接受新的任务,清除一些空闲 worker ,等待阻塞队列的任务完成</font></li>
+<li><font face="华文中宋" size="3">调用 shutdownNow() 方法后处于 STOP 状态,此时线程池不再接受新的任务,中断所有的线程,阻塞队列中没有被执行的任务也会被全部丢弃</font></li>
+<li><font face="华文中宋" size="3">当线程池中执行的任务为空时,也就是此时 ctl 的值为 0 时,线程池会变为 TIDYING 状态,接下来会执行 terminated() 方法</font></li>
+<li><font face="华文中宋" size="3">执行完 terminated() 方法之后,线程池的状态就由 TIDYING 转到 TERMINATED 状态</font></li>
+</ul>
+<p><font face="华文中宋" size="3">最后上张图总结一下:</font></p>
+<p><img src="/images/2020/线程池状态转换.jpg"></p>
+<h2 id="线程池是如何处理任务的"><a href="#线程池是如何处理任务的" class="headerlink" title="线程池是如何处理任务的"></a><font face="华文中宋" size="3">线程池是如何处理任务的</font></h2><p><font face="华文中宋" size="3">线程池处理任务的核心方法是 execute ,大概思路就是:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">如果 command 为 null ,没啥说的,直接抛出异常就完事儿了</font></li>
+<li><font face="华文中宋" size="3">如果当前线程数小于 corePoolSize ,会新建一个核心线程执行任务</font></li>
+<li><font face="华文中宋" size="3">如果当前线程数不小于 corePoolSize ,就会将任务放到队列中等待,如果任务排队成功,仍然需要检查是否应该添加线程,所以需要重新检查状态,并且在必要时回滚排队;如果线程池处于 running 状态,但是此时没有线程,就会创建线程</font></li>
+<li><font face="华文中宋" size="3">如果没有办法给任务排队,说明这个时候,缓存队列满了,而且线程数达到了 maximumPoolSize 或者是线程池关闭了,系统没办法再响应新的请求,此时会执行拒绝策略</font></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (command == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">		</span><br><span class="line">    <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">    <span class="comment">// 当前线程数小于 corePoolSize 时,调用 addWorker 创建核心线程来执行任务</span></span><br><span class="line">    <span class="keyword">if</span> (workerCountOf(c) &lt; corePoolSize) &#123;</span><br><span class="line">        <span class="keyword">if</span> (addWorker(command, <span class="keyword">true</span>))</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        c = ctl.get();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当前线程数不小于 corePoolSize ,就将任务添加到 workQueue 中</span></span><br><span class="line">    <span class="keyword">if</span> (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;</span><br><span class="line">    	<span class="comment">// 获取到当前线程的状态,赋值给 recheck ,是为了重新检查状态</span></span><br><span class="line">        <span class="keyword">int</span> recheck = ctl.get();</span><br><span class="line">        <span class="comment">// 如果 isRunning 返回 false ,那就 remove 掉这个任务,然后执行拒绝策略,也就是回滚重新排队</span></span><br><span class="line">        <span class="keyword">if</span> (! isRunning(recheck) &amp;&amp; remove(command))</span><br><span class="line">            reject(command);</span><br><span class="line">            <span class="comment">// 线程池处于 running 状态,但是没有线程,那就创建线程执行任务</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)</span><br><span class="line">            addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果放入 workQueue 失败,尝试通过创建非核心线程来执行任务</span></span><br><span class="line">    <span class="comment">// 如果还是失败,说明线程池已经关闭或者已经饱和,会拒绝执行该任务</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (!addWorker(command, <span class="keyword">false</span>))</span><br><span class="line">        reject(command);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">在上面源码中,判断了两次线程池的状态,为什么要这么做呢?<br>这是因为在多线程环境下,线程池的状态是时刻发生变化的,可能刚获取线程池状态之后,这个状态就立刻发生了改变.如果没有二次检查的话,线程池处于非 RUNNING 状态时, command 就永远不会执行<br>来张图,总结一下上面说的:</font></p>
+<p><img src="/images/2020/线程执行任务过程.jpg"></p>
+<p><font face="华文中宋" size="3">这篇文章写到这里就没有啦~<br>希望你能从中得到一些收获<br>感谢你的阅读哇</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-并发/" rel="tag"><i class="fa fa-tag"></i> Java 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/ccdbd4d7.html" rel="next" title="[Java 并发]跳出来,看全貌">
+                <i class="fa fa-chevron-left"></i> [Java 并发]跳出来,看全貌
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要用线程池"><span class="nav-number">1.</span> <span class="nav-text">为什么要用线程池</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绕不过去的几个参数"><span class="nav-number">2.</span> <span class="nav-text">绕不过去的几个参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池的几个状态"><span class="nav-number">3.</span> <span class="nav-text">线程池的几个状态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程池是如何处理任务的"><span class="nav-number">3.1.</span> <span class="nav-text">线程池是如何处理任务的</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
