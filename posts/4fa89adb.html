@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在这篇文章:  [mysql]手把手教你给 SQL 做个优化  中介绍了,给 SQL 做优化的时候,最主要的一点就是建索引">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[MySQL]再谈索引">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/4fa89adb.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="在这篇文章:  [mysql]手把手教你给 SQL 做个优化  中介绍了,给 SQL 做优化的时候,最主要的一点就是建索引">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/索引.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/二叉树.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/B树.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/B+树.jpg">
+<meta property="og:updated_time" content="2020-08-23T00:30:03.889Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[MySQL]再谈索引">
+<meta name="twitter:description" content="在这篇文章:  [mysql]手把手教你给 SQL 做个优化  中介绍了,给 SQL 做优化的时候,最主要的一点就是建索引">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/索引.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/4fa89adb">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[MySQL]再谈索引 | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/4fa89adb.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[MySQL]再谈索引
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-23 08:22:35 / 修改时间：08:30:03" itemprop="dateCreated datePublished" datetime="2020-08-23T08:22:35+08:00">2020-08-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/4fa89adb.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/4fa89adb.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">在这篇文章:  <a href="https://www.dynamic-zheng.com/posts/a02f5441.html#more">[mysql]手把手教你给 SQL 做个优化</a>  中介绍了,给 SQL 做优化的时候,最主要的一点就是建索引<br><a id="more"></a><br>那你有没有新的疑问呢?<br>索引采用的数据结构是啥呢,为什么一提到 mysql 就会问 B 树, B+ 树呢<br>今天这篇文章来说说</font></p>
+<p><font face="华文中宋" size="3">在我们给数据库中一个字段建立索引的时候,能够看到可以选择是 Hash 类型,还是 BTREE 类型的索引</font></p>
+<p><img src="/images/2020/索引.jpg"></p>
+<p><font face="华文中宋" size="3">那为什么 InnoDB 引擎默认使用的是 B+ 树而不是 Hash 嘞<br>你想,你细想<br>使用 Hash 的话很容易出现哈希冲突,特别是在数据量非常大的时候,出现了大量的哈希冲突会导致程序的整体查询性能变慢<br>假设我现在有个查询语句是这样写的 <code>select name,age from student where age &gt; 18</code> 这不是蛮简单的嘛,就找出来所有 age 大于 18 的数据就可以了嘛<br>但是对于使用 Hash 数据结构的索引来说,太难了.因为 Hash 是 key-value 的结构,所以它擅长的是精确查询,如果你让它查找  <code>select name,age from student where age = 18</code> 它返回结果就非常快了<br>那既然 Hash 不支持范围查询,支持 key-value ,那它的应用场景是啥呢?就是等值查询咯,给我一个 key 就可以快速回应一个 value ,咦?怎么和 Redis 那么像呢?<br>就是嘛, Redis , Memcached 它们都有用到 Hash 结构</font></p>
+<p><font face="华文中宋" size="3">Hash 不支持范围查找,但是有序数组支持啊<br>那为啥不用有序数组嘞<br>没错,有序数组的查询性能可以说非常好了,不管是等值查询,还是范围查询,效率简直完爆其他<br>但是咱们的应用场景又不是只有查询对吧,还有插入,修改,删除呢,有序数组这个时候就顶不住了<br>特别是如果插入到头部,第一个位置,从第二位开始往后都要开始向后移动,将第一个位置空出来,这么一来,我的天,还没等你插入完毕,用户都等不及跑了</font></p>
+<p><font face="华文中宋" size="3">那新的疑惑来了<br>B+ 树属于树的一种,二叉树也是树的一种,你咋不用二叉树呢<br>你想,你再想</font></p>
+<p><img src="/images/2020/二叉树.jpg"></p>
+<p><font face="华文中宋" size="3">二叉树是每个节点最多只有两个分支,每个节点只存储一个数据的树结构,那如果我的数据量非常大的话呢,比方说一个小目标, 1 亿数据<br>这个时候二叉树的高度就会变得非常高<br>既然是数据,不做持久化嘛?肯定是要持久化到磁盘的,而且就目前公司的成本来说,应该还没富到服务器的硬盘全是固态吧,有些还是机械硬盘,机械硬盘的读取速度又比较慢<br>那么此时我需要在 1 亿数据里面,查找一个数据,再加上机械硬盘的读取速度,可能给它一分钟的时间都找不到需要的数据<br>乖乖,让你在一个空白的页面上呆一分钟,你会么?<br>这个时候你的注意力早就不知道跑哪儿去了,或者这个界面打不开对么?行嘞,关闭界面,浏览下一个</font></p>
+<p><font face="华文中宋" size="3">用户流失不是咱们希望看到的,对吧<br>所以嘞,既然二叉树是树的高度比较高,那我让它低点儿不就好了嘛<br>怎么低呢<br>因为二叉树每个节点只存储一个数据,那我现在让它一个节点多存储几个数据就好了嘛<br>这就是 B 树<br>B 树的一个节点可以存储多个数据</font></p>
+<p><img src="/images/2020/B树.jpg"></p>
+<p><font face="华文中宋" size="3">能够明显看到, B 树相对于二叉树来说,高度降低了不少<br>那为啥不用 B 树做索引呢,采用 B+ 树<br>因为 B+ 树在 B 树的基础上又做了优化<br>那做了什么优化呢<br>咱瞅瞅</font></p>
+<p><img src="/images/2020/B+树.jpg"></p>
+<p><font face="华文中宋" size="3">有没有看出来一些内容<br>在 B+ 树中,叶子节点之间有指针指向,在 B 树中则没有<br>在 B+ 树中,非叶子节点会冗余一份在叶子节点中(比如图中的数据 50 ,在叶子节点中也能看到它)<br>在 B+ 树中,非叶子节点不存储数据,只存储索引<br>在 B+树中,查询必须查找到叶子节点, B 树只要匹配到就可以了, 不需要 care 元素位置,所以 B+ 树查找更慢</font></p>
+<p><font face="华文中宋" size="3">我这个人比较懒,图中用到的图片都是直接从网上拿下来的,拿完也忘了原文地址是啥(非常抱歉,我这个人懒不说,记性也不咋滴,懒 + 记性差到这种理直气壮的程度估计也是没谁了…<br>侵权的话您和我说一声,我立马撤下来</font></p>
+<p><font face="华文中宋" size="3">以上,非常感谢您的阅读~</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/bde049c8.html" rel="next" title="[Java 集合]你确定LinkedList 在新增/删除元素时,效率比 ArrayList 高?">
+                <i class="fa fa-chevron-left"></i> [Java 集合]你确定LinkedList 在新增/删除元素时,效率比 ArrayList 高?
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">67</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
