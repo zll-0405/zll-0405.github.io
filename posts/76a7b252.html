@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="题目是个标题党,主要是想写一下 ReentrantReadWriteLock">
+<meta name="keywords" content="Java 并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Java 并发]面试官让我手写一个读写锁出来,我...">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/76a7b252.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="题目是个标题党,主要是想写一下 ReentrantReadWriteLock">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-09-18T14:40:13.781Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Java 并发]面试官让我手写一个读写锁出来,我...">
+<meta name="twitter:description" content="题目是个标题党,主要是想写一下 ReentrantReadWriteLock">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/76a7b252">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[Java 并发]面试官让我手写一个读写锁出来,我... | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/76a7b252.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[Java 并发]面试官让我手写一个读写锁出来,我...
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-18 22:35:25 / 修改时间：22:40:13" itemprop="dateCreated datePublished" datetime="2020-09-18T22:35:25+08:00">2020-09-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/76a7b252.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/76a7b252.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">题目是个标题党,主要是想写一下 ReentrantReadWriteLock<br><a id="more"></a></font></p>
+<h1 id="ReentrantReadWriteLock-与-ReentrantLock-区别"><a href="#ReentrantReadWriteLock-与-ReentrantLock-区别" class="headerlink" title="ReentrantReadWriteLock 与 ReentrantLock 区别?"></a><font face="华文中宋" size="3">ReentrantReadWriteLock 与 ReentrantLock 区别?</font></h1><p><font face="华文中宋" size="3">在这篇文章中:  <a href="https://blog.csdn.net/zll_0405/article/details/105927574" target="_blank" rel="noopener">[Java 并发]带你从源码解读 ReentrantLock 就不信还搞不定它!</a>  对 ReentrantLock 已经做了非常详细的讲解了<br>那么,今天想要说的 ReentrantReadWriteLock 和 ReentrantLock 有什么区别呢?如果只是从名字上来说的话,就是多了一个 ReadWrite 嘛<br>如果对 ReentrantLock 比较熟的话,那么我问 ReentrantLock 是独占锁还是共享锁,你的第一反应就是: 独占锁</font></p>
+<p><font face="华文中宋" size="3">ReentrantReadWriteLock 是在 ReentrantLock 的基础上做的优化,什么优化呢? ReentrantLock 就是不管操作是读操作还是写操作都会对资源进行加锁,但是你想想,如果好几个操作都只是读的话,并没有让数据的状态发生改变,这样的话是不是可以允许多个读操作同时运行?这样的话,相对来说是不是就提高了并发<br>很多事情都是说起来容易,具体是怎么实现的呢?<br>啥也不多说,咱们直接上源码好吧</font></p>
+<p><font face="华文中宋" size="3">在使用 ReentrantReadWriteLock 时,一般都是调用 <code>writeLock</code> 和 <code>readLock</code> 两种方法,它在源码中定义如下:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> ReentrantReadWriteLock.<span class="function">WriteLock <span class="title">writeLock</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> writerLock; &#125;</span><br><span class="line"><span class="keyword">public</span> ReentrantReadWriteLock.<span class="function">ReadLock  <span class="title">readLock</span><span class="params">()</span>  </span>&#123; <span class="keyword">return</span> readerLock; &#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">而 <code>writeLock</code> 和 <code>readLock</code> 是 <code>ReentrantReadWriteLock</code> 的两个内部类,其中这两种锁的实现如下(其中省略了一些代码):</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadLock</span> <span class="keyword">implements</span> <span class="title">Lock</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    	<span class="comment">// 共享锁</span></span><br><span class="line">        sync.acquireShared(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 共享锁</span></span><br><span class="line">        sync.releaseShared(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">WriteLock</span> <span class="keyword">implements</span> <span class="title">Lock</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    	<span class="comment">// 独占锁</span></span><br><span class="line">        sync.acquire(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 独占锁</span></span><br><span class="line">        sync.release(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">从源码就能够看出,对于读锁 <code>readLock</code> 它使用的是共享锁,也就是多个线程读没问题<br>但是对于写锁 <code>writeLock</code> 它使用的是独占锁,就是当一个线程要进行写操作时,其他的线程都要停下来等待<br>简单点儿说就是:一个资源可以被多个读线程访问,或者被一个写线程访问,但是不能同时存在读线程和写线程,这也是读写锁的定义</font></p>
+<h1 id="ReadLock-和-WriteLock-共享一个变量"><a href="#ReadLock-和-WriteLock-共享一个变量" class="headerlink" title="ReadLock 和 WriteLock 共享一个变量"></a><font face="华文中宋" size="3">ReadLock 和 WriteLock 共享一个变量</font></h1><p><font face="华文中宋" size="3">如果让你设计一个读写锁的话,会怎样设计?<br>我还真的认真想了想这个问题,如果让我设计的话,我应该会用两个变量去控制读和写,当线程获取到读锁时就对读变量进行 +1 操作,当获取到写锁时,就对写变量进行 +1 操作<br>但是通过看 ReentrantReadWriteLock 源码发现,它只是通过一个 state 来实现的<br>具体实现如下:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHARED_SHIFT   = <span class="number">16</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHARED_UNIT    = (<span class="number">1</span> &lt;&lt; SHARED_SHIFT);</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_COUNT      = (<span class="number">1</span> &lt;&lt; SHARED_SHIFT) - <span class="number">1</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EXCLUSIVE_MASK = (<span class="number">1</span> &lt;&lt; SHARED_SHIFT) - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Returns the number of shared holds represented in count  */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">sharedCount</span><span class="params">(<span class="keyword">int</span> c)</span>    </span>&#123; <span class="keyword">return</span> c &gt;&gt;&gt; SHARED_SHIFT; &#125;</span><br><span class="line"><span class="comment">/** Returns the number of exclusive holds represented in count  */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">exclusiveCount</span><span class="params">(<span class="keyword">int</span> c)</span> </span>&#123; <span class="keyword">return</span> c &amp; EXCLUSIVE_MASK; &#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">有两个关键方法 <code>sharedCount</code> 和 <code>exclusiveCount</code> ,乖,光是从名字意思来看应该也是可以猜出来的吧: <code>sharedCount</code> 就是共享锁的数量,而 <code>exclusiveCount</code> 则是独占锁的数量<br>通过看源码,能够看出来,对于 <code>sharedCount</code> 来说,它的计算方式就是无符号右移 16 位,空位都以 0 来补齐( <code>c &gt;&gt;&gt; SHARED_SHIFT;</code> )<br>对于 <code>exclusiveCount</code> 来说,它的计算方式就是将传进来的 c 和 <code>EXCLUSIVE_MASK</code> 做 “&amp;” 运算,那么 <code>EXCLUSIVE_MASK</code> 的值是什么呢?就是 <code>(1 &lt;&lt; SHARED_SHIFT) - 1</code> ,如果对位运算比较熟的话,应该会很容易看出来 <code>(1 &lt;&lt; SHARED_SHIFT) - 1</code> 的值就是 65535 ,化成二进制就是 16 个 1,传进来 c 的值,和 16 位全为 1 做 “&amp;” 运算的话,只有 <code>1 &amp; 1</code> 才为 1 ,也就是说,传进来的 c 值经过这样转换之后,还是原来的值</font></p>
+<p> <font face="华文中宋" size="3">说到这里,可能有点儿懵了,没关系,咱们来个总结就好说了(为了好理解,我就用大白话说了,争取各位都能看懂<br> 对于 <code>sharedCount</code> 来说,只要传进来的值不大于 65535 ,那么经过计算之后,值都是 0<br> 对于 <code>exclusiveCount</code> 来说,传进来的值是多少,经过计算之后还是多少<br> 不管是 <code>sharedCount</code> 还是 <code>exclusiveCount</code> ,最大值都是 65535 ,因为是和 16 做位运算,其实这个数字也是相当够用了<br> 那么,看到这里,各位应该就比较了解了吧,对于 <code>ReadLock</code> 和 <code>WriteLock</code> 来说,在源码层次其实并不是用两个变量去做的,而是通过一个 state 来实现的,思路真的是非常的巧妙</font></p>
+<p><font face="华文中宋" size="3">对于我上面说的,如果还是不清楚的话,可以自己写个 demo 去验证一下,很简单的,就比如下面这样:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> shareCount = <span class="number">3000</span> &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">    System.out.println(<span class="string">"shareCount : "</span> + shareCount);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> exclusiveCount = <span class="number">1</span> &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">16</span>) - <span class="number">1</span>);</span><br><span class="line">    System.out.println(<span class="string">"exclusiveCount : "</span> + exclusiveCount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">等你运行完之后,你就发现,哇,怎么和我说的一样,哈哈哈哈<br>对于 <code>sharedCount</code> 来说,它是针对读锁的,所以不管多少进程进行读取资源,都没关系,所以它的值就是 0<br>对于 <code>exclusiveCount</code> 来说,它是针对写锁的,那么只要有一个进程在进行写入,其他线程都要停下来等待,所以它的值就是传进来的值<br>综上,使用一个状态的话,我们只需要去判断这个状态是否是 0 就可以了</font></p>
+<h1 id="WriteLock-的具体实现"><a href="#WriteLock-的具体实现" class="headerlink" title="WriteLock 的具体实现"></a><font face="华文中宋" size="3">WriteLock 的具体实现</font></h1><p><font face="华文中宋" size="3">OK ,既然你都看到了这里,我就默认上面的内容你都理解了<br>WriteLock 说白了就是独占锁,所以在获取 WriteLock 时,不能只考虑是否有写锁在占用,还要考虑有没有读锁.接下来咱们就去探究一下, WriteLock 它具体是怎么实现的</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sync.acquire(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">        selfInterrupt();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</span><br><span class="line">    Thread current = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 获取到锁的状态</span></span><br><span class="line">    <span class="keyword">int</span> c = getState();</span><br><span class="line">    <span class="comment">// 获取写锁的数量</span></span><br><span class="line">    <span class="keyword">int</span> w = exclusiveCount(c);</span><br><span class="line">    <span class="comment">// c != 0 说明有读锁/写锁</span></span><br><span class="line">    <span class="keyword">if</span> (c != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// (Note: if c != 0 and w == 0 then shared count != 0)</span></span><br><span class="line">        <span class="comment">// w == 0 说明此时没有写锁,有读锁 或者 持有写锁的线程不是当前线程</span></span><br><span class="line">        <span class="keyword">if</span> (w == <span class="number">0</span> || current != getExclusiveOwnerThread())</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">// 如果写锁数量超出了最大值,没啥说的,抛异常就完事儿了</span></span><br><span class="line">        <span class="keyword">if</span> (w + exclusiveCount(acquires) &gt; MAX_COUNT)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</span><br><span class="line">        <span class="comment">// Reentrant acquire</span></span><br><span class="line">        <span class="comment">// 当前线程持有写锁,为重入锁,直接 +acquires 即可</span></span><br><span class="line">        setState(c + acquires);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// CAS 操作,确保修改值成功</span></span><br><span class="line">    <span class="keyword">if</span> (writerShouldBlock() ||</span><br><span class="line">        !compareAndSetState(c, c + acquires))</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    setExclusiveOwnerThread(current);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">如果对 ReentrantLock 比较熟的话,你会发现,上面的代码大部分都是见过的<br>有一点区别就是调用了 <code>exclusiveCount</code> 方法,看当前是否有写锁存在,接下来通过 <code>c != 0 and w == 0</code> 判断了当前是否有读锁存在</font></p>
+<h1 id="ReadLock-的具体实现"><a href="#ReadLock-的具体实现" class="headerlink" title="ReadLock 的具体实现"></a><font face="华文中宋" size="3">ReadLock 的具体实现</font></h1><p><font face="华文中宋" size="3">WriteLock 探究完了,接下来瞅瞅 ReadLock ,话不多说,直接上源码</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sync.acquireShared(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">        doAcquireShared(arg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> unused)</span> </span>&#123;</span><br><span class="line">    Thread current = Thread.currentThread();</span><br><span class="line">    <span class="keyword">int</span> c = getState();</span><br><span class="line">    <span class="comment">// 写锁不等于 0 时,看看当前写锁是否在尝试获取读锁</span></span><br><span class="line">    <span class="keyword">if</span> (exclusiveCount(c) != <span class="number">0</span> &amp;&amp;</span><br><span class="line">        getExclusiveOwnerThread() != current)</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 获取读锁数量</span></span><br><span class="line">    <span class="keyword">int</span> r = sharedCount(c);</span><br><span class="line">    <span class="comment">// 读锁不需要阻塞,而且读锁需要小于最大读锁数量,同时 cas 操作进行加 1 操作</span></span><br><span class="line">    <span class="keyword">if</span> (!readerShouldBlock() &amp;&amp;</span><br><span class="line">        r &lt; MAX_COUNT &amp;&amp;</span><br><span class="line">        compareAndSetState(c, c + SHARED_UNIT)) &#123;</span><br><span class="line">        <span class="comment">// 当前线程是第一个并且第一次获取读锁时</span></span><br><span class="line">        <span class="keyword">if</span> (r == <span class="number">0</span>) &#123;</span><br><span class="line">            firstReader = current;</span><br><span class="line">            firstReaderHoldCount = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (firstReader == current) &#123;</span><br><span class="line">            <span class="comment">// 如果当前线程再次获取读锁,则直接进行 ++ 操作即可</span></span><br><span class="line">            firstReaderHoldCount++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 当前线程不是第一个获取读锁的线程,就放入线程本地变量</span></span><br><span class="line">            HoldCounter rh = cachedHoldCounter;</span><br><span class="line">            <span class="keyword">if</span> (rh == <span class="keyword">null</span> || rh.tid != getThreadId(current))</span><br><span class="line">                cachedHoldCounter = rh = readHolds.get();</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (rh.count == <span class="number">0</span>)</span><br><span class="line">                readHolds.set(rh);</span><br><span class="line">            rh.count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fullTryAcquireShared(current);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">看完有没有觉得和写锁那块挺像的,不同就在于因为是读锁嘛,所以只要没有写锁占用,而且读锁的数量没有超过最大的获取数量,就都可以获取读锁<br>在上面, <code>firstReader</code>  <code>firstReaderHoldCount</code>  <code>cachedHoldCounter</code> 都是为 <code>readHolds</code> 服务的,它是为了获取当前线程持有锁的数量,在 <code>ThreadLocal</code> 基础上添加了 Int 变量来统计,这样比较方便嘛<br>具体实现如下:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalHoldCounter</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">ThreadLocal</span>&lt;<span class="title">HoldCounter</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> HoldCounter <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HoldCounter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">HoldCounter</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 当前线程持有锁的数量</span></span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// Use id, not reference, to avoid garbage retention</span></span><br><span class="line">    <span class="comment">// 当前线程 ID</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> tid = getThreadId(Thread.currentThread());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="回到题目-手写一个读写锁出来"><a href="#回到题目-手写一个读写锁出来" class="headerlink" title="回到题目,手写一个读写锁出来?"></a><font face="华文中宋" size="3">回到题目,手写一个读写锁出来?</font></h1><p><font face="华文中宋" size="3">接下来,再回到题目,如果面试官让手写一个读写锁出来,你会如何实现呢?<br>在读了源码之后,相信你心里应该有谱了<br>首先来个 state 变量,然后高 16 位设置为读锁数量,低 16 位设置为写锁数量低,然后在进行读锁时,先判断下是不是有写锁,如果没有,直接读取即可,如果有的话那就需要等待;在写锁想要拿到锁的时候,就要判断写锁和读锁是不是都存在了,如果存在那就等着,如果不存在才进行接下来的操作<br>在这里我给出一个简单版的实现:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWrite</span></span>&#123;</span><br><span class="line">    <span class="comment">// 定义一个读写锁共享变量 state</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> state = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// state 高 16 位为读锁数量</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getReadCount</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// state 低 16 位为写锁数量</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">getWriteCount</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> state &amp; (( <span class="number">1</span> &lt;&lt; <span class="number">16</span> ) - <span class="number">1</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取读锁时,先判断是否有写锁</span></span><br><span class="line">    <span class="comment">// 如果有写锁,就等待</span></span><br><span class="line">    <span class="comment">// 如果没有,进行加 1 操作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">lockRead</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">        <span class="keyword">while</span> ( getWriteCount() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            wait();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"lockRead --- "</span> + Thread.currentThread().getName());</span><br><span class="line">        state = state + ( <span class="number">1</span> &lt;&lt; <span class="number">16</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放读锁数量减 1 ,通知其他线程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">unLockRead</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state = state - ( <span class="number">1</span> &lt;&lt; <span class="number">16</span> );</span><br><span class="line">        notifyAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取写锁时需要判断读锁和写锁是否都存在,有则等待,没有则将写锁数量加 1</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">lockWrite</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (getReadCount() &gt; <span class="number">0</span> || getWriteCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            wait();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"lockWrite --- "</span> + Thread.currentThread().getName());</span><br><span class="line">        state ++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放写锁数量减 1 ,通知所有等待线程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">unlockWriters</span><span class="params">()</span></span>&#123;</span><br><span class="line">        state --;</span><br><span class="line">        notifyAll();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">我自己测试了下,没啥大问题<br>但是如果细究的话,还是有问题的,就比如,如果现在我有好多个读锁,如果一直不释放的话,那么写锁是一直没办法获取到的,这样就造成了饥饿现象的产生嘛<br>解决的话也蛮好解决的,就是在上面添加一个记录写锁数量的变量,然后在读锁之前,去判断一下是否有线程要获取写锁,如果有的话,优先处理,没有的话再进行读锁操作<br>这块大家试试自己实现吧~我这里就不给具体实现了</font></p>
+<p><font face="华文中宋" size="3">最后,我觉得一个专栏至少是要写 15 篇文章,才可以算得上专栏一说<br>Java 并发这个系列,带上这一篇,就已经写了 14 篇了,计划是再写一篇文章,然后 Java 并发这个系列就告一个段落,接下来 Java 并发系列的更新就随缘,看我兴趣了~<br>Java 并发结束之后,就想去写写 JVM/Dubbo/Zookeeper/Redis/RabbitMQ 等等的内容(总之是要写的内容还有好多</font></p>
+<p><font face="华文中宋" size="3">保持饥饿,保持对技术的热情,就酱~<br>大晚上的更新一篇,感谢您的阅读哇</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-并发/" rel="tag"><i class="fa fa-tag"></i> Java 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/38d2bcc6.html" rel="next" title="[碎碎念]最近有点儿飘">
+                <i class="fa fa-chevron-left"></i> [碎碎念]最近有点儿飘
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ReentrantReadWriteLock-与-ReentrantLock-区别"><span class="nav-number">1.</span> <span class="nav-text">ReentrantReadWriteLock 与 ReentrantLock 区别?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReadLock-和-WriteLock-共享一个变量"><span class="nav-number">2.</span> <span class="nav-text">ReadLock 和 WriteLock 共享一个变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WriteLock-的具体实现"><span class="nav-number">3.</span> <span class="nav-text">WriteLock 的具体实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReadLock-的具体实现"><span class="nav-number">4.</span> <span class="nav-text">ReadLock 的具体实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回到题目-手写一个读写锁出来"><span class="nav-number">5.</span> <span class="nav-text">回到题目,手写一个读写锁出来?</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
