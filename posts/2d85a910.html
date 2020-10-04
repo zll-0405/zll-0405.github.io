@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="redis 在项目中用的话,主要就是用作缓存了既然用作缓存,那就肯定会有 缓存穿透/缓存击穿/缓存雪崩 的问题这篇文章就来说说,遇到这种情况时,该如何去处理">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[redis]关于 缓存穿透&#x2F;缓存击穿&#x2F;缓存雪崩 看这篇文章就够了">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/2d85a910.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="redis 在项目中用的话,主要就是用作缓存了既然用作缓存,那就肯定会有 缓存穿透/缓存击穿/缓存雪崩 的问题这篇文章就来说说,遇到这种情况时,该如何去处理">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/布隆过滤器-初始.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/布隆过滤器-第一次映射.jpg">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/布隆过滤器-第二次映射.jpg">
+<meta property="og:updated_time" content="2020-10-04T09:45:27.891Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[redis]关于 缓存穿透&#x2F;缓存击穿&#x2F;缓存雪崩 看这篇文章就够了">
+<meta name="twitter:description" content="redis 在项目中用的话,主要就是用作缓存了既然用作缓存,那就肯定会有 缓存穿透/缓存击穿/缓存雪崩 的问题这篇文章就来说说,遇到这种情况时,该如何去处理">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/布隆过滤器-初始.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/2d85a910">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[redis]关于 缓存穿透/缓存击穿/缓存雪崩 看这篇文章就够了 | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/2d85a910.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[redis]关于 缓存穿透/缓存击穿/缓存雪崩 看这篇文章就够了
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-04 17:41:52 / 修改时间：17:45:27" itemprop="dateCreated datePublished" datetime="2020-10-04T17:41:52+08:00">2020-10-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/2d85a910.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/2d85a910.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">redis 在项目中用的话,主要就是用作缓存了<br>既然用作缓存,那就肯定会有 缓存穿透/缓存击穿/缓存雪崩 的问题<br>这篇文章就来说说,遇到这种情况时,该如何去处理<br><a id="more"></a></font></p>
+<h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a><font face="华文中宋" size="3">缓存穿透</font></h1><p><font face="华文中宋" size="3">首先咱们搞明白什么是缓存穿透?这三个词这么像,得把概念搞清楚不是<br>其实只是从字面意思上来看的话,大概也能知道一点儿,缓存穿透嘛,就是直接穿过了缓存,将请求打到了数据库上面去<br>一般情况下,去查询数据的话,缓存里面应该都是有的,但是防不住黑客呀,如果黑客请求查询的是数据库里面根本不存在的数据,数据库里面都没有的数据,缓存里面肯定也不会有了,对吧,那么此时请求就会打到咱们的数据库里面去,这就是<strong>缓存穿透</strong><br>你想啊,黑客想要攻击的话,怎么可能只请求一次呢,肯定是大量的请求过来,因为是拿数据库里面不存在的 id 来请求的,那么这些请求毫无疑问直接打到了数据库上面去,那咱们的数据库可能就会因为这些大量的请求直接宕掉</font></p>
+<p><font face="华文中宋" size="3">如何解决呢?<br>咱们回到产生这个问题的场景中,为什么大量的请求会打到数据库上面来?因为缓存里面没有对应的 key 对吧,所以才会越过缓存直接到数据库<br>那么问题就好解决了嘛,缓存里面没有对应的 key ? OK,如果这个 key 数据库里面也没有,那我就在 redis 里面,存上这个 key ,值是 null ,这样如果有查询这个 key 的请求,我直接返回 null 就完事儿了,也就不用打到数据库上面去了<br>注意一下,要记得设置它的过期时间,一般三到五分钟就够了</font></p>
+<p><font face="华文中宋" size="3">但是对方是个黑客呀,可能就用一个 key 去请求么?他可能会在短时间内用大量的 key 来发送请求,那如果一个 key 就在 redis 中存储一个 null 值的话,那么多 key 是不是就会存储那么多个 null 值嘞?<br>这样的话, redis 里面是不是都是值为 null 的了?<br>所以有没有更好的解决办法呢?<br>那必须得有!<br>布隆过滤器,你值得尝试</font></p>
+<p><font face="华文中宋" size="3">什么是布隆过滤器呢?就是它能告诉你,某个值一定不存在或者可能存在( emmmm ,也不知道我有没有说清楚<br>所以可以将数据库的内容缓存一份到布隆过滤器,这样的话,当大量的请求过来的时候,<br> redis 里面没有,没关系,再去布隆过滤器过滤一下,这样请求不用打到数据库上面去,就能确定这个 key 数据库中有没有<br> 这样不就降低了数据库的压力么,可真是个天才~</font></p>
+<h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a><font face="华文中宋" size="3">缓存击穿</font></h1><p><font face="华文中宋" size="3">缓存击穿说的是,在高并发情况下,如果好多个请求都在查询一个 key ,好巧不巧的是,这个 key 因为某些原因失效了(比如设置的过期时间到了,缓存服务器宕机了),这样就会导致那么多的请求都直接打到数据库上面去了<br>那如果这些请求的数量足够大的话,可能直接把数据库就干掉了</font></p>
+<p><font face="华文中宋" size="3">知道了造成结果的原因,那么寻找解决方案也就好办了<br>不是因为好多个请求打到了数据库嘛,但是它们请求的都只是一个 key ,所以这里可以使用排斥锁来实现,第一个请求达到请求 key 发现缓存里面没有,允许它去数据库查询,同时加锁,这样第二个请求,第三个请求…都会被锁阻塞到当前,不会再打到数据库,这样就减少了数据库的并发压力</font></p>
+<h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a><font face="华文中宋" size="3">缓存雪崩</font></h1><p><font face="华文中宋" size="3">缓存雪崩,雪崩雪崩嘛,就比较严重,击穿说的是一个 key 失效的情况,雪崩指的是大规模的缓存失效情况的发生,这是有可能发生的,比如说我的缓存服务器宕机了,那是不是直接就大规模的缓存失效了;或者说,我当时为了图省事,好多个 key 设置的过期时间都是一样的,然后刚好在缓存都失效的时候,好多请求不同的 key 过来了</font></p>
+<p><font face="华文中宋" size="3">解决方案的话,其实就不适合使用加锁的方式去解决了,因为这是好多请求不同的 key ,它不是一个嘛<br>而且嘞,咱们是因为好多个 key 设置的过期时间都是一样的,所以解决方案就是,咱们不设置同样的时间让缓存失效了,咱们给一个随机时间,让缓存随机失效,这样的话,大规模的缓存失效情况就减少很多了<br>那还要一种情况呢,就是如果我的缓存服务器直接宕机了,这怎么办?也好弄,来个集群就解决了,这里只是一个解决方案,它的落地实现不是本文重点哈~</font></p>
+<h1 id="再谈-布隆过滤器"><a href="#再谈-布隆过滤器" class="headerlink" title="再谈 布隆过滤器"></a><font face="华文中宋" size="3">再谈 布隆过滤器</font></h1><p><font face="华文中宋" size="3">OK ,你如果看到这里的话,其实这篇文章的内容就说完了<br>但是我感觉布隆过滤器那块,我没有说清楚,所以在这里拿出来详细说一说</font></p>
+<p><font face="华文中宋" size="3">布隆过滤器是一种数据结构,它是一种概率型的数据结构,就是它能告诉你”某样东西一定不存在或者可能存在”<br>唉,你可能会说,这话刚刚不是说过了嘛,本来就挺拗口的,你咋还说<br>还不是因为这句话比较重要,我觉得把这句话理解透彻了,那么对布隆过滤器理解的应该也就到位了</font></p>
+<p><font face="华文中宋" size="3">来,为了形象生动一些,咱们举个例子~<br>布隆过滤器是一个 bit 向量或者说 bit 数组,大概长这样:</font></p>
+<p><img src="/images/2020/布隆过滤器-初始.jpg"></p>
+<p><font face="华文中宋" size="3">现在,我们需要把 “AliPay” 这个字段给存储进去<br>大概的存储过程就是:将要映射的值,使用多个不同的哈希函数生成多个哈希值,然后每个生成的哈希值指向的 bit 置为 1<br>以给的为例,我们现在将 “AliPay” 这个值,通过三个不同的哈希函数进行映射,那么大概就是这样了:</font></p>
+<p><img src="/images/2020/布隆过滤器-第一次映射.jpg"></p>
+<p><font face="华文中宋" size="3">同样,现在我要存储另外一个值 “WechatPay” ,那么可能映射之后就是下面这样:</font></p>
+<p><img src="/images/2020/布隆过滤器-第二次映射.jpg"></p>
+<p><font face="华文中宋" size="3">细心的你可能就会发现, 4 号位置的值,刚开始不是给 “AliPay” 了么,后来 “WechatPay” 也在那里,这样的话,值不就给覆盖掉了嘛<br>嗯,没错,是给覆盖到了</font></p>
+<p><font face="华文中宋" size="3">接下来,我们查询 “Ali” 那么查询之后,布隆过滤器可能会给你 “0,1,2” 的值, 结果呢 “2” 的位置是 0 ,说明没有任何值映射到这个位置上来,所以我们就可以判定数据库里面没有 “Ali” 这个值<br>那我查询 “AliPay” 的话,毫无疑问,肯定会返回给我 “1,4,6” ,那我们能说数据库里面一定有 “AliPay” 么?不能,因为 “1,4,6” 的值有可能被其他的值给映射了,所以我们只能说,数据库里可能存在 “AliPay”<br>这就是布隆过滤器说的”某个值一定不存在或者可能存在”<br>你理解了嘛?(不理解的话,我也就写到这儿了~</font></p>
+<p><font face="华文中宋" size="3">以上,感谢您的阅读哇~</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/f0d1ecb0.html" rel="next" title="[Java 并发]面试官:三个线程顺序执行,你来说说有几种实现方式?">
+                <i class="fa fa-chevron-left"></i> [Java 并发]面试官:三个线程顺序执行,你来说说有几种实现方式?
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">自由而不独立,仍是奴隶.</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存穿透"><span class="nav-number">1.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存击穿"><span class="nav-number">2.</span> <span class="nav-text">缓存击穿</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">3.</span> <span class="nav-text">缓存雪崩</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#再谈-布隆过滤器"><span class="nav-number">4.</span> <span class="nav-text">再谈 布隆过滤器</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
