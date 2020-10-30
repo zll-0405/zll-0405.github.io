@@ -107,16 +107,19 @@
 
 
 
-  <meta name="description" content="自由而不独立,仍是奴隶.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="郑璐璐|个人博客">
-<meta property="og:url" content="https://www.dynamic-zheng.com/archives/2020/page/4/index.html">
+  <meta name="description" content="我先说下背景:我最近不是换了家公司工作,然后这家公司就是不管发什么请求都是需要带着 token 信息的,也就是说,比如现在我写好代码了,想要验证我写的代码对不对,咱们现在用的都是 springboot , springcloud 框架,写完了直接在 swagger 界面上进行调试就 OK 了,但是现在不管什么请求都要携带 token 信息,默认的 swagger 配置是没有的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[项目]在 swagger 界面实现 token 验证">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/e23cc848.html">
 <meta property="og:site_name" content="郑璐璐|个人博客">
-<meta property="og:description" content="自由而不独立,仍是奴隶.">
+<meta property="og:description" content="我先说下背景:我最近不是换了家公司工作,然后这家公司就是不管发什么请求都是需要带着 token 信息的,也就是说,比如现在我写好代码了,想要验证我写的代码对不对,咱们现在用的都是 springboot , springcloud 框架,写完了直接在 swagger 界面上进行调试就 OK 了,但是现在不管什么请求都要携带 token 信息,默认的 swagger 配置是没有的">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/token.png">
+<meta property="og:updated_time" content="2020-10-30T15:45:44.023Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="郑璐璐|个人博客">
-<meta name="twitter:description" content="自由而不独立,仍是奴隶.">
+<meta name="twitter:title" content="[项目]在 swagger 界面实现 token 验证">
+<meta name="twitter:description" content="我先说下背景:我最近不是换了家公司工作,然后这家公司就是不管发什么请求都是需要带着 token 信息的,也就是说,比如现在我写好代码了,想要验证我写的代码对不对,咱们现在用的都是 springboot , springcloud 框架,写完了直接在 swagger 界面上进行调试就 OK 了,但是现在不管什么请求都要携带 token 信息,默认的 swagger 配置是没有的">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/token.png">
 
 
 
@@ -126,7 +129,7 @@
 
   
   
-  <link rel="canonical" href="https://www.dynamic-zheng.com/archives/2020/page/4/">
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/e23cc848">
 
 
 
@@ -136,7 +139,7 @@
   };
 </script>
 
-  <title>归档 | 郑璐璐|个人博客</title>
+  <title>[项目]在 swagger 界面实现 token 验证 | 郑璐璐|个人博客</title>
   
 
 
@@ -184,7 +187,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -273,7 +276,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -332,247 +335,197 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/e23cc848.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="自由而不独立,仍是奴隶.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
-         
+          <h1 class="post-title" itemprop="name headline">[项目]在 swagger 界面实现 token 验证
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-30 23:43:16 / 修改时间：23:45:44" itemprop="dateCreated datePublished" datetime="2020-10-30T23:43:16+08:00">2020-10-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
           
-        不错! 目前共计 75 篇日志。 继续努力。
-      </span>
-      
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/posts/2d11cb2d.html" itemprop="url">
             
-              <span itemprop="name">[年中总结]若能控制住粗鄙的狂喜</span>
             
-          </a>
-        
-      </h2>
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/e23cc848.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/e23cc848.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-07-04T20:49:10+08:00" content="2020-07-04">
-          07-04
-        </time>
-      </div>
+          
+          
 
-    </header>
-  </article>
+          
 
+          
 
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/posts/a16e4d0e.html" itemprop="url">
-            
-              <span itemprop="name">[Java 并发]你知道不知道 Fork/Join ?</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-27T08:38:37+08:00" content="2020-06-27">
-          06-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/posts/9595861d.html" itemprop="url">
-            
-              <span itemprop="name">[Java 并发] ThreadPoolExecutor 是如何做到线程复用的</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-21T14:02:30+08:00" content="2020-06-21">
-          06-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p><font face="华文中宋" size="3">我先说下背景:我最近不是换了家公司工作,然后这家公司就是不管发什么请求都是需要带着 token 信息的,也就是说,比如现在我写好代码了,想要验证我写的代码对不对,咱们现在用的都是 springboot , springcloud 框架,写完了直接在 swagger 界面上进行调试就 OK 了,但是现在不管什么请求都要携带 token 信息,默认的 swagger 配置是没有的<br><a id="more"></a><br>我在上家公司的时候,当时的权限部门帮我们都做好了 token 验证,只要是能够进入到我们系统的用户,那就是有权限的,所以当时的项目直接在 swagger 界面上进行测试就 OK 了<br>我刚接手项目熟悉的时候,想要测试一下请求, swagger 上没办法添加 token 信息,所以我就得用 postman 去测</font></p>
+<p><font face="华文中宋" size="3">对我来说是有点儿难受的,你想想,我以前就是写好了接口,启动项目,去 swagger 项目上一测试,没问题提交代码完事儿,有问题我就可以直接进行调试<br>现在使用 postman 测试没问题还好,有问题的话, token 不知道怎么添加进去,感觉就是明明可以直接使用 swagger 的,现在要再进行一个第三方 postman ,就感觉用的不是很顺手嘛</font></p>
+<p><font face="华文中宋" size="3">所以我就想,能不能在 swagger 上直接就可以添加上 token 信息,这样的话,我就不需要再借助第三方工具 postman 了<br>一倒腾还真的让我给搞成功了</font></p>
+<p><font face="华文中宋" size="3">swagger 整合细节我就不说了,这里主要就是 swagger 启动那里需要设置,具体代码:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">controllerApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 添加 head 参数配置 start</span></span><br><span class="line">    ParameterBuilder token = <span class="keyword">new</span> ParameterBuilder();</span><br><span class="line">    List&lt;Parameter&gt; pars = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    token.name(<span class="string">"Authorization"</span>).description(<span class="string">"token 信息"</span>).modelRef(<span class="keyword">new</span> ModelRef(<span class="string">"String"</span>))</span><br><span class="line">            .parameterType(<span class="string">"header"</span>).required(<span class="keyword">false</span>).build();</span><br><span class="line">    pars.add(token.build());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">            .enable(enable)</span><br><span class="line">            .apiInfo(<span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                    .title(projectName + <span class="string">"接口文档"</span>)</span><br><span class="line">                    .description(projectDesc + <span class="string">""</span>)</span><br><span class="line">                    .license(<span class="string">"郑璐璐 csdn"</span>)</span><br><span class="line">                    .licenseUrl(<span class="string">"https://blog.csdn.net/zll_0405"</span>)</span><br><span class="line">                    .version(version)</span><br><span class="line">                    .build())</span><br><span class="line">            .select()</span><br><span class="line">            .apis(RequestHandlerSelectors.basePackage(basePackage))</span><br><span class="line">            .paths(PathSelectors.any())</span><br><span class="line">            .build()</span><br><span class="line">            <span class="comment">// 注意一下 globalOperationParameters 这行配置</span></span><br><span class="line">            .globalOperationParameters(pars);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font face="华文中宋" size="3">OK ,添加好上面的代码之后,再启动就能在 swagger 界面上看到下面的改动了:</font></p>
+<p><img src="/images/2020/token.png"></p>
+<p><font face="华文中宋" size="3">在图中红框框的地方,输入 token 信息,然后执行一下,你就会发现,使用 swagger 我又可以了,哈哈哈</font></p>
+<p><font face="华文中宋" size="3">注意:给出的代码只是一个小 demo ,具体信息请根据自己的项目信息去配置<br>以上,感谢您的阅读哇~</font></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/posts/d3e00aa7.html" itemprop="url">
-            
-              <span itemprop="name">[Java 并发]详解 ThreadPoolExecutor</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-14T10:29:12+08:00" content="2020-06-14">
-          06-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/posts/ccdbd4d7.html" itemprop="url">
-            
-              <span itemprop="name">[Java 并发]跳出来,看全貌</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-06T18:56:26+08:00" content="2020-06-06">
-          06-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/83a68896.html" rel="next" title="[碎碎念]是的,我换了家公司工作">
+                <i class="fa fa-chevron-left"></i> [碎碎念]是的,我换了家公司工作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2020/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/archives/2020/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2020/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/2020/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2020/page/9/">9</a><a class="extend next" rel="next" href="/archives/2020/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  </article>
 
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -881,6 +834,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
 
   
 
@@ -926,6 +883,8 @@
 
 
 
+
+  
 
 
   
