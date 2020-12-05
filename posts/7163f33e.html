@@ -120,7 +120,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201129192459721.jpg#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201129193144151.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201129193349908.jpg#pic_center">
-<meta property="og:updated_time" content="2020-11-29T12:00:27.824Z">
+<meta property="og:updated_time" content="2020-12-05T13:19:41.821Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Java]面试官你能不能别问我 HashMap 了?">
 <meta name="twitter:description" content="如果你是个 Java 程序员,那一定对 HashMap 不陌生,巧的是只要你去面试,大概率都会被问到 HashMap 的相关内容基于此,就总结一篇,争取不让面试官问倒~">
@@ -403,12 +403,24 @@
                 
               
 
-              <time title="创建时间：2020-11-29 19:54:58 / 修改时间：20:00:27" itemprop="dateCreated datePublished" datetime="2020-11-29T19:54:58+08:00">2020-11-29</time>
+              <time title="创建时间：2020-11-29 19:54:58" itemprop="dateCreated datePublished" datetime="2020-11-29T19:54:58+08:00">2020-11-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-12-05 21:19:41" itemprop="dateModified" datetime="2020-12-05T21:19:41+08:00">2020-12-05</time>
               
             
           </span>
@@ -477,7 +489,8 @@
 <h1 id="HashMap-的底层数据结构"><a href="#HashMap-的底层数据结构" class="headerlink" title="HashMap 的底层数据结构"></a><font face="华文中宋" size="3">HashMap 的底层数据结构</font></h1><p><font face="华文中宋" size="3">先来聊聊 HashMap 的底层数据结构<br>HashMap 的底层数据结构, 1.7 版本和 1.8 版本是有些不同的,但大体上都是 数组 + 链表 的形式来实现的<br>1.7 版本是这个样子:<br><img src="https://img-blog.csdnimg.cn/2020112912213098.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></font></p>
 <p><font face="华文中宋" size="3">1.8 版本是这样:<br><img src="https://img-blog.csdnimg.cn/2020112912221571.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></font></p>
 <p><font face="华文中宋" size="3">很明显就能看出来, 1.8 版本怎么多了一个树?还是红黑的?<br>这就要来分析 1.7 版本 HashMap 的实现有什么不足了.<br>1.7 版本主要就是 数组 + 链表,那么如果有一个 hash 值总是会发生碰撞,那么由此对应的链表结构也会越来越长,这个时候如果再想要进行查询操作,就会非常耗时,所以该如何优化这一点就是 1.8 版本想要实现的<br>1.8 版本采用了 数组 + 链表 + 红黑树 的方式去实现,当链表的长度大于 8 时,就会将链表转为红黑树.</font></p>
-<p><font face="华文中宋" size="3">这个时候问题就来了,为什么会将链表转红黑树的值设定为 8 ?<br>因为链表的时间复杂度是 n/2 ,红黑树时间复杂度是 logn ,当 n 等于 8 的时候, log8 要比 8/2 小,这个时候红黑树的查找速度会更快一些<br>为什么是小于 6 的时候转为链表,而不是 7 的时候就转为链表呢?频繁的从链表转到红黑树,再从红黑树转到链表,开销会很大,特别是频繁的从链表转到红黑树时,需要旋转</font></p>
+<p><font face="华文中宋" size="3">这个时候问题就来了,为什么会将链表转红黑树的值设定为 8 ?<br>这个问题我们或许可以从源码中窥探一二:</font></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Ideally, under random hashCodes, the frequency of nodes in bins follows a Poisson distribution </span><br><span class="line">with a parameter of about <span class="number">0.5</span> on average <span class="keyword">for</span> the <span class="keyword">default</span> resizing threshold of <span class="number">0.75</span>, although </span><br><span class="line">with a large variance because of resizing granularity. Ignoring variance, the expected </span><br><span class="line"><span class="function">occurrences of list size k <span class="title">are</span> <span class="params">(exp(<span class="number">-0.5</span>)</span> * <span class="title">pow</span><span class="params">(<span class="number">0.5</span>, k)</span> / <span class="title">factorial</span><span class="params">(k)</span>). </span></span><br><span class="line"><span class="function">The first values are:</span></span><br><span class="line"><span class="function">      0:    0.60653066</span></span><br><span class="line"><span class="function">      1:    0.30326533</span></span><br><span class="line"><span class="function">      2:    0.07581633</span></span><br><span class="line"><span class="function">      3:    0.01263606</span></span><br><span class="line"><span class="function">      4:    0.00157952</span></span><br><span class="line"><span class="function">      5:    0.00015795</span></span><br><span class="line"><span class="function">      6:    0.00001316</span></span><br><span class="line"><span class="function">      7:    0.00000094</span></span><br><span class="line"><span class="function">      8:    0.00000006</span></span><br><span class="line"><span class="function">      more: less than 1 in ten million</span></span><br></pre></td></tr></table></figure>
 <p><font face="华文中宋" size="3">为什么将链表转为红黑树,而不是平衡二叉树( AVL 树)呢?</font></p>
 <ul>
 <li><font face="华文中宋" size="3">因为 AVL 树比红黑树保持着更加严格的平衡, AVL 树中从根到最深叶的路径最多为 <code>1.44lg(n + 2)</code> ,红黑树中则最多为 <code>2lg( n + 1)</code> ,所以 AVL 树查找效果会比较快,如果是查找密集型任务使用 AVL 树比较好,相反插入密集型任务,使用红黑树效果就比较 nice</font></li>
