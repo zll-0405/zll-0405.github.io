@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.dynamic-zheng.com/"/>
-  <updated>2020-12-05T13:19:41.821Z</updated>
+  <updated>2020-12-06T13:02:12.128Z</updated>
   <id>https://www.dynamic-zheng.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[碎碎念]这周没有输入的我</title>
+    <link href="https://www.dynamic-zheng.com/posts/76fe9e7d.html"/>
+    <id>https://www.dynamic-zheng.com/posts/76fe9e7d.html</id>
+    <published>2020-12-06T13:01:20.000Z</published>
+    <updated>2020-12-06T13:02:12.128Z</updated>
+    
+    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">一篇没有营养的文章<br>这不是今年的最后一个月了嘛,所以我最近的精力就在年终总结上了,写了几个版本都不满意,还在重新推翻重新写<br>然后,最后的这一个月,除了工作时间,其他时间几乎都约出去了,想着在 2021 年之前尽可能多见一些自己在乎的人吧,如果再不见的话,再见面就是 2021 年了,仪式感还是要有的</font></p><p><font face="华文中宋" size="3">这几天简单的复盘了一下去年的目标,除了一个目标没有实现之外,其他的目标都实现了,整体来说,对自己的表现还算满意吧,其实有些地方还是可以做的更好的,那就是明年要改进的地方了<br>今天和几个朋友去吃好吃的去了,吃了一肚子肉回来的我,现在满脑子大搞就是想要睡觉了~</font></p><p><font face="华文中宋" size="3">这周文章就是这样,没啥营养<br>依旧感谢您的阅读~</font></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;一篇没有营养的文章&lt;br&gt;这不是今年的最后一个月了嘛,所以我最近的精力就在年终总结上了,写了几个版本都不满意,还在重新推翻重新写&lt;br&gt;然后,最后的这一个月,除了工作时间,其他时间几乎都约出去了,想着在 2021 年之前
+      
+    
+    </summary>
+    
+      <category term="碎碎念" scheme="https://www.dynamic-zheng.com/categories/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+    
+      <category term="碎碎念" scheme="https://www.dynamic-zheng.com/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+  </entry>
   
   <entry>
     <title>[Java]面试官你能不能别问我 HashMap 了?</title>
@@ -427,28 +452,6 @@
     
     
       <category term="Java 并发" scheme="https://www.dynamic-zheng.com/tags/Java-%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[年中总结]若能控制住粗鄙的狂喜</title>
-    <link href="https://www.dynamic-zheng.com/posts/2d11cb2d.html"/>
-    <id>https://www.dynamic-zheng.com/posts/2d11cb2d.html</id>
-    <published>2020-07-04T12:49:10.000Z</published>
-    <updated>2020-07-04T12:50:17.752Z</updated>
-    
-    <content type="html"><![CDATA[<p><font face="华文中宋" size="3">每次都是感叹,时间怎么就过的这么快呢~<br>七月份了,说明啥?说明就这么一眨眼的时间,半年就过去了(要不我不眨眼了行不,时间就别过这么快了<br><a id="more"></a></font></p><p><font face="华文中宋" size="3">还记得以前自己的总结都能写出好长一篇出来,这次真的是有点儿惆怅了,不知道该写点儿啥</font></p><p><font face="华文中宋" size="3">要说起来的话,这半年就做了两件事:好好工作,好好精进自己<br>好好工作没啥说的,精进自己主要是从 技术 &amp; 眼界 两方面来提高自己</font></p><p><font face="华文中宋" size="3">今年情况也都知道,寒冬嘛,更应该做的就是提高自己<br>技术方面看我以前写的博客就能够看出来最近都干了啥<br>眼界这方面,第一就是自己不断地去学习吧(大年三十那天我还在读书 &amp; 写作,你敢信?<br>第二就是看自己身边优秀的朋友们都在做什么.我是觉得他们都那么厉害,那我跟着他们的脚步去走,最后应该也不会很差</font></p><p><font face="华文中宋" size="3">过去的一年,受明白老师影响蛮大的<br>看到他也会偷懒,看到他也会嫉妒,看到他也会焦虑,看到他也会纠结,让我觉得我不是一个人<br>我是那种,如果今天一天我是睡过去了,或者是玩过去了,没有看一会儿书,没有输出一点儿内容,就会无限制的责怪自己:你怎么能这样呢,时间这么宝贵,你怎么就这么浪费了呢<br>近距离观察明白老师之后,让我知道了再厉害的人也都有自己的情绪,所以现在我也在慢慢的去接受自己,或好或坏都在努力接受着<br>但是有时候如果一天什么都没做,就又会自觉不自觉的去责怪自己,比以前做的好的一点是:发现自己有这方面的倾向之后,觉察到自己的情绪之后,赶快去做调整<br>明白老师,乔老师还有 Ju 老师会在我不知所措的时候给我建议 &amp; 鼓励,能够得到他们的指点和教导,真的是一件值得感恩的事情<br>不知不觉认识他们都一年了,感觉就像是老友一般</font></p><p><font face="华文中宋" size="3">如果真要说起来的话,过去的半年,甚至是过去的很多年里,我一直都被身边的朋友们善待着 &amp; 治愈着<br>感恩,感谢遇到的所有~</font></p><p><font face="华文中宋" size="3">我知道,到了人生这一个时刻,其实都是要靠自己的,对那句话: <code>一个人的对手只有一个,那就是自己</code> 理解的也更加深刻<br>因为在这漫长的岁月中,你要不断的和自己的情绪,懒惰和意志去做斗争,而且你会发现,在绝大多数情况下,只能缴械投降,你还会发现,这事儿吧,就得你自己去做,你的朋友帮不了你,你的家人也帮不了你,只有你,只有你自己去面对这一切,是好的还是坏的,都是自己的,要自己接纳自己,要自己去努力 &amp; 奋斗<br>众生皆苦,只可自渡</font></p><p><font face="华文中宋" size="3">其实也正是因为能够深刻理解一个人才是常态,所以更加觉得成年人之间的温暖,是及其珍贵的<br>帮助过我的,一直惦记着我的,总是鼓励着我的,我都有记在心里,没啥说的,拿行动说话<br>如果你有幸感受到成年人之间的温暖,好好珍惜<br>如果还没有遇到,别太担心,照顾好自己</font></p><p><font face="华文中宋" size="3">人生最重要的不是快乐,而是平和<br>所以,如果能够控制住粗鄙的狂喜,就不会有深入骨髓的悲伤<br>人生路还长,不要着急,要慢慢来</font></p><p><font face="华文中宋" size="3">我又成功的水了一篇文章,又成功的骗你看到这里<br>哈哈哈,谢谢你,耐心看这篇文章到这里,看我的各种碎碎念</font></p><p><font face="华文中宋" size="3">以上,感谢您的阅读哇~</font></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;font face=&quot;华文中宋&quot; size=&quot;3&quot;&gt;每次都是感叹,时间怎么就过的这么快呢~&lt;br&gt;七月份了,说明啥?说明就这么一眨眼的时间,半年就过去了(要不我不眨眼了行不,时间就别过这么快了&lt;br&gt;
-    
-    </summary>
-    
-      <category term="总结" scheme="https://www.dynamic-zheng.com/categories/%E6%80%BB%E7%BB%93/"/>
-    
-    
-      <category term="年中总结" scheme="https://www.dynamic-zheng.com/tags/%E5%B9%B4%E4%B8%AD%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   
