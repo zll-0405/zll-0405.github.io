@@ -107,20 +107,20 @@
 
 
 
-  <meta name="description" content="在多线程中,如果想让一个线程启动,你使用的方法一定是 thread.start() 方法,而不是 thread.run() 方法(啥,你用的不是 thread.start() 方法?你的打开方式不对哦,下次不要这样了~">
-<meta name="keywords" content="Java 并发">
+  <meta name="description" content="我记得我说过,最近在忙着写年终总结,还有就是去见见想见的人嘛因为总觉得自己在乎的人,年前都应该见一见的">
+<meta name="keywords" content="碎碎念">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Java 并发]为什么启动线程时使用 start 而不是 run ?">
-<meta property="og:url" content="https://www.dynamic-zheng.com/posts/335e06cd.html">
+<meta property="og:title" content="[碎碎念]要不要进来唠唠嗑?">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/f77502f5.html">
 <meta property="og:site_name" content="郑璐璐|个人博客">
-<meta property="og:description" content="在多线程中,如果想让一个线程启动,你使用的方法一定是 thread.start() 方法,而不是 thread.run() 方法(啥,你用的不是 thread.start() 方法?你的打开方式不对哦,下次不要这样了~">
+<meta property="og:description" content="我记得我说过,最近在忙着写年终总结,还有就是去见见想见的人嘛因为总觉得自己在乎的人,年前都应该见一见的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/thread-run.jpg">
-<meta property="og:updated_time" content="2020-12-12T12:02:50.483Z">
+<meta property="og:image" content="https://www.dynamic-zheng.com/images/2020/tk.jpg">
+<meta property="og:updated_time" content="2020-12-20T14:48:22.927Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Java 并发]为什么启动线程时使用 start 而不是 run ?">
-<meta name="twitter:description" content="在多线程中,如果想让一个线程启动,你使用的方法一定是 thread.start() 方法,而不是 thread.run() 方法(啥,你用的不是 thread.start() 方法?你的打开方式不对哦,下次不要这样了~">
-<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/thread-run.jpg">
+<meta name="twitter:title" content="[碎碎念]要不要进来唠唠嗑?">
+<meta name="twitter:description" content="我记得我说过,最近在忙着写年终总结,还有就是去见见想见的人嘛因为总觉得自己在乎的人,年前都应该见一见的">
+<meta name="twitter:image" content="https://www.dynamic-zheng.com/images/2020/tk.jpg">
 
 
 
@@ -130,7 +130,7 @@
 
   
   
-  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/335e06cd">
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/f77502f5">
 
 
 
@@ -140,7 +140,7 @@
   };
 </script>
 
-  <title>[Java 并发]为什么启动线程时使用 start 而不是 run ? | 郑璐璐|个人博客</title>
+  <title>[碎碎念]要不要进来唠唠嗑? | 郑璐璐|个人博客</title>
   
 
 
@@ -356,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/335e06cd.html">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/f77502f5.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郑璐璐">
@@ -373,7 +373,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[Java 并发]为什么启动线程时使用 start 而不是 run ?
+          <h1 class="post-title" itemprop="name headline">[碎碎念]要不要进来唠唠嗑?
 
               
             
@@ -399,7 +399,7 @@
                 
               
 
-              <time title="创建时间：2020-12-12 20:00:32 / 修改时间：20:02:50" itemprop="dateCreated datePublished" datetime="2020-12-12T20:00:32+08:00">2020-12-12</time>
+              <time title="创建时间：2020-12-20 22:42:09 / 修改时间：22:48:22" itemprop="dateCreated datePublished" datetime="2020-12-20T22:42:09+08:00">2020-12-20</time>
             
 
             
@@ -421,7 +421,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/碎碎念/" itemprop="url" rel="index"><span itemprop="name">碎碎念</span></a></span>
 
                 
                 
@@ -440,8 +440,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/posts/335e06cd.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/posts/335e06cd.html" itemprop="commentCount"></span>
+                <a href="/posts/f77502f5.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/f77502f5.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -469,22 +469,18 @@
       
 
       
-        <p><font face="华文中宋" size="3">在多线程中,如果想让一个线程启动,你使用的方法一定是 <code>thread.start()</code> 方法,而不是 <code>thread.run()</code> 方法(啥,你用的不是 <code>thread.start()</code> 方法?你的打开方式不对哦,下次不要这样了~<br><a id="more"></a><br>有没有疑惑,为什么每次我们都习惯调用 <code>start()</code> 方法,为什么不直接调用 <code>run()</code> 方法来启动线程呢?<br>而且如果去看源码的话,你会发现,在 <code>thread.start()</code> 方法中,其实最后还是调用了 <code>thread.run()</code> 方法来执行</font></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Causes <span class="keyword">this</span> thread to begin execution; the Java Virtual Machine</span><br><span class="line"> calls the &lt;code&gt;run&lt;/code&gt; method of this thread.</span><br></pre></td></tr></table></figure>
-<p><font face="华文中宋" size="3">上面的注释翻译一下:当线程开始执行时, JVM 会调用此线程的 run 方法<br>也就是说,线程的 run 方法是由 JVM 直接调用的,在 Java 中如果我们想要直接调用 run 方法也是可以的,因为在 Java 中 run 方法是 public 的</font></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (target != <span class="keyword">null</span>) &#123;</span><br><span class="line">           target.run();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p><font face="华文中宋" size="3">那既然 start 方法最后调用的也是 run 方法,再加上 run 方法本身支持直接调用,那为啥我们平时写的程序都是调用 start 方法,而不是 run 方法呢<br>那是因为,如果直接调用 run 方法,就不是多线程了<br>为了方便解释,咱们看个小 demo :</font></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunThread</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread runThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                System.out.printf(<span class="string">"Run begin another , 当前线程 : %s.%n"</span> ,Thread.currentThread().getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 启动线程</span></span><br><span class="line">        runThread.start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 直接调用 run 方法 -- 演示使用,实际中不要这么做!</span></span><br><span class="line">        runThread.run();</span><br><span class="line"></span><br><span class="line">        System.out.printf(<span class="string">"Run begin , 当前线程 : %s.%n"</span> ,Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><font face="华文中宋" size="3">上面的程序运行结果如下:<br><img src="/images/2020/thread-run.jpg"></font></p>
-<p><font face="华文中宋" size="3">你会发现, <code>runThread</code> 的 <code>run</code> 方法被执行了两次<br>一次是 run 方法运行在自己的线程中,从 <code>Run begin another , 当前线程 : Thread-0</code> 可以看到,这个线程是运行在 <code>Thread-0</code> 中<br>另外一次是因为我们的程序代码直接调用了 run 方法,此时的线程运行在 main 线程中,从 <code>Run begin another , 当前线程 : main</code> 可以看出来<br>也就是说,如果我们直接调用 run 方法的话,线程并不是运行在自己的线程中,而是运行在了当前线程中</font></p>
-<p><font face="华文中宋" size="3">我们为什么要创建多线程?不就是希望多个线程并行执行,比如现在我是线程 A ,此时又起了一个线程,那么我希望这个线程是和线程 A 一起运行的,如果直接调用了 run 方法的话,就运行在线程 A 里面来了<br>并没有达到创建多线程的目标,这怎么行呢,对不对<br>所以在启动线程时,都是使用 start 方法,而不是 run 方法</font></p>
-<p><font face="华文中宋" size="3">这一点,其实在源码中也有说明:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">the Java Virtual Machine calls the run method of <span class="keyword">this</span> thread.</span><br><span class="line">The result is that two threads are running concurrently: </span><br><span class="line">	<span class="function">the current <span class="title">thread</span> <span class="params">(which returns from the call to the start method)</span> </span></span><br><span class="line"><span class="function">	and the other <span class="title">thread</span> <span class="params">(which executes its run method)</span>.</span></span><br></pre></td></tr></table></figure></font></p>
-<p><font face="华文中宋" size="3">在 JVM 调用线程的 run 方法之后,结果就是两个线程同时运行:</font></p>
-<ul>
-<li><font face="华文中宋" size="3">当前线程(从调用返回到 start 方法)</font></li>
-<li><font face="华文中宋" size="3"> 另一个线程(执行 run 方法)</font></li>
-</ul>
-<p><font face="华文中宋" size="3">以上,感谢您的阅读~</font></p>
+        <p><font face="华文中宋" size="3">我记得我说过,最近在忙着写年终总结,还有就是去见见想见的人嘛<br>因为总觉得自己在乎的人,年前都应该见一见的<br><a id="more"></a></font></p>
+<p><font face="华文中宋" size="3">最近见的人都是比我厉害很多的人,所以通过和他们吃饭我也学到了很多东西,毕竟吃饭的时候不可能只是吃饭对吧,还会聊聊天什么的<br>而且有时候真的,线上聊千遍,不如线下见一面<br>所以这篇文章就和大家唠唠嗑,说一说各种碎碎念~</font></p>
+<h1 id="对自己有清晰的定位"><a href="#对自己有清晰的定位" class="headerlink" title="对自己有清晰的定位"></a><font face="华文中宋" size="3">对自己有清晰的定位</font></h1><p><font face="华文中宋" size="3">我发现最近见的几位朋友,对自己都是有清晰的定位的<br>他们知道自己身上的优点,也知道自己身上的缺点,所以对于能发挥自己优势的事情,会尽全力去做好,遇到不擅长的,会拜托给比自己擅长的人去做<br>也正是因为对自己有一个非常清晰的定位,所以他们都是非常自信的,在和他们交流过程中你就能发现,在讲自己做的一些事情的时候,他们眼里有光~<br>还有一点能从他们身上感受到的就是:满足感<br>快节奏的生活下,有满足感其实是比较难的,因为生活节奏比较快,别说开心啥的了,能度日就已经是非常不错的了</font></p>
+<p><font face="华文中宋" size="3">但是和厉害的人聊天,能感受到他们身上的那种乐观,嘴角上扬,整个人给你的 feel 是很向上的<br>我觉得可能就是因为对自己有清晰的定位,知道自己想要什么,也知道该如何努力去得到,所以就比较满足吧,也很从容</font></p>
+<h1 id="沟通交流表达能力都很强"><a href="#沟通交流表达能力都很强" class="headerlink" title="沟通交流表达能力都很强"></a><font face="华文中宋" size="3">沟通交流表达能力都很强</font></h1><p><font face="华文中宋" size="3">不知道你有没有这种感受,有的人说出来的话意思都是一样的,但是有的人一两句就可以说清楚,就能让你 get 到他的点,但是有的人说了好几句,你都不知道对方在说什么(比如我,手动狗头<br>这就是沟通交流表达能力不是很好,但是和厉害的人在一块聊天的时候,比如有时候说到一个技术,我没办法明白,然后对方就可以立刻换一个我熟悉的例子去跟我讲<br>这一点,我是真的还需要再练习</font></p>
+<h1 id="不给自己设限"><a href="#不给自己设限" class="headerlink" title="不给自己设限"></a><font face="华文中宋" size="3">不给自己设限</font></h1><p><font face="华文中宋" size="3">我先说个场景:比如你是做开发的,但是你老大让你去研究一个网络问题,你会怎么办?比如你是做开发的,但是你老大让你去研究一款产品,你会怎么反应?<br>我觉得可能很多人的第一反应就是:我就是一个干开发的,为什么要让我去研究网络?为什么要让我去研究产品?这对我的工作有啥提高?<br>然后心不甘情不愿的去做了<br>你是这样的嘛?</font></p>
+<p><font face="华文中宋" size="3">我观察了一下见过的这几位朋友,他们都是没有什么怨言,扭头就去做的,而且都会尽力做到最好<br>上面我举的例子不是我朋友的真实案例,是想到了 tk 教主分享的一段内容</font></p>
+<p><img src="/images/2020/tk.jpg"></p>
+<p><font face="华文中宋" size="3">给我的感觉就是,那些厉害的人,遇到事情的时候,第一反应不是这件事我做不来,而是会想办法,这件事情我该怎么才能完成它</font></p>
+<h1 id="说说自己的个签"><a href="#说说自己的个签" class="headerlink" title="说说自己的个签"></a><font face="华文中宋" size="3">说说自己的个签</font></h1><p><font face="华文中宋" size="3">最近换了个签<br>以前的个签是: 自由而不独立,仍是奴隶<br>这句话是胡适先生在北大的一次演讲中提到的,当时他问现场学生,为什么校园里贴的标语是”自由思想,自由学术”,而不是”独立思想”? ——因为北大向来开明,自由,学校当然能给你们自由,但是独立是靠你们自己去争取的<br>也就是说,自由是针对外面的束缚来说的,独立才是自己的事情<br>因为如果自己不够独立的话,没有自己的思考,没有自己的想法的话,就算给了你自由,那么到最后可能还是会随大流,会别人做什么自己也去做什么<br>所以就一直放在博客上,来警醒自己,要做一个独立的人,勤思考</font></p>
+<p><font face="华文中宋" size="3">最近的个签换了,换成了:  一个贪财好色,但仍有所不卖的小人<br>我承认我是一个小人,我承认有时候我会比较自私,我也承认我有时候会比较强势,我承认我贪财,满脑子想的都是赚钱,我也承认我好色,对于这世界上的一切美好事物我都想要去尝试,去体验<br>但是有一些事情我也是不为的<br>所以换了个签,活的更加随性洒脱一些~</font></p>
+<p><font face="华文中宋" size="3">以上,感谢您的阅读</font></p>
 
       
     </div>
@@ -508,7 +504,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java-并发/" rel="tag"><i class="fa fa-tag"></i> Java 并发</a>
+            <a href="/tags/碎碎念/" rel="tag"><i class="fa fa-tag"></i> 碎碎念</a>
           
         </div>
       
@@ -521,8 +517,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/76fe9e7d.html" rel="next" title="[碎碎念]这周没有输入的我">
-                <i class="fa fa-chevron-left"></i> [碎碎念]这周没有输入的我
+              <a href="/posts/335e06cd.html" rel="next" title="[Java 并发]为什么启动线程时使用 start 而不是 run ?">
+                <i class="fa fa-chevron-left"></i> [Java 并发]为什么启动线程时使用 start 而不是 run ?
               </a>
             
           </div>
@@ -530,10 +526,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/posts/f77502f5.html" rel="prev" title="[碎碎念]要不要进来唠唠嗑?">
-                [碎碎念]要不要进来唠唠嗑? <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -581,8 +573,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -751,6 +752,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对自己有清晰的定位"><span class="nav-number">1.</span> <span class="nav-text">对自己有清晰的定位</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#沟通交流表达能力都很强"><span class="nav-number">2.</span> <span class="nav-text">沟通交流表达能力都很强</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不给自己设限"><span class="nav-number">3.</span> <span class="nav-text">不给自己设限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#说说自己的个签"><span class="nav-number">4.</span> <span class="nav-text">说说自己的个签</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
