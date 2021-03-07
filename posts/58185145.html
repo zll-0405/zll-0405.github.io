@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-flash.css" rel="stylesheet">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+  <meta name="google-site-verification" content="R25Ul5zjBgl9i9XfnkHEKCcjfc7uKizSAJ3mjQ-eSH4">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/avatar.jpg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们都知道, Maven 是一款非常优秀的软件项目管理 &amp;amp; 自动构建的工具,相信各位在项目中都多多少少接触过那么今天咱们就来扒一扒它的构建生命周期都有哪些,以及拉取 jar 包时它的一个流程是怎样的">
+<meta name="keywords" content="Maven">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Maven]讲讲它的构建生命周期和拉取 jar 包流程">
+<meta property="og:url" content="https://www.dynamic-zheng.com/posts/58185145.html">
+<meta property="og:site_name" content="郑璐璐|个人博客">
+<meta property="og:description" content="我们都知道, Maven 是一款非常优秀的软件项目管理 &amp;amp; 自动构建的工具,相信各位在项目中都多多少少接触过那么今天咱们就来扒一扒它的构建生命周期都有哪些,以及拉取 jar 包时它的一个流程是怎样的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210227171322941.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210227185512881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210227190036816.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2021022719034977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210227190430527.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2021-03-07T06:19:45.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Maven]讲讲它的构建生命周期和拉取 jar 包流程">
+<meta name="twitter:description" content="我们都知道, Maven 是一款非常优秀的软件项目管理 &amp;amp; 自动构建的工具,相信各位在项目中都多多少少接触过那么今天咱们就来扒一扒它的构建生命周期都有哪些,以及拉取 jar 包时它的一个流程是怎样的">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210227171322941.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郑璐璐|个人博客" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://www.dynamic-zheng.com/posts/58185145">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[Maven]讲讲它的构建生命周期和拉取 jar 包流程 | 郑璐璐|个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郑璐璐|个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.dynamic-zheng.com/posts/58185145.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郑璐璐">
+      <meta itemprop="description" content="一个贪财好色,但仍有所不卖的小人">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郑璐璐|个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[Maven]讲讲它的构建生命周期和拉取 jar 包流程
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-03-07 14:18:21 / 修改时间：14:19:45" itemprop="dateCreated datePublished" datetime="2021-03-07T14:18:21+08:00">2021-03-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Maven/" itemprop="url" rel="index"><span itemprop="name">Maven</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/posts/58185145.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/58185145.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="华文中宋" size="3">我们都知道, Maven 是一款非常优秀的软件项目管理 &amp; 自动构建的工具,相信各位在项目中都多多少少接触过<br>那么今天咱们就来扒一扒它的构建生命周期都有哪些,以及拉取 jar 包时它的一个流程是怎样的<br><a id="more"></a></font></p>
+<h1 id="Maven-生命周期"><a href="#Maven-生命周期" class="headerlink" title=" Maven 生命周期"></a><font face="华文中宋" size="3"> Maven 生命周期</font></h1><p><font face="华文中宋" size="3">说到 Maven 的构建生命周期,我的小脑瓜里面冒出来的就是: <code>clean</code> <code>install</code> <code>deploy</code>  这些了<br>但是其实 Maven 生命周期不仅仅是这些~</font></p>
+<p><font face="华文中宋" size="3">Maven 整个生命周期大概可以分为三大类:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">clean : 目的在于清理项目</font></li>
+<li><font face="华文中宋" size="3">default : 目的在于构建项目</font></li>
+<li><font face="华文中宋" size="3">site : 目的在于建立项目站点</font></li>
+</ul>
+<p><font face="华文中宋" size="3">其中 <code>default</code> 生命周期它的目的在于构建项目,所以详细来说又可以再分:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">validate: 验证要构建的项目是正确的,并且所需要的资源是存在的</font></li>
+<li><font face="华文中宋" size="3">compile: 编译项目中的 java 文件成为虚拟机能识别的 .class 字节码文件</font></li>
+<li><font face="华文中宋" size="3">test: 使用合适的单元测试框架来测试编译的源码是否可以正确运行</font></li>
+<li><font face="华文中宋" size="3">package :将编译后的源代码打包( jar 或者 war )</font></li>
+<li><font face="华文中宋" size="3">verify: 验证测试结果确保达到目标</font></li>
+<li><font face="华文中宋" size="3">install: 将 package 放到本地仓库中,用作本地其他项目的依赖项</font></li>
+<li><font face="华文中宋" size="3">deploy: 在构建环境中完成之后,将最终的 package 传到远程仓库中,便于共享</font></li>
+</ul>
+<p><font face="华文中宋" size="3">我经常用的 Maven 生命周期就是刚开始我的小脑袋瓜就冒出来的那几个了: <code>clean</code> <code>install</code> <code>deploy</code><br>但是现在 idea 和 Maven 已经有了一个非常完美的配合了,所以一般都是直接在 idea 里面操作,这些命令说起来也是很久没用过了</font></p>
+<h1 id="拉取-jar-包流程"><a href="#拉取-jar-包流程" class="headerlink" title="拉取 jar 包流程"></a><font face="华文中宋" size="3">拉取 jar 包流程</font></h1><p><font face="华文中宋" size="3">讲完了 Maven 的生命周期,接下来说说,当我们使用 Maven 时,它是如何帮助我们拉取 jar 包的<br>首先上一张图:(问我为啥都是英文么?因为这样显得我很有文化的样子嘛~</font></p>
+<p><img src="https://img-blog.csdnimg.cn/20210227171322941.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><font face="华文中宋" size="3">接下来分析一下它的整个流程<br><code>local repository</code> 就是本地仓库啦,在项目中使用到的 jar 包如果本地仓库中有,那就好了,什么都不用做,直接引用就 OK 了<br>但是如果本地仓库中没有呢?<br>有两种方法可以找到</font></p>
+<p><font face="华文中宋" size="3">第一种就是直接在我们项目中的 <code>pom.xml</code> 文件中,写上使用到的 <code>&lt;repository&gt;</code> <code>&lt;pluginRepository&gt;</code> , Maven 就会根据这个路径去找到要下载的 jar 包,但是这种方式我们一般都不怎么使用,因为我们更喜欢在 <code>pom.xml</code> 文件中以这样的方式使用:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">	&lt;dependency&gt;</span><br><span class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">		&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">	&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">	&lt;dependency&gt;</span><br><span class="line">		&lt;groupId&gt;com.google.guava&lt;/groupId&gt;</span><br><span class="line">		&lt;artifactId&gt;guava&lt;/artifactId&gt;</span><br><span class="line">		&lt;version&gt;23.0&lt;/version&gt;</span><br><span class="line">	&lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">第二种方法就是我们常见的,将使用到的仓库地址存放在 Maven 的 setting 文件中,例如这样定义:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;  </span><br><span class="line">	&lt;id&gt;alimaven&lt;/id&gt;  </span><br><span class="line">	&lt;name&gt;aliyun maven&lt;/name&gt;  </span><br><span class="line">	&lt;url&gt;http:<span class="comment">//maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;  </span></span><br><span class="line">	&lt;mirrorOf&gt;central&lt;/mirrorOf&gt;          </span><br><span class="line">      &lt;/mirror&gt;</span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">当需要的 jar 包本地仓库没有时,就会通过 Maven 中的 setting 文件,我们设置的 <code>mirror</code> 通过 <code>Repository Manager</code> 找到镜像仓库,再通过分组/版本等信息,定位到我们想要的 jar 包<br>镜像仓库肯定都是公共的嘛,也就是 <code>central repository</code> ,然后肯定也会去做 cdn 处理,也就是 <code>central CDN</code> ,那么问题就是 <code>central repository</code> 中的相关数据是从哪里来的呢<br>是从 <code>project-dedicated staging repositories</code> (专用于项目的暂存库) 中同步过来的,我的理解就是:这个仓库是专用于项目的,然后经过大量项目的实践验证之后的 jar 包,会同步到 <code>central data</code> 中,再由 <code>central data</code> 向下同步,同时 <code>central data</code> 中的数据,也会 <code>push</code> (推送)到 <code>public forges(multi-projects) staging repositories</code> (公共库) 中<br>这样整个流程就建立起来了</font></p>
+<h1 id="扩展-推送-jar-包到私服"><a href="#扩展-推送-jar-包到私服" class="headerlink" title="扩展: 推送 jar 包到私服"></a><font face="华文中宋" size="3">扩展: 推送 jar 包到私服</font></h1><p><font face="华文中宋" size="3">我记得原来折腾 Maven 的时候,弄过怎么推送 jar 包到私服(当时搭建的私服是 Nexus ),当时也记录了一些东西,放在这里当个扩展内容吧</font></p>
+<p><font face="华文中宋" size="3">推送 jar 包到私服,主要有两种方式:</font></p>
+<ul>
+<li><font face="华文中宋" size="3">使用命令推送 jar 包</font></li>
+<li><font face="华文中宋" size="3">通过私服界面进行手动推送</font></li>
+</ul>
+<p><font face="华文中宋" size="3">接下来详细讲讲该如何推送,在这里以向 Nexus 推送为例</font></p>
+<p><font face="华文中宋" size="3">在使用命令推送 jar 包时,要在私服界面上允许远程推送,具体设置如下图:<br><img src="https://img-blog.csdnimg.cn/20210227185512881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></font></p>
+<p><font face="华文中宋" size="3">设置完之后,再使用下面的命令就可以推送了<br><code>mvn deploy:deploy-file -Dmaven.test.skip=true -Dfile=C:\test\tool-1.0.jar -DgroupId=com.example -DartifactId=tool -Dversion=1.0 -Dpackaging=jar -DrepositoryId=thirdparty -Durl=http://192.168.163.129:8081/nexus/content/repositories/thirdparty/</code></font></p>
+<p><font face="华文中宋" size="3">其中一些字段的含义是:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-Dmaven.test.skip=<span class="keyword">true</span>                      <span class="comment">//跳过编译、测试</span></span><br><span class="line">-Dfile=C:\test\tool-<span class="number">1.0</span>.jar                 <span class="comment">//jar包文件地址,绝对路径</span></span><br><span class="line">-DgroupId=com.example                       <span class="comment">//gruopId--pom坐标，自定义</span></span><br><span class="line">-DartifactId=tool                           <span class="comment">//artifactId--pom坐标，自定义</span></span><br><span class="line">-Dversion                                   <span class="comment">//版本号</span></span><br><span class="line">-Dpackaging                                 <span class="comment">//打包方式</span></span><br><span class="line">-DrepositoryId                              <span class="comment">//远程库服务器ID</span></span><br><span class="line">-Durl                                       <span class="comment">//远程库服务器地址</span></span><br></pre></td></tr></table></figure></font></p>
+<p><font face="华文中宋" size="3">手动上传的话,就好说很多了,直接在 Nexus 界面操作即可<br>如下图,就上传好了</font></p>
+<p><img src="https://img-blog.csdnimg.cn/20210227190036816.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><font face="华文中宋" size="3">看完这里关于如何推送 jar 包到远程服务器就没有啦~<br>但是我好奇心比较强,因为推送 jar 包到远程服务器上面的话,那这个 jar 包肯定是保存在服务器上面了,我就想知道它保存到哪里了,一定是有路径的<br>然后各处点的时候发现了</font></p>
+<p><img src="https://img-blog.csdnimg.cn/2021022719034977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><font face="华文中宋" size="3">我们去这个路径下看看,发现真的是上传到了这里<br><img src="https://img-blog.csdnimg.cn/20210227190430527.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psbF8wNDA1,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></font></p>
+<p><font face="华文中宋" size="3">以上,就是我想要分享的内容了`<br>感谢您的阅读哇~</font></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Maven/" rel="tag"><i class="fa fa-tag"></i> Maven</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/3a3d2bd6.html" rel="next" title="[碎碎念]可能要恢复更新了">
+                <i class="fa fa-chevron-left"></i> [碎碎念]可能要恢复更新了
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="郑璐璐">
+            
+              <p class="site-author-name" itemprop="name">郑璐璐</p>
+              <div class="site-description motion-element" itemprop="description">一个贪财好色,但仍有所不卖的小人</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">86</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven-生命周期"><span class="nav-number">1.</span> <span class="nav-text"> Maven 生命周期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拉取-jar-包流程"><span class="nav-number">2.</span> <span class="nav-text">拉取 jar 包流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展-推送-jar-包到私服"><span class="nav-number">3.</span> <span class="nav-text">扩展: 推送 jar 包到私服</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郑璐璐</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'vOUCqSjECwoV5kwF6gpHX3TN-gzGzoHsz',
+    appKey: 'Gp04HpWpLsCWBsUenWJrYlhx',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
