@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>[Java 并发]再谈为什么启动线程时使用 start ,而不是 run</title>
+      <link href="/posts/2cc48466.html"/>
+      <url>/posts/2cc48466.html</url>
+      
+        <content type="html"><![CDATA[<p><font face="华文中宋" size="3">其实这个主题,原来我写过: <a href="https://www.dynamic-zheng.com/posts/335e06cd.html#more">[Java 并发]为什么启动线程时使用 start 而不是 run ?</a><br><a id="more"></a><br>在上篇文章中,主要是通过例子,向大家展示了如果调用 <code>run</code> 方法,线程并不是运行在自己的线程中,而是运行在了当前线程中<br>也就是,如果调用 <code>run</code> 方法的话,它本来应该是在 A 线程中运行的,但是因为直接调用了 <code>run</code> 方法,它可能就执行在了 <code>main</code> 线程中<br>我们本来是希望这些线程异步执行的,结果直接调用了 <code>run</code> 方法就成了同步执行</font></p><p><font face="华文中宋" size="3">所以为什么直接调用 <code>run</code> 方法就成了同步,而如果使用 <code>start</code> 方法,则成了异步<br>原因就是因为它们告诉 CPU 不同的内容</font></p><p><font face="华文中宋" size="3">当调用  <code>start</code> 方法时,只是告诉了”线程规划器”说这个线程已经准备就绪了,就差调用线程对象的 <code>run</code> 方法了,此时系统就会安排一个时间来调用这个线程的 <code>run</code> 方法,进而线程得到运行,启动线程,达到了异步执行的效果</font></p><p><font face="华文中宋" size="3">而如果调用 <code>run</code> 方法,那就不是异步执行了,因为调用 <code>run</code> 方法,就相当于现在就要启动运行,此时的线程对象并没有交给”线程规划器”来进行处理,而是直接由 <code>main</code> 线程接管了,来调用 <code>run</code> 方法让线程得到运行,启动线程<br>但是此时的 <code>main</code> 线程有可能正在运行其他的线程,根本没有空余时间来运行此次调用的 <code>run</code> 方法,结果呢,就是要等到 <code>main</code> 线程中的代码执行完毕,才会来执行 <code>run</code> 方法<br>这不就是同步执行了嘛</font></p><p><font face="华文中宋" size="3">所以,调用 <code>start</code> 方法,真正达到了异步执行的效果<br>而调用 <code>run</code> 方法,还是在同步执行代码,并没有充分利用多线程的优势</font></p><p><font face="华文中宋" size="3">以上<br>我觉得我这次理解到位了<br>你呢?</font></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java 并发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java 并发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[Maven]讲讲它的构建生命周期和拉取 jar 包流程</title>
       <link href="/posts/58185145.html"/>
       <url>/posts/58185145.html</url>
